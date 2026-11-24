@@ -496,7 +496,7 @@ var $ = function (id) { return document.getElementById(id); };
 var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
 /* ---------- settings ---------- */
-var DEFAULTS = { theme: 'auto', size: 'm', autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true };
+var DEFAULTS = { theme: 'auto', size: 'm', sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true };
 var CFG = {};
 (function () {
   var saved = {}, k;
@@ -516,6 +516,8 @@ var SET_UI = [
   { title: 'Appearance', rows: [
     { key: 'theme', label: 'Theme', desc: 'Auto follows the phone setting', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
     { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] } ] },
+  { title: 'Sound', rows: [
+    { key: 'sound', label: 'Sound effects', desc: 'A chime for a correct answer and a low tone for a wrong one', sw: true } ] },
   { title: 'Drill', rows: [
     { key: 'autoNext', label: 'Auto-next after a correct answer', desc: 'Moves on after a moment so the explanation is still readable', sw: true },
     { key: 'len', label: 'Session length', desc: 'A summary shows when the session ends', opts: [[10, '10'], [20, '20'], [0, 'Endless']] },
@@ -560,6 +562,31 @@ function confirmBtn(id, label, action) {
     t = setTimeout(disarm, 3500);
   });
 }
+/* ---------- sound (generated in the browser, no audio files) ---------- */
+var AC = null;
+function audioCtx() {
+  try {
+    if (!AC) { var Ctx = window.AudioContext || window.webkitAudioContext; if (!Ctx) return null; AC = new Ctx(); }
+    if (AC.state === 'suspended' && AC.resume) AC.resume();
+    return AC;
+  } catch (e) { return null; }
+}
+function tone(ac, freq, start, dur, type, vol) {
+  var o = ac.createOscillator(), g = ac.createGain(), t0 = ac.currentTime + start;
+  o.type = type; o.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0 + dur + 0.05);
+}
+function playSound(kind) {
+  if (!CFG.sound) return;
+  var ac = audioCtx(); if (!ac) return;
+  try {
+    if (kind === 'ok') { tone(ac, 659.25, 0, 0.16, 'sine', 0.2); tone(ac, 880, 0.12, 0.3, 'sine', 0.2); }
+    else { tone(ac, 196, 0, 0.2, 'triangle', 0.25); tone(ac, 146.83, 0.17, 0.32, 'triangle', 0.25); }
+  } catch (e) {}
+}
 $('settingsBody').addEventListener('change', function (e) {
   var el = e.target, key = el.getAttribute && el.getAttribute('data-key');
   if (!key) return;
@@ -567,6 +594,7 @@ $('settingsBody').addEventListener('change', function (e) {
   else CFG[key] = typeof DEFAULTS[key] === 'number' ? parseInt(el.value, 10) : el.value;
   saveCfg();
   if (key === 'theme' || key === 'size') applyAppearance();
+  if (key === 'sound' && CFG.sound) playSound('ok');
   if (key === 'alwaysHint' && S.q && !S.answered) { if (CFG.alwaysHint) { $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false; } else $('hintBox').hidden = true; }
   if (key === 'len') { resetSession(); nextQ(); }
   if (key === 'dir' || key === 'shuffle') startDeck();
@@ -651,6 +679,7 @@ function finish(ok, gaveUp) {
     if (ok) { S.right++; S.streak++; } else S.streak = 0;
   }
   S.sessionDone++; if (ok) S.sessionRight++;
+  if (!gaveUp) playSound(ok ? 'ok' : 'no');
   if (ok) {
     S.misses = S.misses.filter(function (m) { return !sameQ(m, q); });
   } else if (!S.misses.some(function (m) { return sameQ(m, q); })) {
