@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flight Command Practice</title>
-<script>document.documentElement.classList.add("js");</script>
+<script>(function(){var d=document.documentElement;d.classList.add("js");try{window.__origTheme=d.getAttribute("data-theme");var c=JSON.parse(localStorage.getItem("fc-settings")||"{}")||{};if(c.theme==="light"||c.theme==="dark")d.setAttribute("data-theme",c.theme);var z={s:"88%",m:"100%",l:"116%"}[c.size];if(z)d.style.fontSize=z;}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -58,20 +58,34 @@ h1 { font-size: 1.5rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; 
 .stat span { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
 
 .tabradio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
-.tab { font: inherit; font-weight: 500; border-bottom: 3px solid transparent; padding: 12px 14px; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tab { font: inherit; font-weight: 500; border-bottom: 3px solid transparent; padding: 12px 8px; flex: 1 1 auto; text-align: center; font-size: 0.93rem; white-space: nowrap; color: var(--muted); cursor: pointer; -webkit-tap-highlight-color: transparent; }
 #r-drill:checked ~ .tabs label[for="r-drill"],
 #r-cards:checked ~ .tabs label[for="r-cards"],
-#r-sheet:checked ~ .tabs label[for="r-sheet"] { color: var(--ink); border-bottom-color: var(--accent); }
+#r-sheet:checked ~ .tabs label[for="r-sheet"],
+#r-settings:checked ~ .tabs label[for="r-settings"] { color: var(--ink); border-bottom-color: var(--accent); }
 .tabradio:focus-visible ~ .tabs label { outline: 0; }
 #r-drill:focus-visible ~ .tabs label[for="r-drill"],
 #r-cards:focus-visible ~ .tabs label[for="r-cards"],
-#r-sheet:focus-visible ~ .tabs label[for="r-sheet"] { outline: 3px solid var(--accent); outline-offset: 2px; }
-button:focus-visible, input:focus-visible, .chip:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+#r-sheet:focus-visible ~ .tabs label[for="r-sheet"],
+#r-settings:focus-visible ~ .tabs label[for="r-settings"] { outline: 3px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, input:focus-visible, .chip:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: none; flex-direction: column; gap: 14px; }
-#r-drill:checked ~ #drill, #r-cards:checked ~ #cards, #r-sheet:checked ~ #sheet { display: flex; }
+#r-drill:checked ~ #drill, #r-cards:checked ~ #cards, #r-sheet:checked ~ #sheet, #r-settings:checked ~ #settings { display: flex; }
 html:not(.js) .stats { display: none; }
+.setgroup { display: flex; flex-direction: column; }
+.setgroup h2 { font-size: 1.05rem; margin: 8px 0 2px; }
+.setrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.setrow .lbl { font-weight: 500; flex: 1 1 200px; }
+.setrow .desc { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+.switch { appearance: none; -webkit-appearance: none; width: 46px; height: 26px; border-radius: 13px; background: var(--line); position: relative; cursor: pointer; border: 0; flex: none; margin: 0; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
+.switch:checked { background: var(--accent); }
+.switch:checked::after { transform: translateX(20px); }
+.switch:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+#summary { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; padding: 8px 0; }
+#summary .big { font-family: var(--font-mono); font-size: 2.4rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .jsonly { display: contents; }
 html:not(.js) .jsonly { display: none !important; }
 html.js .nojs { display: none !important; }
@@ -153,10 +167,12 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
   <input class="tabradio" type="radio" name="tab" id="r-drill" checked aria-label="Command drill">
   <input class="tabradio" type="radio" name="tab" id="r-cards" aria-label="Flashcards">
   <input class="tabradio" type="radio" name="tab" id="r-sheet" aria-label="Cheat sheet">
+  <input class="tabradio" type="radio" name="tab" id="r-settings" aria-label="Settings">
   <div class="tabs">
-    <label class="tab" for="r-drill">Command drill</label>
+    <label class="tab" for="r-drill">Drill</label>
     <label class="tab" for="r-cards">Flashcards</label>
     <label class="tab" for="r-sheet">Cheat sheet</label>
+    <label class="tab" for="r-settings">Settings</label>
   </div>
 
   <!-- DRILL -->
@@ -170,11 +186,11 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
       <div class="qtag" id="qTag"></div>
       <p class="qtext" id="qText"></p>
     </div>
-    <label class="term" for="ans">
+    <label class="term" id="termBox" for="ans">
       <span class="prompt" aria-hidden="true">&gt;</span>
       <input id="ans" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Type the command, then press Enter">
     </label>
-    <div class="actions">
+    <div class="actions" id="actRow">
       <button class="btn primary" id="btnCheck">Check</button>
       <button class="btn" id="btnHint">Hint</button>
       <button class="btn" id="btnSkip">Show answer</button>
@@ -182,8 +198,9 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
     </div>
     <div class="hint" id="hintBox" hidden></div>
     <div id="result" hidden aria-live="polite"></div>
-    <div class="actions"><button class="btn primary" id="btnNext" hidden>Next question</button></div>
-    <p class="note">Spaces and capitals do not matter. Option order does not matter for AN (/K C /A*S is the same as /A*S /K C). A leading zero on the day is fine (05JAN or 5JAN).</p>
+    <div class="actions" id="nextRow"><button class="btn primary" id="btnNext" hidden>Next question</button></div>
+    <p class="note" id="drillNote">Spaces and capitals do not matter. Option order does not matter for AN (/K C /A*S is the same as /A*S /K C). A leading zero on the day is fine (05JAN or 5JAN).</p>
+    <div id="summary" hidden></div>
     </div>
     <div class="nojs"><p class="note">Practice questions with answers. Think of the command first, then tap the question to check it. The interactive drill (typing and automatic checking) opens when scripts can run, for example in Chrome or Safari.</p><h2>AN basics</h2><details><summary>1. Display availability for 12 April from Dubai (DXB) to Doha (DOH).</summary><div class="ans"><div class="cmd">AN 12APR DXBDOH</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>12APR</td><td>Departure date</td></tr><tr><td>DXBDOH</td><td>Origin + destination (city pair)</td></tr></tbody></table></div></div></details><details><summary>2. Display availability for 22 August from Tokyo (NRT) to Los Angeles (LAX).</summary><div class="ans"><div class="cmd">AN 22AUG NRTLAX</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>22AUG</td><td>Departure date</td></tr><tr><td>NRTLAX</td><td>Origin + destination (city pair)</td></tr></tbody></table></div></div></details><details><summary>3. Display availability for 12 July from New York (NYC) to Bangkok (BKK).</summary><div class="ans"><div class="cmd">AN 12JUL NYCBKK</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>12JUL</td><td>Departure date</td></tr><tr><td>NYCBKK</td><td>Origin + destination (city pair)</td></tr></tbody></table></div></div></details><details><summary>4. Display availability for 18 January from Seoul (ICN) to Dubai (DXB).</summary><div class="ans"><div class="cmd">AN 18JAN ICNDXB</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>18JAN</td><td>Departure date</td></tr><tr><td>ICNDXB</td><td>Origin + destination (city pair)</td></tr></tbody></table></div></div></details><details><summary>5. Display availability for 21 February from Bangkok (BKK) to Frankfurt (FRA).</summary><div class="ans"><div class="cmd">AN 21FEB BKKFRA</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>21FEB</td><td>Departure date</td></tr><tr><td>BKKFRA</td><td>Origin + destination (city pair)</td></tr></tbody></table></div></div></details><h2>AN with one option</h2><details><summary>6. Display availability for 7 August from Seoul (ICN) to Rome (FCO), on Qatar Airways (QR) only.</summary><div class="ans"><div class="cmd">AN 07AUG ICNFCO /A QR</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>07AUG</td><td>Departure date</td></tr><tr><td>ICNFCO</td><td>Origin + destination (city pair)</td></tr><tr><td>/A QR</td><td>Operating airline QR</td></tr></tbody></table></div></div></details><details><summary>7. Display availability for 2 January from Singapore (SIN) to Kuala Lumpur (KUL), on Lufthansa (LH) only.</summary><div class="ans"><div class="cmd">AN 02JAN SINKUL /A LH</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>02JAN</td><td>Departure date</td></tr><tr><td>SINKUL</td><td>Origin + destination (city pair)</td></tr><tr><td>/A LH</td><td>Operating airline LH</td></tr></tbody></table></div></div></details><details><summary>8. Display availability for 8 June from Rome (FCO) to Singapore (SIN), limited to Star Alliance.</summary><div class="ans"><div class="cmd">AN 08JUN FCOSIN /A*A</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>08JUN</td><td>Departure date</td></tr><tr><td>FCOSIN</td><td>Origin + destination (city pair)</td></tr><tr><td>/A*A</td><td>Alliance: Star Alliance</td></tr></tbody></table></div></div></details><details><summary>9. Display availability for 28 May from Singapore (SIN) to San Francisco (SFO), booking class V.</summary><div class="ans"><div class="cmd">AN 28MAY SINSFO /C V</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>28MAY</td><td>Departure date</td></tr><tr><td>SINSFO</td><td>Origin + destination (city pair)</td></tr><tr><td>/C V</td><td>Booking class V</td></tr></tbody></table></div></div></details><details><summary>10. Display availability for 18 July from Bangkok (BKK) to New York (NYC), departing around 9:00 AM.</summary><div class="ans"><div class="cmd">AN 18JUL BKKNYC 0900</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>18JUL</td><td>Departure date</td></tr><tr><td>BKKNYC</td><td>Origin + destination (city pair)</td></tr><tr><td>0900</td><td>Preferred departure time 9:00 AM</td></tr></tbody></table></div></div></details><details><summary>11. Display availability for 26 August from Bangkok (BKK) to Sydney (SYD), connecting via Seoul (ICN).</summary><div class="ans"><div class="cmd">AN 26AUG BKKSYD /X ICN</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>26AUG</td><td>Departure date</td></tr><tr><td>BKKSYD</td><td>Origin + destination (city pair)</td></tr><tr><td>/X ICN</td><td>Connection point ICN</td></tr></tbody></table></div></div></details><details><summary>12. Display availability for 5 May from Frankfurt (FRA) to Doha (DOH), on Singapore Airlines (SQ) only.</summary><div class="ans"><div class="cmd">AN 05MAY FRADOH /A SQ</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>05MAY</td><td>Departure date</td></tr><tr><td>FRADOH</td><td>Origin + destination (city pair)</td></tr><tr><td>/A SQ</td><td>Operating airline SQ</td></tr></tbody></table></div></div></details><details><summary>13. Display availability for 16 December from Los Angeles (LAX) to Tokyo (NRT), connecting via Manila (MNL).</summary><div class="ans"><div class="cmd">AN 16DEC LAXNRT /X MNL</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>16DEC</td><td>Departure date</td></tr><tr><td>LAXNRT</td><td>Origin + destination (city pair)</td></tr><tr><td>/X MNL</td><td>Connection point MNL</td></tr></tbody></table></div></div></details><h2>AN with combined options</h2><details><summary>14. Display availability for 10 June from London (LON) to Hong Kong (HKG), departing around 6:00 AM, booking class H.</summary><div class="ans"><div class="cmd">AN 10JUN LONHKG 0600 /C H</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>10JUN</td><td>Departure date</td></tr><tr><td>LONHKG</td><td>Origin + destination (city pair)</td></tr><tr><td>0600</td><td>Preferred departure time 6:00 AM</td></tr><tr><td>/C H</td><td>Booking class H</td></tr></tbody></table></div></div></details><details><summary>15. Display availability for 28 May from Dubai (DXB) to Sydney (SYD), limited to Star Alliance, booking class Y, connecting via Hong Kong (HKG).</summary><div class="ans"><div class="cmd">AN 28MAY DXBSYD /A*A /C Y /X HKG</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>28MAY</td><td>Departure date</td></tr><tr><td>DXBSYD</td><td>Origin + destination (city pair)</td></tr><tr><td>/A*A</td><td>Alliance: Star Alliance</td></tr><tr><td>/C Y</td><td>Booking class Y</td></tr><tr><td>/X HKG</td><td>Connection point HKG</td></tr></tbody></table></div></div></details><details><summary>16. Display availability for 1 June from Hong Kong (HKG) to Manila (MNL), excluding Qantas (QF), limited to Star Alliance, economy class (excluding premium economy).</summary><div class="ans"><div class="cmd">AN 01JUN HKGMNL /A- QF /A*A /K M</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>01JUN</td><td>Departure date</td></tr><tr><td>HKGMNL</td><td>Origin + destination (city pair)</td></tr><tr><td>/A- QF</td><td>Exclude airline QF</td></tr><tr><td>/A*A</td><td>Alliance: Star Alliance</td></tr><tr><td>/K M</td><td>Cabin type: Economy class (excluding premium economy)</td></tr></tbody></table></div></div></details><details><summary>17. Display availability for 8 September from New York (NYC) to San Francisco (SFO), economy class (including premium economy), departing around 6:30 AM, excluding United Airlines (UA).</summary><div class="ans"><div class="cmd">AN 08SEP NYCSFO 0630 /K Y /A- UA</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>08SEP</td><td>Departure date</td></tr><tr><td>NYCSFO</td><td>Origin + destination (city pair)</td></tr><tr><td>0630</td><td>Preferred departure time 6:30 AM</td></tr><tr><td>/K Y</td><td>Cabin type: Economy class (including premium economy)</td></tr><tr><td>/A- UA</td><td>Exclude airline UA</td></tr></tbody></table></div></div></details><details><summary>18. Display availability for 13 June from Bangkok (BKK) to San Francisco (SFO), business class, booking class W.</summary><div class="ans"><div class="cmd">AN 13JUN BKKSFO /K C /C W</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>13JUN</td><td>Departure date</td></tr><tr><td>BKKSFO</td><td>Origin + destination (city pair)</td></tr><tr><td>/K C</td><td>Cabin type: Business class</td></tr><tr><td>/C W</td><td>Booking class W</td></tr></tbody></table></div></div></details><details><summary>19. Display availability for 14 December from Seoul (ICN) to Doha (DOH), booking class B, excluding Cathay Pacific (CX).</summary><div class="ans"><div class="cmd">AN 14DEC ICNDOH /C B /A- CX</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>14DEC</td><td>Departure date</td></tr><tr><td>ICNDOH</td><td>Origin + destination (city pair)</td></tr><tr><td>/C B</td><td>Booking class B</td></tr><tr><td>/A- CX</td><td>Exclude airline CX</td></tr></tbody></table></div></div></details><details><summary>20. Display availability for 15 February from Dubai (DXB) to Manila (MNL), economy class (including premium economy), departing around 5:30 AM.</summary><div class="ans"><div class="cmd">AN 15FEB DXBMNL 0530 /K Y</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>15FEB</td><td>Departure date</td></tr><tr><td>DXBMNL</td><td>Origin + destination (city pair)</td></tr><tr><td>0530</td><td>Preferred departure time 5:30 AM</td></tr><tr><td>/K Y</td><td>Cabin type: Economy class (including premium economy)</td></tr></tbody></table></div></div></details><details><summary>21. Display availability for 3 June from Manila (MNL) to Kuala Lumpur (KUL), departing around 10:30 PM, booking class H.</summary><div class="ans"><div class="cmd">AN 03JUN MNLKUL 2230 /C H</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td></tr><tr><td>03JUN</td><td>Departure date</td></tr><tr><td>MNLKUL</td><td>Origin + destination (city pair)</td></tr><tr><td>2230</td><td>Preferred departure time 10:30 PM</td></tr><tr><td>/C H</td><td>Booking class H</td></tr></tbody></table></div></div></details><h2>TN timetable</h2><details><summary>22. Display the flight timetable for Tokyo (NRT) to New York (NYC) on 20 March at around 10:30 AM.</summary><div class="ans"><div class="cmd">TN 20MAR NRTNYC 1030</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>20MAR</td><td>Departure date</td></tr><tr><td>NRTNYC</td><td>Origin + destination</td></tr><tr><td>1030</td><td>Departure time 10:30 AM</td></tr></tbody></table></div></div></details><details><summary>23. Display the flight timetable for Hong Kong (HKG) to Sydney (SYD) on 22 January.</summary><div class="ans"><div class="cmd">TN 22JAN HKGSYD</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>22JAN</td><td>Departure date</td></tr><tr><td>HKGSYD</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>24. Display the flight timetable for Sydney (SYD) to San Francisco (SFO) on 18 January at around 10:00 AM.</summary><div class="ans"><div class="cmd">TN 18JAN SYDSFO 1000</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>18JAN</td><td>Departure date</td></tr><tr><td>SYDSFO</td><td>Origin + destination</td></tr><tr><td>1000</td><td>Departure time 10:00 AM</td></tr></tbody></table></div></div></details><details><summary>25. Display the flight timetable for London (LON) to Hong Kong (HKG) on 2 July.</summary><div class="ans"><div class="cmd">TN 02JUL LONHKG</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>02JUL</td><td>Departure date</td></tr><tr><td>LONHKG</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>26. Display the flight timetable for Doha (DOH) to Seoul (ICN) on 5 May.</summary><div class="ans"><div class="cmd">TN 05MAY DOHICN</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>05MAY</td><td>Departure date</td></tr><tr><td>DOHICN</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>27. Display the flight timetable for Seoul (ICN) to Hong Kong (HKG) on 21 January at around 10:00 PM.</summary><div class="ans"><div class="cmd">TN 21JAN ICNHKG 2200</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>21JAN</td><td>Departure date</td></tr><tr><td>ICNHKG</td><td>Origin + destination</td></tr><tr><td>2200</td><td>Departure time 10:00 PM</td></tr></tbody></table></div></div></details><details><summary>28. Display the flight timetable for Bangkok (BKK) to Hong Kong (HKG) on 8 October.</summary><div class="ans"><div class="cmd">TN 08OCT BKKHKG</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>08OCT</td><td>Departure date</td></tr><tr><td>BKKHKG</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>29. Display the flight timetable for Tokyo (NRT) to Dubai (DXB) on 20 September.</summary><div class="ans"><div class="cmd">TN 20SEP NRTDXB</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>TN</td><td>Timetable</td></tr><tr><td>20SEP</td><td>Departure date</td></tr><tr><td>NRTDXB</td><td>Origin + destination</td></tr></tbody></table></div></div></details><h2>DO flight info</h2><details><summary>30. You are looking at an availability display. Show the flight information for the flight on line 8.</summary><div class="ans"><div class="cmd">DO 8</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>8</td><td>Line number (the purple numbers on the left)</td></tr></tbody></table></div></div></details><details><summary>31. You are looking at an availability display. Show the flight information for the flight on line 1.</summary><div class="ans"><div class="cmd">DO 1</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>1</td><td>Line number (the purple numbers on the left)</td></tr></tbody></table></div></div></details><details><summary>32. You are looking at an availability display. Show the flight information for the flight on line 7.</summary><div class="ans"><div class="cmd">DO 7</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>7</td><td>Line number (the purple numbers on the left)</td></tr></tbody></table></div></div></details><details><summary>33. Display flight details for SQ344 from Sydney (SYD) to London (LON) on 26 October.</summary><div class="ans"><div class="cmd">DO SQ344/26OCT/SYDLON</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>SQ344</td><td>Airline code + flight number</td></tr><tr><td>26OCT</td><td>Departure date</td></tr><tr><td>SYDLON</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>34. Display flight details for KE885 from Hong Kong (HKG) to Frankfurt (FRA) on 24 August.</summary><div class="ans"><div class="cmd">DO KE885/24AUG/HKGFRA</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>KE885</td><td>Airline code + flight number</td></tr><tr><td>24AUG</td><td>Departure date</td></tr><tr><td>HKGFRA</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>35. Display flight details for QF310 from Seoul (ICN) to New York (NYC) on 17 November.</summary><div class="ans"><div class="cmd">DO QF310/17NOV/ICNNYC</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>QF310</td><td>Airline code + flight number</td></tr><tr><td>17NOV</td><td>Departure date</td></tr><tr><td>ICNNYC</td><td>Origin + destination</td></tr></tbody></table></div></div></details><details><summary>36. You are looking at an availability display. Show the flight information for the flight on line 4.</summary><div class="ans"><div class="cmd">DO 4</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>4</td><td>Line number (the purple numbers on the left)</td></tr></tbody></table></div></div></details><details><summary>37. Display flight details for QR368 from Frankfurt (FRA) to New York (NYC) on 17 December.</summary><div class="ans"><div class="cmd">DO QR368/17DEC/FRANYC</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DO</td><td>Display flight information</td></tr><tr><td>QR368</td><td>Airline code + flight number</td></tr><tr><td>17DEC</td><td>Departure date</td></tr><tr><td>FRANYC</td><td>Origin + destination</td></tr></tbody></table></div></div></details><h2>DM connecting time</h2><details><summary>38. Display the minimum connecting time for Manila Ninoy Aquino (MNL) airport.</summary><div class="ans"><div class="cmd">DM MNL</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>MNL</td><td>Airport code</td></tr></tbody></table></div></div></details><details><summary>39. Display the minimum connection from Lufthansa (LH) to Qantas (QF) via SIN.</summary><div class="ans"><div class="cmd">DM LH/SIN/QF</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>LH</td><td>Arriving airline</td></tr><tr><td>SIN</td><td>Transit airport</td></tr><tr><td>QF</td><td>Departing airline</td></tr></tbody></table></div></div></details><details><summary>40. Display the minimum connecting time for terminal 4 at JFK (JFK).</summary><div class="ans"><div class="cmd">DM JFK 4</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>JFK</td><td>Airport code</td></tr><tr><td>4</td><td>Terminal number</td></tr></tbody></table></div></div></details><details><summary>41. Display the minimum connecting time between JFK (JFK) and LaGuardia (LGA).</summary><div class="ans"><div class="cmd">DM JFK-LGA</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>JFK-LGA</td><td>Two airports joined by a hyphen</td></tr></tbody></table></div></div></details><details><summary>42. Display the minimum connecting time for the connection on line 6 of an availability display.</summary><div class="ans"><div class="cmd">DM 6</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>6</td><td>Line number from the availability</td></tr></tbody></table></div></div></details><details><summary>43. Display the minimum connecting time from Orly terminal W (ORY) to Charles de Gaulle terminal 2B (CDG).</summary><div class="ans"><div class="cmd">DM ORYW-CDG2B</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>ORYW</td><td>Airport + terminal</td></tr><tr><td>CDG2B</td><td>Second airport + terminal</td></tr></tbody></table></div></div></details><details><summary>44. Display the minimum connecting time for the connection on line 2 of an availability display.</summary><div class="ans"><div class="cmd">DM 2</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>2</td><td>Line number from the availability</td></tr></tbody></table></div></div></details><details><summary>45. Display the minimum connecting time for London Heathrow (LHR) airport.</summary><div class="ans"><div class="cmd">DM LHR</div><div class="tablewrap"><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td>DM</td><td>Minimum connecting time</td></tr><tr><td>LHR</td><td>Airport code</td></tr></tbody></table></div></div></details></div>
   </section>
@@ -209,6 +226,12 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
     </div>
     </div>
     <div class="nojs"><p class="note">Tap a card to see the answer. The shuffled flashcard mode opens when scripts can run, for example in Chrome or Safari.</p><h2>Commands</h2><details><summary>What does <code>AN</code> do?</summary><div class="ans">Availability display<div class="note">AN 15NOV FRASIN</div></div></details><details><summary>Which entry gives: <b>Availability display</b>?</summary><div class="ans"><code>AN</code><div class="note">AN 15NOV FRASIN</div></div></details><details><summary>What does <code>TN</code> do?</summary><div class="ans">Timetable display<div class="note">TN 15NOV FRASIN, add 1500 for a time</div></div></details><details><summary>Which entry gives: <b>Timetable display</b>?</summary><div class="ans"><code>TN</code><div class="note">TN 15NOV FRASIN, add 1500 for a time</div></div></details><details><summary>What does <code>DO</code> do?</summary><div class="ans">Flight information (DO CX930/26JAN/MNLHKG), or DO 3 for line 3 of an availability</div></details><details><summary>Which entry gives: <b>Flight information (DO CX930/26JAN/MNLHKG), or DO 3 for line 3 of an availability</b>?</summary><div class="ans"><code>DO</code></div></details><details><summary>What does <code>DM</code> do?</summary><div class="ans">Minimum connecting time (DM JFK, DM LON, DM 3)</div></details><details><summary>Which entry gives: <b>Minimum connecting time (DM JFK, DM LON, DM 3)</b>?</summary><div class="ans"><code>DM</code></div></details><h2>AN options</h2><details><summary>What does <code>/A</code> do?</summary><div class="ans">Operating airline<div class="note">AN 30NOV LONNYC /A BA</div></div></details><details><summary>Which entry gives: <b>Operating airline</b>?</summary><div class="ans"><code>/A</code><div class="note">AN 30NOV LONNYC /A BA</div></div></details><details><summary>What does <code>/A-</code> do?</summary><div class="ans">Exclude an airline<div class="note">AN 30NOV LONNYC /A- BA</div></div></details><details><summary>Which entry gives: <b>Exclude an airline</b>?</summary><div class="ans"><code>/A-</code><div class="note">AN 30NOV LONNYC /A- BA</div></div></details><details><summary>What does <code>/C</code> do?</summary><div class="ans">Booking class<div class="note">AN 30NOV LONNYC /C M</div></div></details><details><summary>Which entry gives: <b>Booking class</b>?</summary><div class="ans"><code>/C</code><div class="note">AN 30NOV LONNYC /C M</div></div></details><details><summary>What does <code>/X</code> do?</summary><div class="ans">Connection point<div class="note">AN 30NOV LONNYC /X LAX</div></div></details><details><summary>Which entry gives: <b>Connection point</b>?</summary><div class="ans"><code>/X</code><div class="note">AN 30NOV LONNYC /X LAX</div></div></details><details><summary>What does <code>/A*O</code> do?</summary><div class="ans">Alliance: oneworld<div class="note">S = SkyTeam, A = Star Alliance</div></div></details><details><summary>Which entry gives: <b>Alliance: oneworld</b>?</summary><div class="ans"><code>/A*O</code><div class="note">S = SkyTeam, A = Star Alliance</div></div></details><details><summary>What does <code>/A*S</code> do?</summary><div class="ans">Alliance: SkyTeam<div class="note">O = oneworld, A = Star Alliance</div></div></details><details><summary>Which entry gives: <b>Alliance: SkyTeam</b>?</summary><div class="ans"><code>/A*S</code><div class="note">O = oneworld, A = Star Alliance</div></div></details><details><summary>What does <code>/A*A</code> do?</summary><div class="ans">Alliance: Star Alliance<div class="note">O = oneworld, S = SkyTeam</div></div></details><details><summary>Which entry gives: <b>Alliance: Star Alliance</b>?</summary><div class="ans"><code>/A*A</code><div class="note">O = oneworld, S = SkyTeam</div></div></details><details><summary>What does <code>/K</code> do?</summary><div class="ans">Cabin type<div class="note">AN 30NOV LONNYC /K C</div></div></details><details><summary>Which entry gives: <b>Cabin type</b>?</summary><div class="ans"><code>/K</code><div class="note">AN 30NOV LONNYC /K C</div></div></details><details><summary>What does <code>/K F</code> do?</summary><div class="ans">First class cabin</div></details><details><summary>Which entry gives: <b>First class cabin</b>?</summary><div class="ans"><code>/K F</code></div></details><details><summary>What does <code>/K C</code> do?</summary><div class="ans">Business class cabin</div></details><details><summary>Which entry gives: <b>Business class cabin</b>?</summary><div class="ans"><code>/K C</code></div></details><details><summary>What does <code>/K Y</code> do?</summary><div class="ans">Economy including premium economy</div></details><details><summary>Which entry gives: <b>Economy including premium economy</b>?</summary><div class="ans"><code>/K Y</code></div></details><details><summary>What does <code>/K W</code> do?</summary><div class="ans">Premium economy</div></details><details><summary>Which entry gives: <b>Premium economy</b>?</summary><div class="ans"><code>/K W</code></div></details><details><summary>What does <code>/K M</code> do?</summary><div class="ans">Economy excluding premium economy</div></details><details><summary>Which entry gives: <b>Economy excluding premium economy</b>?</summary><div class="ans"><code>/K M</code></div></details><details><summary>What does <code>HHMM after the city pair</code> do?</summary><div class="ans">Specific departure time<div class="note">AN 30NOV LONNYC 1500</div></div></details><details><summary>Which entry gives: <b>Specific departure time</b>?</summary><div class="ans"><code>HHMM after the city pair</code><div class="note">AN 30NOV LONNYC 1500</div></div></details><details><summary>What does <code>/B</code> do?</summary><div class="ans">Number of seats required<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Number of seats required</b>?</summary><div class="ans"><code>/B</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/X-</code> do?</summary><div class="ans">Exclude a connection point<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Exclude a connection point</b>?</summary><div class="ans"><code>/X-</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/O</code> do?</summary><div class="ans">On-line connection (same airline)<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>On-line connection (same airline)</b>?</summary><div class="ans"><code>/O</code><div class="note">From your notes</div></div></details><h2>Reading the screen</h2><details><summary>On an availability display, what are the purple numbers on the left?</summary><div class="ans">Line numbers. Use them with DO or DM (DO 3, DM 3).<div class="note">From your notes</div></div></details><details><summary>On an availability display, what is the light blue text?</summary><div class="ans">The airline code (carrier).<div class="note">From your notes</div></div></details><details><summary>On an availability display, what is the red text?</summary><div class="ans">The flight number.<div class="note">From your notes</div></div></details><details><summary>On an availability display, what is the purple text near the right?</summary><div class="ans">The type of aircraft (equipment).<div class="note">From your notes</div></div></details><details><summary>What is the time at the far right of an availability line?</summary><div class="ans">The elapsed time (total flight journey time), for example 3:25.<div class="note">From your notes</div></div></details><details><summary>What is the third way to check availability for a flight, besides the line display?</summary><div class="ans">Hover over the flight number.<div class="note">From your notes</div></div></details><details><summary>What do DY and EFT mean?</summary><div class="ans">DY = day (of the week). EFT = elapsed flight time.<div class="note">From your notes</div></div></details><details><summary>Which time should you always read when comparing arrivals?</summary><div class="ans">The arrival time, which is local time in the arrival country.<div class="note">From your notes</div></div></details><details><summary>In a city pair like MNLHKG, which is the origin?</summary><div class="ans">MNL, the first three letters. HKG is the destination.</div></details><details><summary>How is time written in a command?</summary><div class="ans">HHMM in 24 hours, so 3:00 PM is 1500.<div class="note">HH = hour, MM = minute</div></div></details><details><summary>What is the difference between AN and TN?</summary><div class="ans">AN shows availability (seats open to sell). TN shows the timetable (schedule only).</div></details><details><summary>What does the 3-letter connection pair KUL-KUL stand for?</summary><div class="ans">A connection at the same airport (arrive and depart KUL).<div class="note">Your notes were hard to read here, so check against the handout</div></div></details><h2>Codes</h2><details><summary>What does <code>D/D</code> do?</summary><div class="ans">Domestic to Domestic</div></details><details><summary>Which entry gives: <b>Domestic to Domestic</b>?</summary><div class="ans"><code>D/D</code></div></details><details><summary>What does <code>D/I</code> do?</summary><div class="ans">Domestic to International</div></details><details><summary>Which entry gives: <b>Domestic to International</b>?</summary><div class="ans"><code>D/I</code></div></details><details><summary>What does <code>I/D</code> do?</summary><div class="ans">International to Domestic</div></details><details><summary>Which entry gives: <b>International to Domestic</b>?</summary><div class="ans"><code>I/D</code></div></details><details><summary>What does <code>I/I</code> do?</summary><div class="ans">International to International</div></details><details><summary>Which entry gives: <b>International to International</b>?</summary><div class="ans"><code>I/I</code></div></details><details><summary>What does <code>/M</code> do?</summary><div class="ans">Meal (general)<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Meal (general)</b>?</summary><div class="ans"><code>/M</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/B</code> do?</summary><div class="ans">Breakfast<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Breakfast</b>?</summary><div class="ans"><code>/B</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/L</code> do?</summary><div class="ans">Lunch<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Lunch</b>?</summary><div class="ans"><code>/L</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/S</code> do?</summary><div class="ans">Snacks<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Snacks</b>?</summary><div class="ans"><code>/S</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/D</code> do?</summary><div class="ans">Dinner<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Dinner</b>?</summary><div class="ans"><code>/D</code><div class="note">From your notes</div></div></details><details><summary>What does <code>DM JFK</code> do?</summary><div class="ans">MCT for one airport</div></details><details><summary>Which entry gives: <b>MCT for one airport</b>?</summary><div class="ans"><code>DM JFK</code></div></details><details><summary>What does <code>DM LON</code> do?</summary><div class="ans">MCT table for a multi-airport city</div></details><details><summary>Which entry gives: <b>MCT table for a multi-airport city</b>?</summary><div class="ans"><code>DM LON</code></div></details><details><summary>What does <code>DM LGW-LHR</code> do?</summary><div class="ans">MCT between two specific airports</div></details><details><summary>Which entry gives: <b>MCT between two specific airports</b>?</summary><div class="ans"><code>DM LGW-LHR</code></div></details><details><summary>What does <code>DM SIN 1</code> do?</summary><div class="ans">MCT for a specific terminal</div></details><details><summary>Which entry gives: <b>MCT for a specific terminal</b>?</summary><div class="ans"><code>DM SIN 1</code></div></details><details><summary>What does <code>DM 3</code> do?</summary><div class="ans">MCT for line 3 of an availability</div></details><details><summary>Which entry gives: <b>MCT for line 3 of an availability</b>?</summary><div class="ans"><code>DM 3</code></div></details><details><summary>What does <code>DM QF/HKG/CX</code> do?</summary><div class="ans">MCT from one airline to another via a transit point</div></details><details><summary>Which entry gives: <b>MCT from one airline to another via a transit point</b>?</summary><div class="ans"><code>DM QF/HKG/CX</code></div></details><details><summary>What does <code>DM ORYW-CDG2B</code> do?</summary><div class="ans">MCT between specific terminals at different airports</div></details><details><summary>Which entry gives: <b>MCT between specific terminals at different airports</b>?</summary><div class="ans"><code>DM ORYW-CDG2B</code></div></details></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="panel" id="settings">
+    <div class="jsonly"><div id="settingsBody"></div></div>
+    <div class="nojs"><p class="note">Settings need scripts, so they are not available in this viewer. The page follows the phone's light or dark setting automatically.</p></div>
   </section>
 
   <!-- CHEAT SHEET -->
@@ -442,8 +465,8 @@ var ONEWAY = [
 function buildCards() {
   var cards = [];
   PAIRSET.forEach(function (p) {
-    cards.push({ deck: p[0], f: 'What does <code>' + esc(p[1]) + '</code> do?', b: p[2], n: p[3] });
-    cards.push({ deck: p[0], f: 'Which entry gives: <b>' + esc(p[2]) + '</b>?', b: p[1], n: p[3], mono: true });
+    cards.push({ deck: p[0], dir: 'c2m', f: 'What does <code>' + esc(p[1]) + '</code> do?', b: p[2], n: p[3] });
+    cards.push({ deck: p[0], dir: 'm2c', f: 'Which entry gives: <b>' + esc(p[2]) + '</b>?', b: p[1], n: p[3], mono: true });
   });
   ONEWAY.forEach(function (p) { cards.push({ deck: p[0], f: esc(p[1]), b: p[2], n: p[3] }); });
   return cards;
@@ -456,8 +479,86 @@ function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').
 var $ = function (id) { return document.getElementById(id); };
 var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
+/* ---------- settings ---------- */
+var DEFAULTS = { theme: 'auto', size: 'm', autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true };
+var CFG = {};
+(function () {
+  var saved = {}, k;
+  try { saved = JSON.parse(store.get('fc-settings') || '{}') || {}; } catch (e) {}
+  for (k in DEFAULTS) CFG[k] = (saved[k] !== undefined && typeof saved[k] === typeof DEFAULTS[k]) ? saved[k] : DEFAULTS[k];
+})();
+function saveCfg() { store.set('fc-settings', JSON.stringify(CFG)); }
+var ROOT = document.documentElement;
+var ORIG_THEME = window.__origTheme === undefined ? ROOT.getAttribute('data-theme') : window.__origTheme;
+function applyAppearance() {
+  if (CFG.theme === 'light' || CFG.theme === 'dark') ROOT.setAttribute('data-theme', CFG.theme);
+  else if (ORIG_THEME) ROOT.setAttribute('data-theme', ORIG_THEME);
+  else ROOT.removeAttribute('data-theme');
+  ROOT.style.fontSize = { s: '88%', m: '100%', l: '116%' }[CFG.size] || '100%';
+}
+var SET_UI = [
+  { title: 'Appearance', rows: [
+    { key: 'theme', label: 'Theme', desc: 'Auto follows the phone setting', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
+    { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] } ] },
+  { title: 'Drill', rows: [
+    { key: 'autoNext', label: 'Auto-next after a correct answer', desc: 'Moves on after a moment so the explanation is still readable', sw: true },
+    { key: 'len', label: 'Session length', desc: 'A summary shows when the session ends', opts: [[10, '10'], [20, '20'], [0, 'Endless']] },
+    { key: 'alwaysHint', label: 'Always show the hint', sw: true } ] },
+  { title: 'Flashcards', rows: [
+    { key: 'dir', label: 'Direction', opts: [['both', 'Both'], ['c2m', 'Code to meaning'], ['m2c', 'Meaning to code']] },
+    { key: 'shuffle', label: 'Shuffle cards', sw: true },
+    { key: 'notes', label: 'Show the "From your notes" labels', sw: true } ] }
+];
+function renderSettings() {
+  var h = '';
+  SET_UI.forEach(function (g) {
+    h += '<div class="setgroup"><h2>' + g.title + '</h2>';
+    g.rows.forEach(function (r) {
+      h += '<div class="setrow"><div class="lbl">' + r.label + (r.desc ? '<span class="desc">' + r.desc + '</span>' : '') + '</div>';
+      if (r.sw) {
+        h += '<input class="switch" type="checkbox" role="switch" data-key="' + r.key + '" aria-label="' + r.label.replace(/"/g, '&quot;') + '"' + (CFG[r.key] ? ' checked' : '') + '>';
+      } else {
+        h += '<div class="chips">';
+        r.opts.forEach(function (o) {
+          h += '<label class="chip"><input type="radio" name="set-' + r.key + '" data-key="' + r.key + '" value="' + o[0] + '"' + (String(CFG[r.key]) === String(o[0]) ? ' checked' : '') + '><span>' + o[1] + '</span></label>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    });
+    h += '</div>';
+  });
+  h += '<div class="setgroup"><h2>Reset and data</h2>' +
+    '<div class="setrow"><div class="lbl">Reset stats<span class="desc">Clears answered, accuracy and streak</span></div><button class="btn" id="btnResetStats">Reset stats</button></div>' +
+    '<div class="setrow"><div class="lbl">Clear misses list<span class="desc">Empties "Practice my misses"</span></div><button class="btn" id="btnClearMisses">Clear misses</button></div></div>' +
+    '<p class="note" id="setMsg" aria-live="polite">Settings are saved in this browser.</p>';
+  $('settingsBody').innerHTML = h;
+}
+function flash(msg) { $('setMsg').textContent = msg; }
+function confirmBtn(id, label, action) {
+  var b = $(id), t = null;
+  function disarm() { b.removeAttribute('data-arm'); b.textContent = label; b.classList.remove('bad'); }
+  b.addEventListener('click', function () {
+    if (b.getAttribute('data-arm') === '1') { clearTimeout(t); disarm(); action(); return; }
+    b.setAttribute('data-arm', '1'); b.textContent = 'Tap again to confirm'; b.classList.add('bad');
+    t = setTimeout(disarm, 3500);
+  });
+}
+$('settingsBody').addEventListener('change', function (e) {
+  var el = e.target, key = el.getAttribute && el.getAttribute('data-key');
+  if (!key) return;
+  if (el.type === 'checkbox') CFG[key] = el.checked;
+  else CFG[key] = typeof DEFAULTS[key] === 'number' ? parseInt(el.value, 10) : el.value;
+  saveCfg();
+  if (key === 'theme' || key === 'size') applyAppearance();
+  if (key === 'alwaysHint' && S.q && !S.answered) { if (CFG.alwaysHint) { $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false; } else $('hintBox').hidden = true; }
+  if (key === 'len') { resetSession(); nextQ(); }
+  if (key === 'dir' || key === 'shuffle') startDeck();
+  if (key === 'notes') showNote();
+});
+
 /* ---------- drill ---------- */
-var S = { done: 0, right: 0, streak: 0, q: null, answered: false, hints: 0, misses: [], missMode: false };
+var S = { done: 0, right: 0, streak: 0, q: null, answered: false, hints: 0, misses: [], missMode: false, sessionDone: 0, sessionRight: 0, sessionEnd: false, autoTimer: null };
 try { var saved = JSON.parse(store.get('flightcmd-misses') || '[]'); if (Array.isArray(saved)) S.misses = saved; } catch (e) {}
 
 var chipBox = $('topicChips');
@@ -478,19 +579,40 @@ function updateStats() {
   $('sStreak').textContent = S.streak;
   $('btnMisses').textContent = S.missMode ? 'Back to normal practice' : 'Practice my misses (' + S.misses.length + ')';
 }
+function setEnded(on) {
+  ['qArea', 'termBox', 'actRow', 'hintBox', 'result', 'nextRow', 'drillNote'].forEach(function (id) { $(id).style.display = on ? 'none' : ''; });
+  $('summary').hidden = !on;
+}
+function resetSession() { S.sessionDone = 0; S.sessionRight = 0; S.sessionEnd = false; }
 function nextQ() {
   var q;
+  clearTimeout(S.autoTimer);
+  setEnded(false); S.sessionEnd = false;
   if (S.missMode && S.misses.length) q = S.misses[int(0, S.misses.length - 1)];
   else { S.missMode = false; q = pick(activeTopics()).gen(); }
   S.q = q; S.answered = false; S.hints = 0;
-  $('qTag').textContent = (S.missMode ? 'REVIEW · ' : '') + TOPIC_LABEL[q.topic];
+  $('qTag').textContent = (S.missMode ? 'REVIEW · ' : '') + TOPIC_LABEL[q.topic] + (CFG.len ? ' · ' + (S.sessionDone + 1) + ' of ' + CFG.len : '');
   $('qText').textContent = q.text;
   $('ans').value = ''; $('ans').disabled = false;
   $('hintBox').hidden = true; $('result').hidden = true; $('btnNext').hidden = true;
+  $('btnNext').textContent = 'Next question';
+  if (CFG.alwaysHint) { $('hintBox').textContent = q.hint; $('hintBox').hidden = false; }
   $('btnCheck').disabled = false; $('btnHint').disabled = false; $('btnSkip').disabled = false;
   updateStats();
   $('ans').focus();
 }
+function showSummary() {
+  clearTimeout(S.autoTimer);
+  var d = S.sessionDone, r = S.sessionRight, pct = d ? Math.round(100 * r / d) : 0, m = S.misses.length;
+  $('summary').innerHTML = '<div class="qtag">SESSION COMPLETE</div><div class="big">' + r + ' / ' + d + '</div>' +
+    '<p class="qtext">' + pct + '% correct. ' + (m ? m + ' question' + (m === 1 ? '' : 's') + ' saved in the misses list.' : 'No misses to review.') + '</p>' +
+    '<div class="actions"><button class="btn primary" id="btnNewSession">Start a new session</button>' + (m ? '<button class="btn" id="btnReviewMisses">Review my misses</button>' : '') + '</div>';
+  setEnded(true);
+  $('btnNewSession').addEventListener('click', function () { resetSession(); S.missMode = false; nextQ(); });
+  var rm = $('btnReviewMisses');
+  if (rm) rm.addEventListener('click', function () { resetSession(); S.missMode = true; nextQ(); });
+}
+function advance() { if (S.sessionEnd) showSummary(); else nextQ(); }
 function saveMisses() { store.set('flightcmd-misses', JSON.stringify(S.misses.slice(0, 40))); }
 function sameQ(a, b) { return a.text === b.text && a.answers[0] === b.answers[0]; }
 function breakdown(q) {
@@ -505,6 +627,7 @@ function finish(ok, gaveUp) {
     S.done++;
     if (ok) { S.right++; S.streak++; } else S.streak = 0;
   }
+  S.sessionDone++; if (ok) S.sessionRight++;
   if (ok) {
     S.misses = S.misses.filter(function (m) { return !sameQ(m, q); });
   } else if (!S.misses.some(function (m) { return sameQ(m, q); })) {
@@ -522,6 +645,8 @@ function finish(ok, gaveUp) {
   $('result').innerHTML = html; $('result').hidden = false;
   $('btnNext').hidden = false; $('btnCheck').disabled = true; $('btnSkip').disabled = true; $('ans').disabled = true;
   updateStats();
+  if (CFG.len && S.sessionDone >= CFG.len) { S.sessionEnd = true; $('btnNext').textContent = 'See results'; }
+  if (ok && CFG.autoNext && !S.sessionEnd) { S.autoTimer = setTimeout(function () { if (S.answered && S.q === q) nextQ(); }, 1800); }
   $('btnNext').focus();
 }
 $('btnCheck').addEventListener('click', function () {
@@ -533,7 +658,7 @@ $('btnSkip').addEventListener('click', function () { if (!S.answered) finish(fal
 $('btnHint').addEventListener('click', function () {
   $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false;
 });
-$('btnNext').addEventListener('click', nextQ);
+$('btnNext').addEventListener('click', advance);
 $('btnMisses').addEventListener('click', function () {
   if (S.missMode) { S.missMode = false; nextQ(); return; }
   if (!S.misses.length) { $('hintBox').textContent = 'No misses yet. Questions you get wrong are saved here for review.'; $('hintBox').hidden = false; return; }
@@ -541,7 +666,7 @@ $('btnMisses').addEventListener('click', function () {
 });
 $('ans').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('btnCheck').click(); } });
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Enter' && S.answered && $('r-drill').checked && document.activeElement !== $('btnNext')) { e.preventDefault(); nextQ(); }
+  if (e.key === 'Enter' && S.answered && $('r-drill').checked && document.activeElement !== $('btnNext')) { e.preventDefault(); advance(); }
 });
 
 /* ---------- flashcards ---------- */
@@ -560,8 +685,11 @@ var C = { queue: [], total: 0, cleared: 0, current: null, shown: false };
 function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = int(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 function startDeck() {
   var sel = deckBox.querySelector('input:checked').value;
-  var list = ALLCARDS.filter(function (c) { return sel === 'all' || c.deck === sel; });
-  C.queue = shuffle(list.slice()); C.total = list.length; C.cleared = 0;
+  var list = ALLCARDS.filter(function (c) {
+    if (!(sel === 'all' || c.deck === sel)) return false;
+    return CFG.dir === 'both' || !c.dir || c.dir === CFG.dir;
+  });
+  C.queue = CFG.shuffle ? shuffle(list.slice()) : list.slice(); C.total = list.length; C.cleared = 0;
   showCard();
 }
 function showCard() {
@@ -580,13 +708,18 @@ function showCard() {
   $('cardBack').hidden = true; $('cardNote').hidden = true;
   $('btnReveal').hidden = false; $('btnGot').hidden = true; $('btnMissed').hidden = true;
 }
+function showNote() {
+  var n = C.current && C.current.n, show = !!n && (CFG.notes || n !== 'From your notes');
+  if (show) $('cardNote').textContent = n;
+  $('cardNote').hidden = !(C.shown && show);
+}
 function reveal() {
   if (!C.current || C.shown) return;
   C.shown = true;
   var b = $('cardBack');
   b.innerHTML = C.current.mono ? '<code>' + esc(C.current.b) + '</code>' : esc(C.current.b);
   b.hidden = false;
-  if (C.current.n) { $('cardNote').textContent = C.current.n; $('cardNote').hidden = false; }
+  showNote();
   $('btnReveal').hidden = true; $('btnGot').hidden = false; $('btnMissed').hidden = false;
 }
 $('btnReveal').addEventListener('click', reveal);
@@ -602,6 +735,10 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* boot */
+applyAppearance();
+renderSettings();
+confirmBtn('btnResetStats', 'Reset stats', function () { S.done = 0; S.right = 0; S.streak = 0; resetSession(); updateStats(); flash('Stats reset.'); });
+confirmBtn('btnClearMisses', 'Clear misses', function () { S.misses = []; S.missMode = false; saveMisses(); updateStats(); flash('Misses list cleared.'); });
 nextQ();
 startDeck();
 </script>
