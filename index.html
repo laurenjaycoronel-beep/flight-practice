@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flight Command Practice</title>
-<script>(function(){var d=document.documentElement;d.classList.add("js");try{window.__origTheme=d.getAttribute("data-theme");var c=JSON.parse(localStorage.getItem("fc-settings")||"{}")||{};if(c.theme==="light"||c.theme==="dark")d.setAttribute("data-theme",c.theme);var z={s:"88%",m:"100%",l:"116%"}[c.size];if(z)d.style.fontSize=z;}catch(e){}})();</script>
+<script>(function(){var d=document.documentElement;d.classList.add("js");d.setAttribute("data-view",/^#topic-\w+$/.test(location.hash||"")?"topic":"home");try{window.__origTheme=d.getAttribute("data-theme");var c=JSON.parse(localStorage.getItem("fc-settings")||"{}")||{};if(c.theme==="light"||c.theme==="dark")d.setAttribute("data-theme",c.theme);var z={s:"88%",m:"100%",l:"116%"}[c.size];if(z)d.style.fontSize=z;}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -86,10 +86,50 @@ html:not(.js) .stats { display: none; }
 .switch:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 #summary { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; padding: 8px 0; }
 #summary .big { font-family: var(--font-mono); font-size: 2.4rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-.topicbar { display: flex; flex-direction: column; gap: 6px; }
+
+#home, #app { display: flex; flex-direction: column; gap: 16px; }
+.wrap { overflow-x: clip; }
+html.js[data-view="home"] #app { display: none; }
+html:not(.js) #home, html[data-view="topic"] #home { display: none; }
+html:not(.js) .jsonly-btn { display: none; }
+.hero { padding: 18px 0 4px; }
+.hero h1 { font-size: 1.9rem; line-height: 1.15; }
+.tgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.tcard { font: inherit; color: var(--ink); text-align: left; display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease; }
+.tcard:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 22px rgba(15, 30, 60, 0.12); }
+.tcard:active { transform: scale(0.98); }
+.tcard .ttag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 600; }
+.tcard .tname { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
+.tcard .tblurb { color: var(--muted); font-size: 0.9rem; }
+.tcard .tpills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tcard .tpill { font-size: 0.75rem; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
+.tcard .tgo { position: absolute; top: 14px; right: 14px; font-size: 0.7rem; padding: 3px 9px; border-radius: 99px; background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.tcard.locked { border-style: dashed; opacity: 0.6; cursor: not-allowed; }
+.tcard.locked:hover { transform: none; box-shadow: none; border-color: var(--line); }
+.tcard .lock { position: absolute; top: 14px; right: 14px; width: 18px; height: 18px; color: var(--muted); }
+.homebar { display: flex; justify-content: flex-start; }
+.appbar { display: flex; }
+.tabs { position: relative; }
+.tabind { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--accent); border-radius: 3px 3px 0 0; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); pointer-events: none; }
+.tabind.noanim { transition: none !important; }
+html:not(.js) .tabind { display: none; }
+html.js .tab { border-bottom-color: transparent !important; }
 .chip input:disabled + span { opacity: 0.55; border-style: dashed; cursor: not-allowed; }
 .chip input:disabled { cursor: not-allowed; }
 .sheet h2.topichead, .nojs h2.topichead { font-size: 1.2rem; color: var(--accent); margin: 0 0 4px; }
+body, .panel, .stat, .chip span, .card, .hint, .tab, .setrow, .result, .term, th, td { transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, opacity 0.2s ease; }
+.btn { transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.12s ease, filter 0.2s ease, opacity 0.2s ease; }
+.btn:hover:not([disabled]) { filter: brightness(1.07); }
+.btn:active:not([disabled]) { transform: scale(0.96); }
+.chip span { transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.12s ease; }
+.chip input:active + span { transform: scale(0.95); }
+.tab:hover { color: var(--ink); }
+.switch { transition: background-color 0.22s ease; }
+.switch::after { transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.bar > i { transition: width 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.stat b { transform-origin: left center; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 .jsonly { display: contents; }
 html:not(.js) .jsonly { display: none !important; }
 html.js .nojs { display: none !important; }
@@ -156,9 +196,19 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 </head>
 <body>
 <div class="wrap">
+<section id="home" class="jsonly-block" aria-label="Topic selection">
+  <div class="hero">
+    <h1>Flight Command Practice</h1>
+    <p class="sub">Choose a topic to practice. Typing practice only; no live flight data.</p>
+  </div>
+  <div class="tgrid" id="tgrid"></div>
+  <div class="homebar"><button class="btn" type="button" id="homeSettings">Settings</button></div>
+</section>
+<div id="app">
+  <div class="appbar"><button class="btn jsonly-btn" type="button" id="btnHome">&larr; Topics</button></div>
   <header>
     <div>
-      <h1>Flight Command Practice</h1>
+      <h1 id="appTitle">Flight Command Practice</h1>
       <p class="sub">Command practice for the flight lessons. Typing practice only; no live flight data.</p>
     </div>
     <div class="stats" aria-label="Session stats">
@@ -167,11 +217,6 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
       <div class="stat"><b id="sStreak">0</b><span>Streak</span></div>
     </div>
   </header>
-
-  <div class="jsonly"><div class="topicbar">
-    <div class="row-label">Topic</div>
-    <div class="chips" id="topicPick" role="radiogroup" aria-label="Topic"></div>
-  </div></div>
 
   <input class="tabradio" type="radio" name="tab" id="r-drill" checked aria-label="Command drill">
   <input class="tabradio" type="radio" name="tab" id="r-cards" aria-label="Flashcards">
@@ -182,6 +227,7 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
     <label class="tab" for="r-cards">Flashcards</label>
     <label class="tab" for="r-sheet">Cheat sheet</label>
     <label class="tab" for="r-settings">Settings</label>
+    <i class="tabind" id="tabind" aria-hidden="true"></i>
   </div>
 
   <!-- DRILL -->
@@ -247,6 +293,7 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
   <section class="panel sheet" id="sheet">
 <div class="sheetblock" data-topic="t3"><h2 class="topichead">Topic 3: Flight Availability</h2><h2>Core entries</h2><div class="tablewrap"><table><thead><tr><th>Entry</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td><td>AN 15NOV FRASIN</td></tr><tr><td>TN</td><td>Timetable</td><td>TN 15NOV FRASIN 1500</td></tr><tr><td>DO</td><td>Flight information</td><td>DO CX930/26JAN/MNLHKG  or  DO 3</td></tr><tr><td>DM</td><td>Minimum connecting time</td><td>DM JFK  /  DM LON  /  DM 3</td></tr></tbody></table></div><h2>AN options</h2><div class="tablewrap"><table><thead><tr><th>Option</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td>/A</td><td>Operating airline</td><td>AN 30NOV LONNYC /A BA</td></tr><tr><td>/A-</td><td>Exclude airline</td><td>AN 30NOV LONNYC /A- BA</td></tr><tr><td>/C</td><td>Booking class</td><td>AN 30NOV LONNYC /C M</td></tr><tr><td>/X</td><td>Connection point</td><td>AN 30NOV LONNYC /X LAX</td></tr><tr><td>/A*O  /A*S  /A*A</td><td>Alliance: oneworld, SkyTeam, Star Alliance</td><td>AN 30NOV LONNYC /A*O</td></tr><tr><td>/K</td><td>Cabin: F first, C business, Y economy (incl. premium), W premium economy, M economy (excl. premium)</td><td>AN 30NOV LONNYC /K C</td></tr><tr><td>+ HHMM</td><td>Specific departure time</td><td>AN 30NOV LONNYC 1500</td></tr><tr><td>/B  /X-  /O</td><td>Seats required, exclude connection point, on-line connection (from your notes)</td><td></td></tr></tbody></table></div><h2>Cabin types (/K)</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Cabin</th><th>Example</th></tr></thead><tbody><tr><td>F</td><td>First class</td><td>AN 30NOV LONNYC /K F</td></tr><tr><td>C</td><td>Business class</td><td>AN 30NOV LONNYC /K C</td></tr><tr><td>Y</td><td>Economy, including premium economy</td><td>AN 30NOV LONNYC /K Y</td></tr><tr><td>W</td><td>Premium economy only</td><td>AN 30NOV LONNYC /K W</td></tr><tr><td>M</td><td>Economy, excluding premium economy</td><td>AN 30NOV LONNYC /K M</td></tr></tbody></table></div><h2>Cabin (/K) vs booking class (/C)</h2><div class="tablewrap"><table><thead><tr><th>Question says</th><th>Type</th><th>Example</th></tr></thead><tbody><tr><td>First, Business, Economy, Premium Economy</td><td>/K + cabin letter</td><td>AN 30NOV LONNYC /K C</td></tr><tr><td>Booking class + a letter</td><td>/C + class letter</td><td>AN 30NOV LONNYC /C M</td></tr></tbody></table></div><p class="note">The letters can look the same (Y, C, F, W, M), so the option in front decides: /K C is the business cabin, /C C is booking class C.</p><h2>DM variations</h2><div class="tablewrap"><table><thead><tr><th>Entry</th><th>Shows</th></tr></thead><tbody><tr><td>DM JFK</td><td>MCT for a specific airport</td></tr><tr><td>DM LON</td><td>MCT table for a multi-airport city</td></tr><tr><td>DM LGW-LHR</td><td>MCT between two specific airports</td></tr><tr><td>DM SIN 1</td><td>MCT for a specific terminal</td></tr><tr><td>DM 3</td><td>MCT from line 3 of an availability</td></tr><tr><td>DM QF/HKG/CX</td><td>MCT from one airline to another via a transit point</td></tr><tr><td>DM ORYW-CDG2B</td><td>MCT for specific terminals at different airports</td></tr></tbody></table></div><h2>Connection codes</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td>D/D</td><td>Domestic to Domestic</td></tr><tr><td>D/I</td><td>Domestic to International</td></tr><tr><td>I/D</td><td>International to Domestic</td></tr><tr><td>I/I</td><td>International to International</td></tr></tbody></table></div><h2>Meal codes (from your notes)</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td>/M</td><td>Meal</td></tr><tr><td>/B</td><td>Breakfast</td></tr><tr><td>/L</td><td>Lunch</td></tr><tr><td>/S</td><td>Snacks</td></tr><tr><td>/D</td><td>Dinner</td></tr></tbody></table></div><h2>Reading an availability display (from your notes)</h2><div class="tablewrap"><table><thead><tr><th>Where</th><th>What it is</th></tr></thead><tbody><tr><td>Purple numbers, far left</td><td>Line numbers</td></tr><tr><td>Light blue</td><td>Airline code (carrier)</td></tr><tr><td>Red</td><td>Flight number</td></tr><tr><td>Purple, near the right</td><td>Aircraft type (equipment)</td></tr><tr><td>Far right time</td><td>Elapsed flight time</td></tr><tr><td>Hover over the flight number</td><td>Third way to check availability</td></tr><tr><td>Arrival time</td><td>Local time in the arrival country</td></tr></tbody></table></div></div>
   </section>
+</div>
 </div>
 
 <script>
@@ -485,8 +532,8 @@ function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').
 /* Each topic is one entry here. To add Topic 4: build its question generators, decks and cards,
    add a block with data-topic="t4" to the cheat sheet, then set ready: true. */
 var COURSE = [
-  { id: 't3', title: 'Topic 3: Flight Availability', ready: true, topics: TOPICS, labels: TOPIC_LABEL, decks: DECKS, cards: buildCards },
-  { id: 't4', title: 'Topic 4: coming soon', ready: false }
+  { id: 't3', tag: 'Topic 3', name: 'Flight Availability', blurb: 'AN, TN, DO and DM commands: typing drills, flashcards and a cheat sheet.', title: 'Topic 3: Flight Availability', ready: true, topics: TOPICS, labels: TOPIC_LABEL, decks: DECKS, cards: buildCards },
+  { id: 't4', tag: 'Topic 4', name: 'Coming soon', blurb: 'Not available yet. Check back later.', title: 'Topic 4: coming soon', ready: false }
 ];
 </script>
 
@@ -496,7 +543,7 @@ var $ = function (id) { return document.getElementById(id); };
 var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
 /* ---------- settings ---------- */
-var DEFAULTS = { theme: 'auto', size: 'm', sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true };
+var DEFAULTS = { theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true };
 var CFG = {};
 (function () {
   var saved = {}, k;
@@ -511,13 +558,15 @@ function applyAppearance() {
   else if (ORIG_THEME) ROOT.setAttribute('data-theme', ORIG_THEME);
   else ROOT.removeAttribute('data-theme');
   ROOT.style.fontSize = { s: '88%', m: '100%', l: '116%' }[CFG.size] || '100%';
+  ROOT.setAttribute('data-motion', CFG.motion ? 'on' : 'off');
 }
 var SET_UI = [
   { title: 'Appearance', rows: [
     { key: 'theme', label: 'Theme', desc: 'Auto follows the phone setting', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
-    { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] } ] },
+    { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] },
+    { key: 'motion', label: 'Smooth animations', desc: 'Turn off if the page feels slow', sw: true } ] },
   { title: 'Sound', rows: [
-    { key: 'sound', label: 'Sound effects', desc: 'A chime for a correct answer and a low tone for a wrong one', sw: true } ] },
+    { key: 'sound', label: 'Sound effects', desc: 'A chime for correct, a low tone for wrong, and a soft tone on every tap (high for on or up, low for off or down)', sw: true } ] },
   { title: 'Drill', rows: [
     { key: 'autoNext', label: 'Auto-next after a correct answer', desc: 'Moves on after a moment so the explanation is still readable', sw: true },
     { key: 'len', label: 'Session length', desc: 'A summary shows when the session ends', opts: [[10, '10'], [20, '20'], [0, 'Endless']] },
@@ -562,6 +611,18 @@ function confirmBtn(id, label, action) {
     t = setTimeout(disarm, 3500);
   });
 }
+/* ---------- motion helpers ---------- */
+var EASE = 'cubic-bezier(0.2, 0.7, 0.2, 1)';
+function motionOn() {
+  if (!CFG.motion) return false;
+  try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false; } catch (e) {}
+  return true;
+}
+function anim(el, frames, opts) { if (!el || !el.animate || !motionOn()) return; try { el.animate(frames, opts); } catch (e) {} }
+function fadeIn(el, dy) { anim(el, [{ opacity: 0, transform: 'translateY(' + (dy === undefined ? 8 : dy) + 'px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 260, easing: EASE }); }
+function shake(el) { anim(el, [{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(2px)' }, { transform: 'translateX(0)' }], { duration: 380, easing: 'ease-out' }); }
+function pulse(el) { anim(el, [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 300, easing: EASE }); }
+
 /* ---------- sound (generated in the browser, no audio files) ---------- */
 var AC = null;
 function audioCtx() {
@@ -584,16 +645,48 @@ function playSound(kind) {
   var ac = audioCtx(); if (!ac) return;
   try {
     if (kind === 'ok') { tone(ac, 659.25, 0, 0.16, 'sine', 0.2); tone(ac, 880, 0.12, 0.3, 'sine', 0.2); }
-    else { tone(ac, 196, 0, 0.2, 'triangle', 0.25); tone(ac, 146.83, 0.17, 0.32, 'triangle', 0.25); }
+    else if (kind === 'no') { tone(ac, 196, 0, 0.2, 'triangle', 0.25); tone(ac, 146.83, 0.17, 0.32, 'triangle', 0.25); }
+    else {
+      var P = CLICKS[kind]; if (!P) return;
+      for (var i = 0; i < P[0].length; i++) tone(ac, P[0][i], i * 0.055, 0.09, P[1], P[2]);
+    }
   } catch (e) {}
 }
+/* tap sounds: [notes, wave, volume]. High = on / up / go, low = off / down / stop. */
+var CLICKS = {
+  hi:   [[988], 'sine', 0.12],
+  mid:  [[660], 'sine', 0.12],
+  lo:   [[262], 'triangle', 0.17],
+  tab:  [[784], 'sine', 0.11],
+  flip: [[740, 988], 'sine', 0.11],
+  up:   [[784, 1175], 'sine', 0.12],
+  down: [[330, 247], 'triangle', 0.16],
+  open: [[523, 784, 1047], 'sine', 0.11],
+  back: [[784, 523], 'sine', 0.11]
+};
+var BTN_SOUND = { btnHome: 'back', homeSettings: 'mid', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
+function clickKind(t) {
+  var el = t && t.closest ? t.closest('button,input,select') : null;
+  if (!el || el.disabled) return null;
+  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnCheck') return null;
+  if (el.tagName === 'SELECT') return null;
+  if (el.tagName === 'INPUT') {
+    if (el.type === 'checkbox') return el.checked ? 'hi' : 'lo';
+    if (el.type === 'radio') return el.classList.contains('tabradio') ? 'tab' : 'mid';
+    return null;
+  }
+  if (el.classList.contains('tcard')) return el.classList.contains('locked') ? 'lo' : 'open';
+  return BTN_SOUND[el.id] || 'mid';
+}
+document.addEventListener('click', function (e) { var k = clickKind(e.target); if (k) playSound(k); }, true);
+document.addEventListener('change', function (e) { if (e.target && e.target.tagName === 'SELECT' && e.target.getAttribute('data-key') !== 'sound') playSound('mid'); }, true);
 $('settingsBody').addEventListener('change', function (e) {
   var el = e.target, key = el.getAttribute && el.getAttribute('data-key');
   if (!key) return;
   if (el.type === 'checkbox') CFG[key] = el.checked;
   else CFG[key] = typeof DEFAULTS[key] === 'number' ? parseInt(el.value, 10) : el.value;
   saveCfg();
-  if (key === 'theme' || key === 'size') applyAppearance();
+  if (key === 'theme' || key === 'size' || key === 'motion') applyAppearance();
   if (key === 'sound' && CFG.sound) playSound('ok');
   if (key === 'alwaysHint' && S.q && !S.answered) { if (CFG.alwaysHint) { $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false; } else $('hintBox').hidden = true; }
   if (key === 'len') { resetSession(); nextQ(); }
@@ -604,7 +697,7 @@ $('settingsBody').addEventListener('change', function (e) {
 /* ---------- drill ---------- */
 var S = { done: 0, right: 0, streak: 0, q: null, answered: false, hints: 0, misses: [], missMode: false, sessionDone: 0, sessionRight: 0, sessionEnd: false, autoTimer: null };
 var CUR = COURSE[0];
-(function () { var id = store.get('fc-topic'); COURSE.forEach(function (c) { if (c.id === id && c.ready) CUR = c; }); })();
+(function () { var hm = (location.hash || '').match(/^#topic-(\w+)$/); var id = hm ? hm[1] : store.get('fc-topic'); COURSE.forEach(function (c) { if (c.id === id && c.ready) CUR = c; }); })();
 function missKey() { return 'fc-misses-' + CUR.id; }
 function loadMisses() { var m = []; try { var v = JSON.parse(store.get(missKey()) || '[]'); if (Array.isArray(v)) m = v; } catch (e) {} return m; }
 S.misses = loadMisses();
@@ -624,10 +717,29 @@ function activeTopics() {
   var list = CUR.topics.filter(function (t) { return on.indexOf(t.id) >= 0; });
   return list.length ? list : CUR.topics;
 }
+var statTok = {};
+function setStat(id, val) {
+  var el = $(id), v = String(val);
+  if (el.textContent === v) return;
+  var from = parseFloat(el.textContent), to = parseFloat(v), tok = (statTok[id] = (statTok[id] || 0) + 1);
+  if (motionOn() && isFinite(from) && isFinite(to) && Math.abs(to - from) >= 2 && window.requestAnimationFrame) {
+    var suffix = v.replace(/[0-9.\-]/g, ''), t0 = null, dur = 350;
+    var step = function (t) {
+      if (statTok[id] !== tok) return;
+      if (t0 === null) t0 = t;
+      var k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = (k >= 1 ? to : Math.round(from + (to - from) * e)) + suffix;
+      if (k < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+    setTimeout(function () { if (statTok[id] === tok) el.textContent = v; }, dur + 120);
+  } else el.textContent = v;
+  pulse(el);
+}
 function updateStats() {
-  $('sDone').textContent = S.done;
-  $('sAcc').textContent = S.done ? Math.round(100 * S.right / S.done) + '%' : '–';
-  $('sStreak').textContent = S.streak;
+  setStat('sDone', S.done);
+  setStat('sAcc', S.done ? Math.round(100 * S.right / S.done) + '%' : '–');
+  setStat('sStreak', S.streak);
   $('btnMisses').textContent = S.missMode ? 'Back to normal practice' : 'Practice my misses (' + S.misses.length + ')';
 }
 function setEnded(on) {
@@ -644,6 +756,7 @@ function nextQ() {
   S.q = q; S.answered = false; S.hints = 0;
   $('qTag').textContent = (S.missMode ? 'REVIEW · ' : '') + CUR.labels[q.topic] + (CFG.len ? ' · ' + (S.sessionDone + 1) + ' of ' + CFG.len : '');
   $('qText').textContent = q.text;
+  fadeIn($('qArea'), 8);
   $('ans').value = ''; $('ans').disabled = false;
   $('hintBox').hidden = true; $('result').hidden = true; $('btnNext').hidden = true;
   $('btnNext').textContent = 'Next question';
@@ -658,7 +771,7 @@ function showSummary() {
   $('summary').innerHTML = '<div class="qtag">SESSION COMPLETE</div><div class="big">' + r + ' / ' + d + '</div>' +
     '<p class="qtext">' + pct + '% correct. ' + (m ? m + ' question' + (m === 1 ? '' : 's') + ' saved in the misses list.' : 'No misses to review.') + '</p>' +
     '<div class="actions"><button class="btn primary" id="btnNewSession">Start a new session</button>' + (m ? '<button class="btn" id="btnReviewMisses">Review my misses</button>' : '') + '</div>';
-  setEnded(true);
+  setEnded(true); fadeIn($('summary'), 12);
   $('btnNewSession').addEventListener('click', function () { resetSession(); S.missMode = false; nextQ(); });
   var rm = $('btnReviewMisses');
   if (rm) rm.addEventListener('click', function () { resetSession(); S.missMode = true; nextQ(); });
@@ -696,6 +809,8 @@ function finish(ok, gaveUp) {
   }
   $('result').innerHTML = html; $('result').hidden = false;
   $('btnNext').hidden = false; $('btnCheck').disabled = true; $('btnSkip').disabled = true; $('ans').disabled = true;
+  fadeIn($('result'), 8); fadeIn($('btnNext'), 6);
+  if (!ok && !gaveUp) shake($('termBox'));
   updateStats();
   if (CFG.len && S.sessionDone >= CFG.len) { S.sessionEnd = true; $('btnNext').textContent = 'See results'; }
   if (ok && CFG.autoNext && !S.sessionEnd) { S.autoTimer = setTimeout(function () { if (S.answered && S.q === q) nextQ(); }, 1800); }
@@ -708,7 +823,7 @@ $('btnCheck').addEventListener('click', function () {
 });
 $('btnSkip').addEventListener('click', function () { if (!S.answered) finish(false, true); });
 $('btnHint').addEventListener('click', function () {
-  $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false;
+  $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false; fadeIn($('hintBox'), 6);
 });
 $('btnNext').addEventListener('click', advance);
 $('btnMisses').addEventListener('click', function () {
@@ -746,6 +861,7 @@ function startDeck() {
 }
 function showCard() {
   var done = C.queue.length === 0;
+  fadeIn($('card'), 10);
   $('cardBar').style.width = (C.total ? 100 * C.cleared / C.total : 0) + '%';
   $('cardProgress').textContent = done ? 'Deck finished' : C.cleared + ' of ' + C.total + ' cleared';
   if (done) {
@@ -765,7 +881,7 @@ function showNote() {
   if (show) $('cardNote').textContent = n;
   $('cardNote').hidden = !(C.shown && show);
 }
-function reveal() {
+function doReveal() {
   if (!C.current || C.shown) return;
   C.shown = true;
   var b = $('cardBack');
@@ -773,6 +889,24 @@ function reveal() {
   b.hidden = false;
   showNote();
   $('btnReveal').hidden = true; $('btnGot').hidden = false; $('btnMissed').hidden = false;
+}
+function reveal() {
+  if (!C.current || C.shown || C.flipping) return;
+  var card = $('card');
+  if (!motionOn() || !card.animate) { doReveal(); return; }
+  C.flipping = true;
+  var a;
+  var finish = function () {
+    if (!C.flipping) return;
+    C.flipping = false; doReveal();
+    try { card.animate([{ transform: 'perspective(700px) rotateX(-90deg)' }, { transform: 'perspective(700px) rotateX(0deg)' }], { duration: 170, easing: EASE }); } catch (e) {}
+    if (a) { try { a.cancel(); } catch (e) {} }
+  };
+  try {
+    a = card.animate([{ transform: 'perspective(700px) rotateX(0deg)' }, { transform: 'perspective(700px) rotateX(90deg)' }], { duration: 130, easing: 'ease-in', fill: 'forwards' });
+    a.onfinish = finish;
+  } catch (e) { finish(); return; }
+  setTimeout(finish, 400);
 }
 $('btnReveal').addEventListener('click', reveal);
 $('btnGot').addEventListener('click', function () { C.queue.shift(); C.cleared++; showCard(); });
@@ -786,17 +920,111 @@ document.addEventListener('keydown', function (e) {
   if (e.key === ' ' || e.key === 'Enter') { if (!C.shown && C.current) { e.preventDefault(); reveal(); } }
 });
 
+/* ---------- home / views / tabs ---------- */
+var TABIDS = ['r-drill', 'r-cards', 'r-sheet', 'r-settings'], TABPANELS = ['drill', 'cards', 'sheet', 'settings'], TABNAMES = ['drill', 'cards', 'sheet', 'settings'];
+var curTab = 0, busy = false;
+function tabIndex() { for (var i = 0; i < TABIDS.length; i++) if ($(TABIDS[i]).checked) return i; return 0; }
+function placeInd(instant) {
+  var ind = $('tabind'), lab = document.querySelector('.tabs label[for="' + TABIDS[tabIndex()] + '"]');
+  if (!ind || !lab || !lab.offsetWidth) return;
+  if (instant) ind.classList.add('noanim');
+  ind.style.width = lab.offsetWidth + 'px';
+  ind.style.transform = 'translateX(' + lab.offsetLeft + 'px)';
+  if (instant) { void ind.offsetWidth; ind.classList.remove('noanim'); }
+}
+function onTab() {
+  var i = tabIndex(), prev = curTab, dir = i >= prev ? 1 : -1;
+  curTab = i; placeInd();
+  if (i !== prev) anim($(TABPANELS[i]), [{ opacity: 0, transform: 'translateX(' + (dir * 22) + 'px)' }, { opacity: 1, transform: 'translateX(0)' }], { duration: 300, easing: EASE });
+}
+function selectTab(name, instant) {
+  var i = TABNAMES.indexOf(name); if (i < 0) return;
+  $(TABIDS[i]).checked = true;
+  if (instant) { curTab = i; placeInd(true); } else onTab();
+}
+TABIDS.forEach(function (id) { $(id).addEventListener('change', onTab); });
+window.addEventListener('resize', function () { placeInd(true); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { placeInd(true); });
+
+function missCount(id) { try { var a = JSON.parse(store.get('fc-misses-' + id) || '[]'); return a && a.length ? a.length : 0; } catch (e) { return 0; } }
+function renderHome() {
+  var box = $('tgrid'), last = store.get('fc-topic'); box.innerHTML = '';
+  COURSE.forEach(function (c) {
+    var b = document.createElement('button'); b.type = 'button';
+    b.className = 'tcard' + (c.ready ? '' : ' locked'); b.setAttribute('data-id', c.id);
+    var pills = '', extra = '';
+    if (c.ready) {
+      var n = missCount(c.id);
+      pills = '<span class="tpill">' + c.topics.length + ' drill types</span><span class="tpill">' + c.cards().length + ' flashcards</span>' + (n ? '<span class="tpill">' + n + ' to review</span>' : '');
+      if (c.id === last) extra = '<span class="tgo">Continue</span>';
+    } else {
+      b.setAttribute('aria-disabled', 'true');
+      extra = '<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    }
+    b.innerHTML = extra + '<span class="ttag">' + esc(c.tag) + '</span><span class="tname">' + esc(c.name) + '</span><span class="tblurb">' + esc(c.blurb) + '</span>' + (pills ? '<span class="tpills">' + pills + '</span>' : '');
+    box.appendChild(b);
+  });
+}
+function swapView(to, after) {
+  var root = document.documentElement;
+  if (root.getAttribute('data-view') === to) { if (after) after(); return; }
+  if (busy) return;
+  var out = to === 'topic' ? $('home') : $('app'), inn = to === 'topic' ? $('app') : $('home');
+  var done = false, a = null;
+  var enter = function () {
+    if (done) return; done = true;
+    if (a) { try { a.cancel(); } catch (e) {} }
+    root.setAttribute('data-view', to);
+    if (after) after();
+    try { window.scrollTo(0, 0); } catch (e) {}
+    anim(inn, [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 320, easing: EASE });
+    if (to === 'home') Array.prototype.forEach.call($('tgrid').children, function (el, k) {
+      anim(el, [{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 340, delay: 60 + k * 70, easing: EASE, fill: 'backwards' });
+    });
+    busy = false;
+  };
+  if (!motionOn() || !out.animate) { enter(); return; }
+  busy = true;
+  try {
+    a = out.animate([{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-8px)' }], { duration: 180, easing: 'ease-in', fill: 'forwards' });
+    a.onfinish = enter;
+  } catch (e) { enter(); return; }
+  setTimeout(enter, 400);
+}
+function pushHash(h) { try { history.pushState(null, '', '#' + h); } catch (e) { try { location.hash = h; } catch (e2) {} } }
+function openTopic(id, tab, fromHash) {
+  var c = COURSE.filter(function (x) { return x.id === id && x.ready; })[0];
+  if (!c || busy) return;
+  swapView('topic', function () {
+    setTopic(id); store.set('fc-topic', CUR.id);
+    $('appTitle').textContent = CUR.title;
+    if (tab) selectTab(tab, true);
+    placeInd(true);
+  });
+  if (!fromHash) pushHash('topic-' + id);
+}
+function goHome(fromHash) {
+  if (busy) return;
+  saveMisses();
+  swapView('home', renderHome);
+  if (!fromHash) pushHash('topics');
+}
+function routeFromHash() {
+  var m = (location.hash || '').match(/^#topic-(\w+)$/);
+  if (m && COURSE.filter(function (x) { return x.id === m[1] && x.ready; })[0]) openTopic(m[1], null, true); else goHome(true);
+}
+window.addEventListener('hashchange', routeFromHash);
+$('tgrid').addEventListener('click', function (e) {
+  var b = e.target.closest ? e.target.closest('.tcard') : null; if (!b) return;
+  if (b.classList.contains('locked')) { shake(b); return; }
+  openTopic(b.getAttribute('data-id'));
+});
+$('btnHome').addEventListener('click', function () { goHome(); });
+$('homeSettings').addEventListener('click', function () { openTopic(CUR.id, 'settings'); });
+
 /* ---------- topics ---------- */
 function applySheetTopic() {
   Array.prototype.forEach.call(document.querySelectorAll('.sheetblock'), function (el) { el.hidden = el.getAttribute('data-topic') !== CUR.id; });
-}
-function renderTopicPick() {
-  var box = $('topicPick'); box.innerHTML = '';
-  COURSE.forEach(function (c) {
-    var l = document.createElement('label'); l.className = 'chip';
-    l.innerHTML = '<input type="radio" name="topicpick" value="' + c.id + '"' + (c.id === CUR.id ? ' checked' : '') + (c.ready ? '' : ' disabled') + '><span>' + esc(c.title) + '</span>';
-    box.appendChild(l);
-  });
 }
 function setTopic(id) {
   var next = COURSE.filter(function (c) { return c.id === id && c.ready; })[0];
@@ -805,12 +1033,11 @@ function setTopic(id) {
   CUR = next; store.set('fc-topic', CUR.id);
   S.misses = loadMisses(); S.missMode = false; resetSession();
   buildTopicChips(); ALLCARDS = CUR.cards(); buildDeckChips(); applySheetTopic();
+  fadeIn(chipBox, 6); fadeIn(deckBox, 6);
   startDeck(); nextQ();
 }
-$('topicPick').addEventListener('change', function (e) { setTopic(e.target.value); });
 
 /* boot */
-renderTopicPick();
 buildTopicChips();
 buildDeckChips();
 applySheetTopic();
@@ -820,6 +1047,13 @@ confirmBtn('btnResetStats', 'Reset stats', function () { S.done = 0; S.right = 0
 confirmBtn('btnClearMisses', 'Clear misses', function () { S.misses = []; S.missMode = false; saveMisses(); updateStats(); flash('Misses list cleared.'); });
 nextQ();
 startDeck();
+renderHome();
+$('appTitle').textContent = CUR.title;
+(function () {
+  var m = (location.hash || '').match(/^#topic-(\w+)$/);
+  if (m && COURSE.filter(function (x) { return x.id === m[1] && x.ready; })[0]) placeInd(true);
+  else document.documentElement.setAttribute('data-view', 'home');
+})();
 </script>
 </body>
 </html>
