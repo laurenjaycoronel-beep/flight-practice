@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin</title>
+<script>
+/* ===== FILL THESE IN (see the setup steps) ===== */
+window.FC_FIREBASE = {
+  apiKey: "AIzaSyBOuICPE6CHCZeEGEnDSRatPuGz_bxq1N0",
+  authDomain: "flight-practice.firebaseapp.com",
+  databaseURL: "https://flight-practice-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "flight-practice",
+  storageBucket: "flight-practice.firebasestorage.app",
+  messagingSenderId: "719207974272",
+  appId: "1:719207974272:web:f68e1365d7563d9224ad65"
+};
+window.FC_ADMIN_EMAIL = "laurenjaycoronel@gmail.com"; // the only Google account allowed to open this page
+</script>
+<style>
+:root { --bg:#f3f5f9; --surface:#fff; --ink:#141b2b; --muted:#5d6b83; --line:#dbe1ec; --accent:#1d4ed8; --accent-ink:#fff; --good:#15803d; --bad:#b91c1c; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0f1520; --surface:#172030; --ink:#e6ecf5; --muted:#98a5ba; --line:#2a3750; --accent:#6c93ff; --accent-ink:#0b1220; --good:#4ade80; --bad:#f87171; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 22px 16px 56px; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 1.5rem; margin: 0; }
+.sub { color: var(--muted); font-size: .9rem; margin: 2px 0 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.btn { font: inherit; font-weight: 500; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: transform .12s ease, background-color .2s ease; }
+.btn:active { transform: scale(.96); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.big { font-size: 2.2rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.lbl { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
+ul { list-style: none; margin: 0; padding: 0; }
+li { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); animation: in .3s cubic-bezier(.2,.7,.2,1); }
+li:last-child { border-bottom: 0; }
+@keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); flex: none; }
+.on .dot { background: var(--good); box-shadow: 0 0 0 4px color-mix(in srgb, var(--good) 22%, transparent); }
+.who { flex: 1; min-width: 0; }
+.who b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.who span { display: block; color: var(--muted); font-size: .82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ago { color: var(--muted); font-size: .82rem; white-space: nowrap; }
+.msg { color: var(--muted); }
+.err { color: var(--bad); }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row">
+    <div><h1>Who is online</h1><p class="sub">Only visible to the owner. Updates live.</p></div>
+    <button class="btn" id="btnOut" hidden>Sign out</button>
+  </div>
+
+  <div class="card" id="signin">
+    <p class="msg" id="status">Sign in with your Google account to continue.</p>
+    <button class="btn primary" id="btnIn">Sign in with Google</button>
+  </div>
+
+  <div id="board" hidden>
+    <div class="card row">
+      <div><div class="big" id="nOnline">0</div><div class="lbl">Online now</div></div>
+      <div><div class="big" id="nSeen">0</div><div class="lbl">Seen in the last 24 hours</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="lbl" style="margin-bottom:4px">Online now</div>
+      <ul id="listOn"></ul><p class="msg" id="emptyOn">Nobody is online right now.</p>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="row"><div class="lbl">Earlier (last 24 hours)</div><button class="btn" id="btnClear">Clear offline list</button></div>
+      <ul id="listOff"></ul><p class="msg" id="emptyOff">Nobody else yet.</p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+var $ = function (id) { return document.getElementById(id); };
+var cfg = window.FC_FIREBASE, ADMIN = String(window.FC_ADMIN_EMAIL || '').toLowerCase();
+function say(t, bad) { $('status').textContent = t; $('status').className = bad ? 'err' : 'msg'; }
+function ago(ms) {
+  var s = Math.max(0, Math.round(ms / 1000));
+  if (s < 60) return s + 's ago'; var m = Math.round(s / 60); if (m < 60) return m + ' min ago';
+  var h = Math.round(m / 60); if (h < 24) return h + ' h ago'; return Math.round(h / 24) + ' d ago';
+}
+(async function () {
+  if (!cfg) { say('Not set up yet: paste the Firebase config at the top of this file.', true); $('btnIn').hidden = true; return; }
+  try {
+    var B = 'https://www.gstatic.com/firebasejs/10.14.1/';
+    var A = await import(B + 'firebase-app.js'), Au = await import(B + 'firebase-auth.js'), D = await import(B + 'firebase-database.js');
+    var app = A.initializeApp(cfg), auth = Au.getAuth(app), db = D.getDatabase(app);
+    var data = {}, unsub = null, tick = null;
+    function render() {
+      var now = Date.now(), on = [], off = [];
+      Object.keys(data).forEach(function (k) {
+        var r = data[k]; if (!r || typeof r.name !== 'string') return;
+        var last = typeof r.last === 'number' ? r.last : 0, live = r.online === true && now - last < 90000;
+        (live ? on : off).push({ k: k, name: r.name, where: r.where || '', last: last, live: live });
+      });
+      off = off.filter(function (x) { return now - x.last < 86400000; });
+      on.sort(function (a, b) { return a.name.localeCompare(b.name); });
+      off.sort(function (a, b) { return b.last - a.last; });
+      function fill(ul, arr) {
+        ul.innerHTML = '';
+        arr.forEach(function (x) {
+          var li = document.createElement('li'); if (x.live) li.className = 'on';
+          var d = document.createElement('i'); d.className = 'dot';
+          var w = document.createElement('div'); w.className = 'who';
+          var b = document.createElement('b'); b.textContent = x.name;
+          var sp = document.createElement('span'); sp.textContent = x.where || '';
+          w.appendChild(b); w.appendChild(sp);
+          var t = document.createElement('div'); t.className = 'ago'; t.textContent = x.live ? 'now' : ago(now - x.last);
+          li.appendChild(d); li.appendChild(w); li.appendChild(t); ul.appendChild(li);
+        });
+      }
+      fill($('listOn'), on); fill($('listOff'), off);
+      $('emptyOn').hidden = on.length > 0; $('emptyOff').hidden = off.length > 0;
+      $('nOnline').textContent = on.length; $('nSeen').textContent = on.length + off.length;
+    }
+    function show(user) {
+      if (!user || user.isAnonymous) { $('signin').hidden = false; $('board').hidden = true; $('btnOut').hidden = true; if (unsub) { unsub(); unsub = null; } return; }
+      if (!user.emailVerified || String(user.email || '').toLowerCase() !== ADMIN) {
+        say('Signed in as ' + user.email + ', which does not have access.', true);
+        Au.signOut(auth); return;
+      }
+      $('signin').hidden = true; $('board').hidden = false; $('btnOut').hidden = false;
+      if (!unsub) unsub = D.onValue(D.ref(db, 'presence'), function (snap) { data = snap.val() || {}; render(); }, function () { say('Could not read the list. Check the database rules.', true); $('signin').hidden = false; $('board').hidden = true; });
+      if (!tick) tick = setInterval(render, 15000);
+    }
+    Au.onAuthStateChanged(auth, show);
+    $('btnIn').onclick = function () { say('Opening Google sign-in…'); Au.signInWithPopup(auth, new Au.GoogleAuthProvider()).catch(function (e) { say('Sign-in failed: ' + (e && e.code || e), true); }); };
+    $('btnOut').onclick = function () { Au.signOut(auth); say('Signed out.'); };
+    $('btnClear').onclick = function () {
+      if (!confirm('Remove everyone who is offline from the list?')) return;
+      var now = Date.now(); Object.keys(data).forEach(function (k) { var r = data[k] || {}; if (!(r.online === true && now - (r.last || 0) < 90000)) D.remove(D.ref(db, 'presence/' + k)); });
+    };
+  } catch (e) { say('Could not load Firebase. Check the connection and try again.', true); }
+})();
+</script>
+</body>
+</html>

@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flight Command Practice</title>
 <script>(function(){var d=document.documentElement;d.classList.add("js");d.setAttribute("data-view",/^#topic-\w+$/.test(location.hash||"")?"topic":"home");try{window.__origTheme=d.getAttribute("data-theme");var c=JSON.parse(localStorage.getItem("fc-settings")||"{}")||{};if(c.theme==="light"||c.theme==="dark")d.setAttribute("data-theme",c.theme);var z={s:"88%",m:"100%",l:"116%"}[c.size];if(z)d.style.fontSize=z;}catch(e){}})();</script>
+<script>
+/* ===== ONLINE LIST (optional) =====
+   Leave as null to keep the page fully offline-friendly with no name prompt.
+   To turn on the name prompt + "who is online" list, paste the Firebase web config here. */
+window.FC_FIREBASE = {
+  apiKey: "AIzaSyBOuICPE6CHCZeEGEnDSRatPuGz_bxq1N0",
+  authDomain: "flight-practice.firebaseapp.com",
+  databaseURL: "https://flight-practice-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "flight-practice",
+  storageBucket: "flight-practice.firebasestorage.app",
+  messagingSenderId: "719207974272",
+  appId: "1:719207974272:web:f68e1365d7563d9224ad65"
+};
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -88,6 +102,22 @@ html:not(.js) .stats { display: none; }
 .seg input:active + span { transform: scale(0.96); }
 .seg label:has(input:focus-visible) span { outline: 3px solid var(--accent); outline-offset: 1px; }
 .setcard .btn { flex: none; }
+
+.gate { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); transition: opacity 0.25s ease; }
+.gate[hidden] { display: none; }
+.gate.out { opacity: 0; }
+.gcard { width: min(100%, 420px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 14px 40px rgba(15, 30, 60, 0.12); }
+.gcard h1 { font-size: 1.5rem; line-height: 1.15; }
+.gcard p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.gcard label { font-weight: 500; font-size: 0.9rem; }
+.ginput { font: inherit; width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.ginput:focus { outline: 0; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+.gerr { color: var(--bad); font-size: 0.85rem; min-height: 1.1em; }
+.grow { display: flex; gap: 8px; }
+.grow .btn { flex: 1; padding: 11px 16px; }
+.nameline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+html:not(.js) .gate { display: none; }
+body.gateopen { overflow: hidden; }
 .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 40px; }
 html:not(.js) .topbar { display: none; }
 html[data-view="home"] #btnHome { visibility: hidden; }
@@ -317,6 +347,17 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 </div>
 </div>
 
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" hidden>
+  <form class="gcard" id="gateForm" autocomplete="off" novalidate>
+    <h1 id="gateTitle">Welcome</h1>
+    <p>Type your name to start practicing. No account or password needed.</p>
+    <div><label for="gateName">Your name</label>
+    <input class="ginput" id="gateName" type="text" maxlength="30" placeholder="e.g. Maria" autocapitalize="words" enterkeyhint="go"></div>
+    <div class="gerr" id="gateErr" role="alert"></div>
+    <p>Your name is visible to the site owner while you use this page.</p>
+    <div class="grow"><button class="btn" type="button" id="btnGateCancel" hidden>Cancel</button><button class="btn primary" type="submit" id="btnGateGo">Continue</button></div>
+  </form>
+</div>
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="settings" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true">
   <div class="shead"><h2>Settings</h2><button class="sclose" type="button" id="btnCloseSet" aria-label="Close settings">&times;</button></div>
@@ -622,6 +663,7 @@ function renderSettings() {
     });
     h += '</div></div>';
   });
+  if (window.FC_FIREBASE) h += '<div class="setgroup"><h2>You</h2><div class="setcard"><div class="setrow"><div class="lbl">Your name<span class="desc" id="nameNow"></span></div><button class="btn" type="button" id="btnChangeName">Change</button></div></div></div>';
   h += '<div class="setgroup"><h2>Reset and data</h2><div class="setcard">' +
     '<div class="setrow"><div class="lbl">Reset stats<span class="desc">Clears answered, accuracy and streak</span></div><button class="btn" id="btnResetStats">Reset stats</button></div>' +
     '<div class="setrow"><div class="lbl">Clear misses list<span class="desc">Empties "Practice my misses"</span></div><button class="btn" id="btnClearMisses">Clear misses</button></div></div></div>' +
@@ -691,11 +733,11 @@ var CLICKS = {
   open: [[523, 784, 1047], 'sine', 0.11],
   back: [[784, 523], 'sine', 0.11]
 };
-var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
+var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnChangeName: 'mid', btnGateCancel: 'back', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
 function clickKind(t) {
   var el = t && t.closest ? t.closest('button,input,select') : null;
   if (!el || el.disabled) return null;
-  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnCheck') return null;
+  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnCheck' || el.id === 'btnGateGo') return null;
   if (el.tagName === 'SELECT') return null;
   if (el.tagName === 'INPUT') {
     if (el.type === 'checkbox') return el.checked ? 'hi' : 'lo';
@@ -1084,6 +1126,44 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+
+/* ---------- name prompt (only when the online list is switched on) ---------- */
+var gateOpen = false;
+function savedName() { return (store.get('fc-name') || '').trim(); }
+function cleanName(v) { return String(v || '').replace(/[\u0000-\u001f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 30); }
+function showName() { var el = $('nameNow'); if (el) el.textContent = savedName() || '–'; }
+function openGate(changing) {
+  gateOpen = true;
+  $('gateName').value = changing ? savedName() : ''; $('gateErr').textContent = '';
+  $('btnGateCancel').hidden = !changing;
+  $('gateTitle').textContent = changing ? 'Change your name' : 'Welcome';
+  var g = $('gate'); g.classList.remove('out'); g.hidden = false;
+  document.body.classList.add('gateopen');
+  try { wrapEl().inert = true; } catch (e) {}
+  anim($('gateForm'), [{ opacity: 0, transform: 'translateY(14px) scale(0.98)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: EASE });
+  setTimeout(function () { try { $('gateName').focus(); } catch (e) {} }, 80);
+}
+function closeGate() {
+  if (!gateOpen) return; gateOpen = false;
+  var g = $('gate'); g.classList.add('out');
+  document.body.classList.remove('gateopen');
+  try { wrapEl().inert = false; } catch (e) {}
+  setTimeout(function () { if (!gateOpen) g.hidden = true; }, motionOn() ? 260 : 0);
+}
+$('gateForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var n = cleanName($('gateName').value);
+  if (!n) { $('gateErr').textContent = 'Please type a name to continue.'; shake($('gateName')); playSound('lo'); return; }
+  store.set('fc-name', n); showName(); closeGate(); playSound('up');
+  try { window.dispatchEvent(new CustomEvent('fc-name', { detail: n })); } catch (e2) {}
+});
+$('btnGateCancel').addEventListener('click', closeGate);
+$('settingsBody').addEventListener('click', function (e) { if (e.target && e.target.id === 'btnChangeName') { closeSettings(); openGate(true); } });
+window.fcWhere = function () {
+  if (document.documentElement.getAttribute('data-view') === 'home') return 'Topic screen';
+  return CUR.title + ' - ' + ['Drill', 'Flashcards', 'Cheat sheet'][tabIndex()];
+};
+
 /* ---------- topics ---------- */
 function applySheetTopic() {
   Array.prototype.forEach.call(document.querySelectorAll('.sheetblock'), function (el) { el.hidden = el.getAttribute('data-topic') !== CUR.id; });
@@ -1109,12 +1189,50 @@ confirmBtn('btnResetStats', 'Reset stats', function () { S.done = 0; S.right = 0
 confirmBtn('btnClearMisses', 'Clear misses', function () { S.misses = []; S.missMode = false; saveMisses(); updateStats(); flash('Misses list cleared.'); });
 nextQ();
 startDeck();
+showName();
+if (window.FC_FIREBASE && !savedName()) openGate(false);
 renderHome();
 $('appTitle').textContent = CUR.title;
 (function () {
   var m = (location.hash || '').match(/^#topic-(\w+)$/);
   if (m && COURSE.filter(function (x) { return x.id === m[1] && x.ready; })[0]) placeInd(true);
   else document.documentElement.setAttribute('data-view', 'home');
+})();
+</script>
+
+<script type="module">
+/* Online list: sends a small "I am here" signal (name + where) to Firebase. Does nothing unless FC_FIREBASE is set. */
+(async function () {
+  var cfg = window.FC_FIREBASE; if (!cfg) return;
+  try {
+    var V = '10.14.1', B = 'https://www.gstatic.com/firebasejs/' + V + '/';
+    var A = await import(B + 'firebase-app.js'), Au = await import(B + 'firebase-auth.js'), D = await import(B + 'firebase-database.js');
+    var app = A.initializeApp(cfg), auth = Au.getAuth(app), db = D.getDatabase(app);
+    var cred = await Au.signInAnonymously(auth), me = D.ref(db, 'presence/' + cred.user.uid);
+    var started = false, timer = null;
+    function name() { try { return (localStorage.getItem('fc-name') || '').trim(); } catch (e) { return ''; } }
+    function where() { try { return String(window.fcWhere ? window.fcWhere() : '').slice(0, 60); } catch (e) { return ''; } }
+    function visible() { return document.visibilityState !== 'hidden'; }
+    function beat(first) {
+      var n = name(); if (!n) return;
+      var data = { name: n, online: visible(), where: where(), last: D.serverTimestamp() };
+      (first ? D.set(me, data) : D.update(me, data)).catch(function () {});
+    }
+    function start() {
+      if (started || !name()) return; started = true;
+      D.onValue(D.ref(db, '.info/connected'), function (snap) {
+        if (snap.val() !== true) return;
+        D.onDisconnect(me).update({ online: false, last: D.serverTimestamp() }).catch(function () {});
+        beat(true);
+      });
+      timer = setInterval(function () { beat(false); }, 25000);
+    }
+    start();
+    window.addEventListener('fc-name', function () { if (!started) start(); else beat(false); });
+    document.addEventListener('visibilitychange', function () { beat(false); });
+    window.addEventListener('hashchange', function () { setTimeout(function () { beat(false); }, 600); });
+    document.addEventListener('click', function () { clearTimeout(window.__fcT); window.__fcT = setTimeout(function () { beat(false); }, 1200); }, true);
+  } catch (e) { /* offline or blocked: the page keeps working without the online list */ }
 })();
 </script>
 </body>
