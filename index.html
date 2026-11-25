@@ -306,6 +306,55 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 .empty { color: var(--muted); }
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+
+/* ---------- Pip the pilot bird ---------- */
+#mascot { position: fixed; left: 12px; bottom: 10px; z-index: 30; width: 84px; height: 84px; pointer-events: none; }
+html[data-mascot="on"] body { padding-bottom: 96px; }
+.mbird { touch-action: none; user-select: none; -webkit-user-select: none; position: absolute; inset: 0; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; border-radius: 50%; -webkit-tap-highlight-color: transparent; transform-origin: 50% 100%; }
+.mbird:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mbird svg { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 4px 5px rgba(10, 20, 40, 0.28)); }
+.mbird svg * { transform-box: fill-box; }
+.mbub { position: absolute; left: 68px; bottom: 56px; width: max-content; max-width: min(240px, 62vw); padding: 9px 13px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 15px 15px 15px 4px; font-size: 0.86rem; line-height: 1.35; box-shadow: 0 8px 22px rgba(8, 14, 26, 0.2); opacity: 0; transform: translateY(6px) scale(0.95); transform-origin: 0 100%; transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1.25); pointer-events: none; }
+.mbub.show { opacity: 1; transform: none; }
+.mbub.r { left: auto; right: 68px; border-radius: 15px 15px 4px 15px; transform-origin: 100% 100%; }
+.mbub.d { bottom: auto; top: 56px; border-radius: 4px 15px 15px 15px; transform-origin: 0 0; }
+.mbub.d.r { border-radius: 15px 4px 15px 15px; transform-origin: 100% 0; }
+#mascot.drag .mbird { cursor: grabbing; }
+.mg { transform-origin: 50% 100%; animation: mbob 3.2s ease-in-out infinite; }
+.mlid { transform-origin: 50% 0; transform: scaleY(0); animation: mblink 4.8s infinite; }
+.mwR { transform-origin: 8% 12%; transform: rotate(0deg); }
+.mwL { transform-origin: 92% 12%; transform: rotate(0deg); }
+.mhap, .mbrow, .mspark, .mzz, .mslp { opacity: 0; }
+.mzz { fill: var(--muted); font: 700 13px var(--font-body); }
+.mspark { fill: #fbbf24; }
+.mscarfT { transform-origin: 0% 20%; animation: mflap 2.6s ease-in-out infinite; }
+@keyframes mbob { 0%, 100% { transform: translateY(0) scale(1, 1); } 50% { transform: translateY(-2px) scale(1.012, 0.99); } }
+@keyframes mblink { 0%, 93%, 100% { transform: scaleY(0); } 96% { transform: scaleY(1); } }
+@keyframes mflap { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(9deg); } }
+@keyframes mwave { 0%, 100% { transform: rotate(-58deg); } 50% { transform: rotate(-22deg); } }
+@keyframes mjump { 0%, 100% { transform: translateY(0) scale(1, 1); } 18% { transform: translateY(2px) scale(1.07, 0.92); } 50% { transform: translateY(-17px) scale(0.97, 1.05); } 78% { transform: translateY(0) scale(1.05, 0.95); } }
+@keyframes mflapw { 0%, 100% { transform: rotate(-70deg); } 50% { transform: rotate(-30deg); } }
+@keyframes mflapwL { 0%, 100% { transform: rotate(70deg); } 50% { transform: rotate(30deg); } }
+@keyframes mspark { 0% { opacity: 0.2; transform: scale(0.6); } 100% { opacity: 1; transform: scale(1.1); } }
+@keyframes mzz { 0% { opacity: 0; transform: translate(0, 6px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translate(6px, -10px); } }
+#mascot.m-wave .mwR { animation: mwave 0.55s ease-in-out 4; transform: rotate(-40deg); }
+#mascot.m-cheer .mbird { animation: mjump 0.62s ease-out 3; }
+#mascot.m-cheer .mwR { animation: mflapw 0.3s ease-in-out infinite; transform: rotate(-50deg); }
+#mascot.m-cheer .mwL { animation: mflapwL 0.3s ease-in-out infinite; transform: rotate(50deg); }
+#mascot.m-cheer .meye { opacity: 0; }
+#mascot.m-cheer .mhap { opacity: 1; }
+#mascot.m-cheer .mspark { animation: mspark 0.5s ease-in-out infinite alternate; }
+#mascot.m-sad .mg { animation: none; transform: rotate(-5deg) translateY(3px); }
+#mascot.m-sad .mbrow { opacity: 1; }
+#mascot.m-sad .mpup { transform: translateY(2px); }
+#mascot.m-sad .mwR, #mascot.m-sad .mwL { transform: rotate(0deg) translateY(2px); }
+#mascot.m-sleep .mg { animation-duration: 5s; transform: translateY(2px); }
+#mascot.m-sleep .mlid { animation: none; transform: scaleY(1); }
+#mascot.m-sleep .mslp { opacity: 1; }
+#mascot.m-sleep .mzz { animation: mzz 2.6s ease-in infinite; }
+#mascot.m-sleep .mzz.z2 { animation-delay: 1.2s; }
+@media (max-width: 520px) { #mascot { width: 58px; height: 58px; } .mbub { left: 50px; bottom: 40px; font-size: 0.82rem; } .mbub.r { left: auto; right: 50px; } .mbub.d { bottom: auto; top: 44px; } html[data-mascot="on"] body { padding-bottom: 80px; } }
+@media print { #mascot { display: none !important; } }
 </style>
 </head>
 <body>
@@ -692,7 +741,7 @@ var $ = function (id) { return document.getElementById(id); };
 var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
 
 /* ---------- settings ---------- */
-var DEFAULTS = { theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true };
+var DEFAULTS = { theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true, mascot: true };
 var CFG = {};
 (function () {
   var saved = {}, k;
@@ -725,7 +774,8 @@ var SET_UI = [
   { title: 'Appearance', rows: [
     { key: 'theme', label: 'Theme', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
     { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] },
-    { key: 'motion', label: 'Smooth animations', desc: 'Turn off if the page feels slow', sw: true } ] },
+    { key: 'motion', label: 'Smooth animations', desc: 'Turn off if the page feels slow', sw: true },
+    { key: 'mascot', label: 'Pip the pilot bird', desc: 'A little co-pilot that cheers you on', sw: true } ] },
   { title: 'Sound', rows: [
     { key: 'sound', label: 'Sound effects', desc: 'Chimes for answers and soft tones on taps', sw: true } ] },
   { title: 'Drill', rows: [
@@ -831,7 +881,7 @@ var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnTheme: 'mid', btnChangeNa
 function clickKind(t) {
   var el = t && t.closest ? t.closest('button,input,select') : null;
   if (!el || el.disabled) return null;
-  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnCheck' || el.id === 'btnGateGo' || el.id === 'btnFbSend') return null;
+  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnMascot' || el.id === 'btnCheck' || el.id === 'btnGateGo' || el.id === 'btnFbSend') return null;
   if (el.classList.contains('star')) return 'tab';
   if (el.tagName === 'SELECT') return null;
   if (el.tagName === 'INPUT') {
@@ -853,6 +903,7 @@ $('settingsBody').addEventListener('change', function (e) {
   saveCfg();
   if (key === 'theme' || key === 'size' || key === 'motion') applyAppearance();
   if (key === 'sound' && CFG.sound) playSound('ok');
+  if (key === 'mascot') { Mascot.sync(); if (CFG.mascot) { Mascot.build(); Mascot.say('Hi! I am Pip. Let\'s fly!', 'wave', { force: true, ms: 3600 }); } }
   if (key === 'alwaysHint' && S.q && !S.answered) { if (CFG.alwaysHint) { $('hintBox').textContent = S.q.hint; $('hintBox').hidden = false; } else $('hintBox').hidden = true; }
   if (key === 'len') { resetSession(); nextQ(); }
   if (key === 'dir' || key === 'shuffle') startDeck();
@@ -939,6 +990,7 @@ function showSummary() {
     '<div class="actions"><button class="btn primary" id="btnNewSession">Start a new session</button>' + (m ? '<button class="btn" id="btnReviewMisses">Review my misses</button>' : '') + '</div>';
   setEnded(true); fadeIn($('summary'), 12);
   if (win) { playSound('win'); celebrate(document.querySelector('#summary .big')); }
+  try { Mascot.summary(win, pct === 100 && win); } catch (e) {}
   $('btnNewSession').addEventListener('click', function () { resetSession(); S.missMode = false; nextQ(); });
   var rm = $('btnReviewMisses');
   if (rm) rm.addEventListener('click', function () { resetSession(); S.missMode = true; nextQ(); });
@@ -995,6 +1047,7 @@ function finish(ok, gaveUp) {
   fadeIn($('result'), 8); fadeIn($('btnNext'), 6);
   if (!ok && !gaveUp) shake($('termBox'));
   updateStats();
+  try { Mascot.answered(ok, gaveUp, S.streak); } catch (e) {}
   if (CFG.len && S.sessionDone >= CFG.len) { S.sessionEnd = true; $('btnNext').textContent = 'See results'; }
   if (ok && CFG.autoNext && !S.sessionEnd) { S.autoTimer = setTimeout(function () { if (S.answered && S.q === q) nextQ(); }, 1800); }
   $('btnNext').focus();
@@ -1189,6 +1242,7 @@ function openTopic(id, tab, fromHash) {
     placeInd(true);
   });
   if (!fromHash) pushHash('topic-' + id);
+  try { Mascot.say('Ready when you are' + (savedName() ? ', ' + savedName() : '') + '!', 'wave', { ms: 3200, moodMs: 1400 }); } catch (e) {}
 }
 function goHome(fromHash) {
   if (busy) return;
@@ -1280,7 +1334,7 @@ $('gateForm').addEventListener('submit', function (e) {
   e.preventDefault();
   var n = cleanName($('gateName').value);
   if (!n) { $('gateErr').textContent = 'Please type a name to continue.'; shake($('gateName')); playSound('lo'); return; }
-  store.set('fc-name', n); showName(); greetText(); closeGate(); playSound('up'); setTimeout(maybeGreet, 380);
+  store.set('fc-name', n); showName(); greetText(); closeGate(); playSound('up'); setTimeout(maybeGreet, 380); setTimeout(Mascot.hello, 1500);
   try { window.dispatchEvent(new CustomEvent('fc-name', { detail: n })); } catch (e2) {}
 });
 $('btnGateCancel').addEventListener('click', closeGate);
@@ -1333,7 +1387,7 @@ $('fbForm').addEventListener('submit', function (e) {
   var timer = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')); }, 8000); });
   Promise.race([window.fcSendFeedback({ msg: m.slice(0, 600), rating: fbRating }), timer]).then(function () {
     store.set('fc-fb-at', String(Date.now()));
-    $('fbErr').className = 'gok'; $('fbErr').textContent = 'Thank you! Your feedback was sent.'; playSound('up');
+    $('fbErr').className = 'gok'; $('fbErr').textContent = 'Thank you! Your feedback was sent.'; playSound('up'); try { Mascot.say('Thanks for the feedback!', 'cheer', { force: true, ms: 3600 }); } catch (e) {}
     setTimeout(closeFb, 1400);
   }).catch(function () { fbError('Could not send. Check your connection and try again.'); }).then(function () {
     fbBusy = false; $('btnFbSend').disabled = false; $('btnFbSend').textContent = 'Send';
@@ -1344,6 +1398,7 @@ window.fcProgress = function () {
   COURSE.forEach(function (c) { if (!c.ready) return; var g = loadProg(c.id); if (g.d) o[c.id] = { d: g.d, r: g.r, b: g.b }; });
   return o;
 };
+window.__fcPrevVisit = store.get('fc-last'); store.set('fc-last', String(Date.now()));
 try { store.set('fc-visits', String((+store.get('fc-visits') || 0) + 1)); if (!store.get('fc-first')) store.set('fc-first', String(Date.now())); } catch (e) {}
 
 /* ---------- greeting plane ---------- */
@@ -1408,6 +1463,126 @@ function setTopic(id) {
   startDeck(); nextQ();
 }
 
+/* ---------- Pip the pilot bird ---------- */
+var Mascot = (function () {
+  var moved = false, root, btn, bub, hideT, moodT, sleepT, tickT, lastSay = 0, lastAct = Date.now(), sleeping = false, ready = false, tipN = -1, hintedQ = null, lastMsg = {};
+  var SVG = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g class="mg"> <path d="M40 90v5M60 90v5M35 96h10M55 96h10" stroke="#f97316" stroke-width="3" stroke-linecap="round" fill="none"/> <ellipse cx="50" cy="60" rx="31" ry="30" fill="#ffc93c"/> <ellipse cx="50" cy="69" rx="19" ry="17" fill="#fff3c4"/> <ellipse class="mwL" cx="20" cy="64" rx="8" ry="15" fill="#f4b223"/> <ellipse class="mwR" cx="80" cy="64" rx="8" ry="15" fill="#f4b223"/> <path class="mscarf" d="M28 78q22 13 44 0v7q-22 13-44 0z" fill="#ef4444"/> <path class="mscarfT" d="M66 82l15 5-3 9-10-4z" fill="#dc2626"/> <path d="M21 44c0-26 58-26 58 0z" fill="#8a5a3c"/> <rect x="21" y="38" width="58" height="6" rx="3" fill="#6f452b"/> <ellipse cx="21" cy="50" rx="6" ry="10" fill="#8a5a3c"/> <ellipse cx="79" cy="50" rx="6" ry="10" fill="#8a5a3c"/> <circle cx="38" cy="27" r="8" fill="#cfe8ff" stroke="#5b6b8a" stroke-width="3.2"/> <circle cx="62" cy="27" r="8" fill="#cfe8ff" stroke="#5b6b8a" stroke-width="3.2"/> <path d="M34 25q2-3 5-3M58 25q2-3 5-3" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/> <rect x="44" y="25" width="12" height="4" fill="#5b6b8a"/> <circle cx="31" cy="62" r="4.5" fill="#fb7185" opacity=".45"/> <circle cx="69" cy="62" r="4.5" fill="#fb7185" opacity=".45"/> <g class="meye"><circle cx="40" cy="53" r="7.5" fill="#fff"/><circle cx="60" cy="53" r="7.5" fill="#fff"/>  <circle class="mpup" cx="41" cy="54" r="4" fill="#1f2937"/><circle class="mpup" cx="59" cy="54" r="4" fill="#1f2937"/>  <circle cx="42.4" cy="52.4" r="1.4" fill="#fff"/><circle cx="60.4" cy="52.4" r="1.4" fill="#fff"/>  <ellipse class="mlid" cx="40" cy="53" rx="8" ry="8" fill="#ffc93c"/><ellipse class="mlid" cx="60" cy="53" rx="8" ry="8" fill="#ffc93c"/></g> <path class="mhap" d="M33 54q7-9 14 0M53 54q7-9 14 0" stroke="#1f2937" stroke-width="3.2" stroke-linecap="round" fill="none"/> <path class="mbrow" d="M32 48l13-5M68 48l-13-5" stroke="#6f452b" stroke-width="3" stroke-linecap="round" fill="none"/> <path class="mslp" d="M33 53q7 6 14 0M53 53q7 6 14 0" stroke="#1f2937" stroke-width="3" stroke-linecap="round" fill="none"/> <path d="M42 60q8-3 16 0l-8 10z" fill="#f97316"/> <path d="M44 61q6-2 12 0" stroke="#fdba74" stroke-width="1.6" stroke-linecap="round" fill="none"/> <path class="mspark" d="M12 24l2.2 5.8L20 32l-5.8 2.2L12 40l-2.2-5.8L4 32l5.8-2.2z"/> <path class="mspark" d="M90 14l1.8 4.7L96.5 20.5l-4.7 1.8L90 27l-1.8-4.7L83.5 20.5l4.7-1.8z" style="animation-delay:.15s"/> <text class="mzz" x="74" y="24">z</text><text class="mzz z2" x="82" y="14" font-size="10">z</text></g></svg>';
+  var TIPS = [
+    'Spaces and capitals do not matter when you type a command.',
+    'For AN, the order of the options does not matter.',
+    'A leading zero on the day is fine: 05JAN or 5JAN.',
+    'Missed one? It goes to "Practice my misses" so you can retry it.',
+    'Try the Flashcards tab to learn what each part of a command means.',
+    'The Cheat sheet tab has every command on one page.',
+    'Stuck? The Hint button helps. Practice makes it stick!',
+    'Turn on "Auto-next" in settings to move faster after right answers.'
+  ];
+  function on() { return CFG.mascot !== false; }
+  function name() { return (typeof savedName === 'function' && savedName()) || ''; }
+  function pick(arr, key) {
+    var i = Math.floor(Math.random() * arr.length);
+    if (arr.length > 1 && lastMsg[key] === i) i = (i + 1) % arr.length;
+    lastMsg[key] = i; return arr[i];
+  }
+  function build() {
+    if (ready) return; ready = true;
+    root = document.createElement('div'); root.id = 'mascot'; root.hidden = !on();
+    btn = document.createElement('button'); btn.type = 'button'; btn.id = 'btnMascot'; btn.className = 'mbird';
+    btn.setAttribute('aria-label', 'Pip, your co-pilot. Tap for a tip.'); btn.innerHTML = SVG;
+    bub = document.createElement('div'); bub.className = 'mbub'; bub.setAttribute('aria-hidden', 'true');
+    root.appendChild(btn); root.appendChild(bub); document.body.appendChild(root);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation(); if (moved) { moved = false; return; } wake(true); tipN = (tipN + 1) % TIPS.length;
+      if (typeof playSound === 'function') playSound('hi');
+      say(TIPS[tipN], 'wave', { force: true, ms: 5200, moodMs: 2200 });
+    });
+    var bump = function () { var was = sleeping; lastAct = Date.now(); if (was) wake(false); };
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, bump, true); });
+    var pos = null; try { pos = JSON.parse(store.get('fc-pip-pos') || 'null'); } catch (e) {}
+    if (pos && typeof pos.x === 'number') place(pos.x, pos.y);
+    var dg = null;
+    btn.addEventListener('pointerdown', function (e) { var r = root.getBoundingClientRect(); dg = { px: e.clientX, py: e.clientY, x: r.left, y: window.innerHeight - r.bottom, on: false }; try { btn.setPointerCapture(e.pointerId); } catch (e2) {} });
+    btn.addEventListener('pointermove', function (e) {
+      if (!dg) return; var dx = e.clientX - dg.px, dy = e.clientY - dg.py;
+      if (!dg.on && Math.abs(dx) + Math.abs(dy) < 8) return;
+      dg.on = true; moved = true; root.classList.add('drag'); place(dg.x + dx, dg.y - dy);
+    });
+    var end = function () { if (!dg) return; var was = dg.on; dg = null; root.classList.remove('drag'); if (was) { var r = root.getBoundingClientRect(); store.set('fc-pip-pos', JSON.stringify({ x: Math.round(r.left), y: Math.round(window.innerHeight - r.bottom) })); setTimeout(function () { moved = false; }, 60); } };
+    btn.addEventListener('pointerup', end); btn.addEventListener('pointercancel', end);
+    window.addEventListener('resize', function () { var r = root.getBoundingClientRect(); place(r.left, window.innerHeight - r.bottom); });
+    tickT = setInterval(tick, 5000);
+    sync();
+  }
+  function place(x, y) {
+    var w = root.offsetWidth || 84, h = root.offsetHeight || 84, W = window.innerWidth, H = window.innerHeight;
+    x = Math.max(4, Math.min(W - w - 4, x)); y = Math.max(4, Math.min(H - h - 4, y));
+    root.style.left = Math.round(x) + 'px'; root.style.bottom = Math.round(y) + 'px';
+    bub.classList.toggle('r', x + w / 2 > W / 2); bub.classList.toggle('d', y + h + 90 > H);
+  }
+  function sync() { document.documentElement.setAttribute('data-mascot', on() ? 'on' : 'off'); if (root) root.hidden = !on(); }
+  function mood(m, ms) {
+    if (!root) return;
+    clearTimeout(moodT);
+    root.className = m ? 'm-' + m : '';
+    if (m && m !== 'sleep' && ms) moodT = setTimeout(function () { if (!sleeping) root.className = ''; }, ms);
+  }
+  function hide() { if (bub) bub.classList.remove('show'); }
+  function say(text, m, o) {
+    o = o || {};
+    if (!on()) return; build();
+    var now = Date.now();
+    if (!o.force && now - lastSay < 2200) { if (m) mood(m, o.moodMs || 1600); return; }
+    lastSay = now;
+    if (text) { bub.textContent = text; bub.classList.add('show'); clearTimeout(hideT); hideT = setTimeout(hide, o.ms || 4200); }
+    if (m) mood(m, o.moodMs || 1800);
+  }
+  function sleep() { if (sleeping || !on() || !ready) return; sleeping = true; hide(); mood('sleep'); }
+  function wake(silent) {
+    if (!sleeping) return; sleeping = false; mood(null);
+    if (!silent) say('Oh, hi again!', 'wave', { force: true, ms: 2600 });
+  }
+  function tick() {
+    if (!on() || !ready || document.hidden) return;
+    var idle = Date.now() - lastAct;
+    if (!sleeping && idle > 60000) { sleep(); return; }
+    if (sleeping || !root || !S || !S.q || S.answered || hintedQ === S.q) return;
+    var r = document.getElementById('r-drill');
+    if (document.documentElement.getAttribute('data-view') === 'topic' && r && r.checked && idle > 35000) {
+      hintedQ = S.q; say('Stuck? The Hint button can help.', 'wave', { ms: 4800, moodMs: 1400 });
+    }
+  }
+  function hello() {
+    if (!on()) return; build();
+    var n = name(), first = !store.get('fc-met-pip'), gap = Date.now() - (+window.__fcPrevVisit || 0), txt;
+    store.set('fc-met-pip', '1');
+    if (first) txt = 'Hi' + (n ? ' ' + n : '') + '! I\'m Pip, your co-pilot. Tap me for tips.';
+    else if (window.__fcPrevVisit && gap > 3 * 86400000) txt = 'Long time no see' + (n ? ', ' + n : '') + '! Missed you.';
+    else txt = pick(['Welcome back' + (n ? ', ' + n : '') + '!', 'Ready for takeoff?', 'Good to see you again!', 'Let\'s practice some commands!'], 'hello');
+    say(txt, 'wave', { force: true, ms: 5200, moodMs: 2400 });
+  }
+  function answered(ok, gaveUp, streak) {
+    if (!on()) return; build(); wake(true); lastAct = Date.now();
+    if (gaveUp) { say(pick(['Now you have seen it. It will stick next time.', 'That is how we learn. On to the next one!'], 'giveup'), 'sad', { moodMs: 1500 }); return; }
+    if (ok) {
+      var milestone = streak === 3 ? '3 in a row! Warming up.' : streak === 5 ? '5 in a row! You are flying!' : streak === 10 ? '10 straight! Ace pilot!' : (streak > 10 && streak % 5 === 0) ? streak + ' in a row! Legendary!' : '';
+      if (milestone) say(milestone, 'cheer', { force: true, ms: 4600, moodMs: 2000 });
+      else if (Math.random() < 0.55) say(pick(['Nice one!', 'Cleared for takeoff!', 'Smooth landing!', 'That is the one!', 'Right on route!', 'Spot on!'], 'ok'), 'cheer', { moodMs: 1300 });
+      else mood('cheer', 1300);
+    } else {
+      if (Math.random() < 0.7) say(pick(['Turbulence! It is saved in your misses.', 'Close! Check the breakdown below.', 'No worries, every pilot practices.', 'Almost! You will get it next time.'], 'no'), 'sad', { moodMs: 1900 });
+      else mood('sad', 1900);
+    }
+  }
+  function summary(win, perfect) {
+    if (!on()) return; build(); wake(true);
+    var n = name();
+    if (perfect) say('Perfect landing' + (n ? ', ' + n : '') + '! 100%!', 'cheer', { force: true, ms: 6000, moodMs: 2400 });
+    else if (win) say('Great flight' + (n ? ', ' + n : '') + '!', 'cheer', { force: true, ms: 5200, moodMs: 2200 });
+    else say('Good session! Review your misses and try again.', 'wave', { force: true, ms: 5200, moodMs: 1800 });
+  }
+  return { sync: sync, say: say, hello: hello, answered: answered, summary: summary, build: build, mood: mood };
+})();
+
 /* boot */
 buildTopicChips();
 buildDeckChips();
@@ -1430,6 +1605,8 @@ $('appTitle').textContent = CUR.title;
 })();
 syncTheme();
 maybeGreet();
+Mascot.sync();
+if (CFG.mascot !== false) { Mascot.build(); if (!(window.FC_FIREBASE && !savedName())) setTimeout(Mascot.hello, 1300); }
 </script>
 
 <script type="module">
