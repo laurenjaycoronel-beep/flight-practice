@@ -6,136 +6,274 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Admin</title>
 <script>
-/* ===== FILL THESE IN (see the setup steps) ===== */
-window.FC_FIREBASE = {
-  apiKey: "AIzaSyBOuICPE6CHCZeEGEnDSRatPuGz_bxq1N0",
-  authDomain: "flight-practice.firebaseapp.com",
-  databaseURL: "https://flight-practice-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "flight-practice",
-  storageBucket: "flight-practice.firebasestorage.app",
-  messagingSenderId: "719207974272",
-  appId: "1:719207974272:web:f68e1365d7563d9224ad65"
-};
-window.FC_ADMIN_EMAIL = "laurenjaycoronel@gmail.com"; // the only Google account allowed to open this page
+/* ===== SETTINGS ===== */
+window.FC_FIREBASE = null;                  // the same Firebase web config used in index.html
+window.FC_ADMIN_EMAIL = "YOUR_GOOGLE_EMAIL"; // the only Google account allowed to open this page
+window.FC_TOPICS = { t3: "Topic 3: Flight Availability" };
 </script>
 <style>
-:root { --bg:#f3f5f9; --surface:#fff; --ink:#141b2b; --muted:#5d6b83; --line:#dbe1ec; --accent:#1d4ed8; --accent-ink:#fff; --good:#15803d; --bad:#b91c1c; }
-@media (prefers-color-scheme: dark) { :root { --bg:#0f1520; --surface:#172030; --ink:#e6ecf5; --muted:#98a5ba; --line:#2a3750; --accent:#6c93ff; --accent-ink:#0b1220; --good:#4ade80; --bad:#f87171; } }
+:root { --bg:#f3f5f9; --surface:#fff; --ink:#141b2b; --muted:#5d6b83; --line:#dbe1ec; --accent:#1d4ed8; --accent-ink:#fff; --good:#15803d; --warn:#b45309; --bad:#b91c1c; --chip:#eef2f8; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0f1520; --surface:#172030; --ink:#e6ecf5; --muted:#98a5ba; --line:#2a3750; --accent:#6c93ff; --accent-ink:#0b1220; --good:#4ade80; --warn:#fbbf24; --bad:#f87171; --chip:#1d2940; } }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.wrap { max-width: 760px; margin: 0 auto; padding: 22px 16px 56px; display: flex; flex-direction: column; gap: 16px; }
-h1 { font-size: 1.5rem; margin: 0; }
-.sub { color: var(--muted); font-size: .9rem; margin: 2px 0 0; }
+.wrap { max-width: 880px; margin: 0 auto; padding: 20px 16px 56px; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 1.4rem; margin: 0; }
+.sub { color: var(--muted); font-size: .88rem; margin: 2px 0 0; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
-.btn { font: inherit; font-weight: 500; padding: 9px 16px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: transform .12s ease, background-color .2s ease; }
+.btn { font: inherit; font-weight: 500; font-size: .9rem; padding: 8px 14px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: transform .12s ease, background-color .2s ease, border-color .2s ease; }
+.btn:hover { border-color: var(--accent); }
 .btn:active { transform: scale(.96); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.danger { color: var(--bad); }
 .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.big { font-size: 2.2rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
 .lbl { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
-ul { list-style: none; margin: 0; padding: 0; }
-li { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); animation: in .3s cubic-bezier(.2,.7,.2,1); }
-li:last-child { border-bottom: 0; }
-@keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); flex: none; }
-.on .dot { background: var(--good); box-shadow: 0 0 0 4px color-mix(in srgb, var(--good) 22%, transparent); }
-.who { flex: 1; min-width: 0; }
-.who b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.who span { display: block; color: var(--muted); font-size: .82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ago { color: var(--muted); font-size: .82rem; white-space: nowrap; }
-.msg { color: var(--muted); }
+.msg { color: var(--muted); margin: 0; }
 .err { color: var(--bad); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+.stat b { display: block; font-size: 1.9rem; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat.on b { color: var(--good); } .stat.away b { color: var(--warn); }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
+.tab { font: inherit; font-weight: 500; background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted); padding: 10px 14px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.badge { background: var(--accent); color: var(--accent-ink); border-radius: 99px; font-size: .72rem; padding: 1px 8px; font-weight: 600; }
+.tool { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tool input[type=search], .tool select { font: inherit; font-size: .9rem; padding: 8px 12px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.tool input[type=search] { flex: 1 1 180px; min-width: 0; }
+.spacer { flex: 1; }
+ul { list-style: none; margin: 0; padding: 0; }
+.person { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); animation: in .3s cubic-bezier(.2,.7,.2,1); }
+.person:last-child { border-bottom: 0; }
+@keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.s-on .dot { background: var(--good); box-shadow: 0 0 0 4px color-mix(in srgb, var(--good) 22%, transparent); }
+.s-away .dot { background: var(--warn); box-shadow: 0 0 0 4px color-mix(in srgb, var(--warn) 22%, transparent); }
+.nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pill { font-size: .72rem; padding: 2px 9px; border-radius: 99px; background: var(--chip); color: var(--muted); font-weight: 500; }
+.s-on .pill { color: var(--good); } .s-away .pill { color: var(--warn); }
+.meta { grid-column: 2 / 4; color: var(--muted); font-size: .82rem; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.prog { grid-column: 2 / 4; display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+.pr { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: .84rem; }
+.pr .t { color: var(--muted); }
+.bar { grid-column: 1 / 3; height: 6px; background: var(--chip); border-radius: 99px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .5s cubic-bezier(.2,.7,.2,1); }
+.fb { padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; animation: in .3s cubic-bezier(.2,.7,.2,1); }
+.fb:last-child { border-bottom: 0; }
+.fb.unread { border-left: 3px solid var(--accent); padding-left: 12px; }
+.fb .head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.stars { color: #f59e0b; letter-spacing: 2px; }
+.fb p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.fb .acts { display: flex; gap: 8px; }
+.empty { color: var(--muted); padding: 14px 0; }
 [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="row">
-    <div><h1>Who is online</h1><p class="sub">Only visible to the owner. Updates live.</p></div>
+    <div><h1>Admin</h1><p class="sub" id="who">Only visible to the owner. Updates live.</p></div>
     <button class="btn" id="btnOut" hidden>Sign out</button>
   </div>
 
   <div class="card" id="signin">
     <p class="msg" id="status">Sign in with your Google account to continue.</p>
-    <button class="btn primary" id="btnIn">Sign in with Google</button>
+    <button class="btn primary" id="btnIn" style="margin-top:10px">Sign in with Google</button>
   </div>
 
-  <div id="board" hidden>
-    <div class="card row">
-      <div><div class="big" id="nOnline">0</div><div class="lbl">Online now</div></div>
-      <div><div class="big" id="nSeen">0</div><div class="lbl">Seen in the last 24 hours</div></div>
+  <div id="board" hidden style="display:flex;flex-direction:column;gap:16px">
+    <div class="stats">
+      <div class="stat on"><b id="nOnline">0</b><span class="lbl">Online now</span></div>
+      <div class="stat away"><b id="nAway">0</b><span class="lbl">Away</span></div>
+      <div class="stat"><b id="nToday">0</b><span class="lbl">Seen today</span></div>
+      <div class="stat"><b id="nTotal">0</b><span class="lbl">Total people</span></div>
     </div>
-    <div class="card" style="margin-top:16px">
-      <div class="lbl" style="margin-bottom:4px">Online now</div>
-      <ul id="listOn"></ul><p class="msg" id="emptyOn">Nobody is online right now.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tabLive" aria-selected="true" data-tab="live">Live</button>
+      <button class="tab" role="tab" id="tabAll" aria-selected="false" data-tab="all">Everyone</button>
+      <button class="tab" role="tab" id="tabFb" aria-selected="false" data-tab="fb">Feedback <span class="badge" id="fbBadge" hidden>0</span></button>
     </div>
-    <div class="card" style="margin-top:16px">
-      <div class="row"><div class="lbl">Earlier (last 24 hours)</div><button class="btn" id="btnClear">Clear offline list</button></div>
-      <ul id="listOff"></ul><p class="msg" id="emptyOff">Nobody else yet.</p>
-    </div>
+
+    <section class="card" id="paneLive" role="tabpanel">
+      <div class="lbl">Online now</div><ul id="listOn"></ul><p class="empty" id="emptyOn">Nobody is online right now.</p>
+      <div class="lbl" style="margin-top:14px">Away (tab in the background)</div><ul id="listAway"></ul><p class="empty" id="emptyAway">Nobody is away.</p>
+    </section>
+
+    <section class="card" id="paneAll" role="tabpanel" hidden>
+      <div class="tool">
+        <input type="search" id="q" placeholder="Search by name" aria-label="Search by name">
+        <select id="sort" aria-label="Sort by">
+          <option value="seen">Last seen</option><option value="name">Name</option><option value="acc">Accuracy</option><option value="streak">Best streak</option><option value="done">Most answered</option>
+        </select>
+        <button class="btn" id="btnCsv">Export CSV</button>
+      </div>
+      <ul id="listAll"></ul><p class="empty" id="emptyAll">Nobody yet.</p>
+      <div class="row" style="margin-top:10px"><span class="lbl" id="countAll"></span><button class="btn danger" id="btnClear">Clear offline list</button></div>
+    </section>
+
+    <section class="card" id="paneFb" role="tabpanel" hidden>
+      <div class="tool">
+        <select id="fbFilter" aria-label="Filter feedback"><option value="all">All feedback</option><option value="unread">Unread only</option></select>
+        <span class="spacer"></span>
+        <button class="btn" id="btnFbCsv">Export CSV</button>
+      </div>
+      <div id="listFb"></div><p class="empty" id="emptyFb">No feedback yet.</p>
+    </section>
   </div>
 </div>
 
 <script type="module">
 var $ = function (id) { return document.getElementById(id); };
-var cfg = window.FC_FIREBASE, ADMIN = String(window.FC_ADMIN_EMAIL || '').toLowerCase();
+var cfg = window.FC_FIREBASE, ADMIN = String(window.FC_ADMIN_EMAIL || '').toLowerCase(), TOPICS = window.FC_TOPICS || {};
+var FRESH = 180000;
 function say(t, bad) { $('status').textContent = t; $('status').className = bad ? 'err' : 'msg'; }
 function ago(ms) {
-  var s = Math.max(0, Math.round(ms / 1000));
-  if (s < 60) return s + 's ago'; var m = Math.round(s / 60); if (m < 60) return m + ' min ago';
-  var h = Math.round(m / 60); if (h < 24) return h + ' h ago'; return Math.round(h / 24) + ' d ago';
+  var s = Math.max(0, Math.round(ms / 1000)); if (s < 60) return 'just now';
+  var m = Math.round(s / 60); if (m < 60) return m + ' min ago';
+  var h = Math.round(m / 60); if (h < 24) return h + ' h ago';
+  var d = Math.round(h / 24); return d + (d === 1 ? ' day ago' : ' days ago');
 }
+function dt(ms) { if (!ms) return ''; try { return new Date(ms).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); } catch (e) { return String(ms); } }
+function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function csvCell(v) { var t = String(v === undefined || v === null ? '' : v); if (/^[=+\-@\t\r]/.test(t)) t = "'" + t; return '"' + t.replace(/"/g, '""') + '"'; }
+function download(name, rows) {
+  var blob = new Blob(['﻿' + rows.map(function (r) { return r.map(csvCell).join(','); }).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+var state = { presence: {}, feedback: {}, tab: 'live' };
+window.__admin = state;
+
+function people() {
+  var now = Date.now(), out = [];
+  Object.keys(state.presence).forEach(function (k) {
+    var r = state.presence[k]; if (!r || typeof r.name !== 'string') return;
+    var last = typeof r.last === 'number' ? r.last : 0, live = r.online === true && now - last < FRESH;
+    var tot = { d: 0, r: 0, b: 0 }, prog = r.prog && typeof r.prog === 'object' ? r.prog : {};
+    Object.keys(prog).forEach(function (t) { var g = prog[t] || {}; tot.d += g.d | 0; tot.r += g.r | 0; if ((g.b | 0) > tot.b) tot.b = g.b | 0; });
+    out.push({ k: k, name: r.name, where: r.where || '', last: last, first: r.first || 0, visits: r.visits | 0, prog: prog, tot: tot, acc: tot.d ? tot.r / tot.d : -1, status: live ? (r.away === true ? 'away' : 'on') : 'off' });
+  });
+  return out;
+}
+function progBlock(p) {
+  var keys = Object.keys(p.prog); if (!keys.length) return null;
+  var box = el('div', 'prog');
+  keys.forEach(function (t) {
+    var g = p.prog[t] || {}, d = g.d | 0, r = g.r | 0, pct = d ? Math.round(100 * r / d) : 0, row = el('div', 'pr');
+    row.appendChild(el('span', 't', TOPICS[t] || t.toUpperCase()));
+    row.appendChild(el('span', '', d + ' answered · ' + pct + '% · best streak ' + (g.b | 0)));
+    var bar = el('div', 'bar'), fill = document.createElement('i'); fill.style.width = pct + '%'; bar.appendChild(fill); row.appendChild(bar); box.appendChild(row);
+  });
+  return box;
+}
+function personRow(p, now, showAgo) {
+  var li = el('li', 'person s-' + p.status);
+  li.appendChild(el('i', 'dot')); li.appendChild(el('span', 'nm', p.name));
+  li.appendChild(el('span', 'pill', p.status === 'on' ? 'Online' : p.status === 'away' ? 'Away' : ago(now - p.last)));
+  var meta = el('div', 'meta');
+  if (p.where && p.status !== 'off') meta.appendChild(el('span', '', p.where));
+  if (p.status === 'off' && p.last) meta.appendChild(el('span', '', 'Last seen ' + dt(p.last)));
+  if (p.visits) meta.appendChild(el('span', '', p.visits + (p.visits === 1 ? ' visit' : ' visits')));
+  if (p.first) meta.appendChild(el('span', '', 'First seen ' + dt(p.first)));
+  li.appendChild(meta);
+  var pb = progBlock(p); if (pb) li.appendChild(pb);
+  return li;
+}
+function fill(ul, arr, now) { ul.innerHTML = ''; arr.forEach(function (p) { ul.appendChild(personRow(p, now)); }); }
+function render() {
+  var now = Date.now(), all = people(), sod = new Date(); sod.setHours(0, 0, 0, 0);
+  var on = all.filter(function (p) { return p.status === 'on'; }), away = all.filter(function (p) { return p.status === 'away'; });
+  $('nOnline').textContent = on.length; $('nAway').textContent = away.length; $('nTotal').textContent = all.length;
+  $('nToday').textContent = all.filter(function (p) { return p.last >= sod.getTime() || p.status !== 'off'; }).length;
+  var byName = function (a, b) { return a.name.localeCompare(b.name); };
+  fill($('listOn'), on.sort(byName), now); fill($('listAway'), away.sort(byName), now);
+  $('emptyOn').hidden = on.length > 0; $('emptyAway').hidden = away.length > 0;
+  // everyone
+  var q = $('q').value.trim().toLowerCase(), sort = $('sort').value;
+  var list = all.filter(function (p) { return !q || p.name.toLowerCase().indexOf(q) >= 0; });
+  list.sort(function (a, b) {
+    if (sort === 'name') return a.name.localeCompare(b.name);
+    if (sort === 'acc') return b.acc - a.acc;
+    if (sort === 'streak') return b.tot.b - a.tot.b;
+    if (sort === 'done') return b.tot.d - a.tot.d;
+    return b.last - a.last;
+  });
+  fill($('listAll'), list, now); $('emptyAll').hidden = list.length > 0; $('countAll').textContent = list.length + (list.length === 1 ? ' person' : ' people');
+  // feedback
+  var fbs = Object.keys(state.feedback).map(function (k) { var f = state.feedback[k] || {}; f.k = k; return f; }).filter(function (f) { return typeof f.msg === 'string'; }).sort(function (a, b) { return (b.at || 0) - (a.at || 0); });
+  var unread = fbs.filter(function (f) { return !f.read; }).length;
+  $('fbBadge').hidden = unread === 0; $('fbBadge').textContent = unread;
+  var shown = $('fbFilter').value === 'unread' ? fbs.filter(function (f) { return !f.read; }) : fbs, box = $('listFb'); box.innerHTML = '';
+  shown.forEach(function (f) {
+    var d = el('div', 'fb' + (f.read ? '' : ' unread')), h = el('div', 'head');
+    h.appendChild(el('b', '', f.name || 'Anonymous'));
+    if (f.rating >= 1 && f.rating <= 5) { var st = el('span', 'stars', '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating)); st.setAttribute('aria-label', f.rating + ' out of 5'); h.appendChild(st); }
+    h.appendChild(el('span', 'pill', f.at ? dt(f.at) : ''));
+    if (f.where) h.appendChild(el('span', 'pill', f.where));
+    d.appendChild(h); d.appendChild(el('p', '', f.msg));
+    var a = el('div', 'acts'), rb = el('button', 'btn', f.read ? 'Mark unread' : 'Mark read'), db = el('button', 'btn danger', 'Delete');
+    rb.setAttribute('data-act', 'read'); rb.setAttribute('data-k', f.k); db.setAttribute('data-act', 'del'); db.setAttribute('data-k', f.k);
+    a.appendChild(rb); a.appendChild(db); d.appendChild(a); box.appendChild(d);
+  });
+  $('emptyFb').hidden = shown.length > 0;
+  $('emptyFb').textContent = $('fbFilter').value === 'unread' ? 'No unread feedback.' : 'No feedback yet.';
+}
+function setTab(t) {
+  state.tab = t;
+  ['live', 'all', 'fb'].forEach(function (x) {
+    var id = x === 'live' ? 'Live' : x === 'all' ? 'All' : 'Fb';
+    $('pane' + id).hidden = x !== t; $('tab' + id).setAttribute('aria-selected', x === t ? 'true' : 'false');
+  });
+}
+document.querySelector('.tabs').addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('.tab'); if (b) setTab(b.getAttribute('data-tab')); });
+$('q').addEventListener('input', render); $('sort').addEventListener('change', render); $('fbFilter').addEventListener('change', render);
+$('btnCsv').addEventListener('click', function () {
+  var rows = [['Name', 'Status', 'Last seen', 'First seen', 'Visits', 'Topic', 'Answered', 'Correct', 'Accuracy %', 'Best streak']];
+  people().sort(function (a, b) { return a.name.localeCompare(b.name); }).forEach(function (p) {
+    var ks = Object.keys(p.prog);
+    var base = [p.name, p.status === 'on' ? 'Online' : p.status === 'away' ? 'Away' : 'Offline', p.last ? new Date(p.last).toISOString() : '', p.first ? new Date(p.first).toISOString() : '', p.visits];
+    if (!ks.length) rows.push(base.concat(['', '', '', '', '']));
+    ks.forEach(function (t) { var g = p.prog[t] || {}; rows.push(base.concat([TOPICS[t] || t, g.d | 0, g.r | 0, g.d ? Math.round(100 * (g.r | 0) / g.d) : '', g.b | 0])); });
+  });
+  download('people.csv', rows);
+});
+$('btnFbCsv').addEventListener('click', function () {
+  var rows = [['When', 'Name', 'Rating', 'Page', 'Message', 'Read']];
+  Object.keys(state.feedback).map(function (k) { return state.feedback[k]; }).filter(function (f) { return f && typeof f.msg === 'string'; }).sort(function (a, b) { return (b.at || 0) - (a.at || 0); })
+    .forEach(function (f) { rows.push([f.at ? new Date(f.at).toISOString() : '', f.name || '', f.rating || '', f.where || '', f.msg, f.read ? 'yes' : 'no']); });
+  download('feedback.csv', rows);
+});
+
 (async function () {
   if (!cfg) { say('Not set up yet: paste the Firebase config at the top of this file.', true); $('btnIn').hidden = true; return; }
   try {
     var B = 'https://www.gstatic.com/firebasejs/10.14.1/';
     var A = await import(B + 'firebase-app.js'), Au = await import(B + 'firebase-auth.js'), D = await import(B + 'firebase-database.js');
-    var app = A.initializeApp(cfg), auth = Au.getAuth(app), db = D.getDatabase(app);
-    var data = {}, unsub = null, tick = null;
-    function render() {
-      var now = Date.now(), on = [], off = [];
-      Object.keys(data).forEach(function (k) {
-        var r = data[k]; if (!r || typeof r.name !== 'string') return;
-        var last = typeof r.last === 'number' ? r.last : 0, live = r.online === true && now - last < 90000;
-        (live ? on : off).push({ k: k, name: r.name, where: r.where || '', last: last, live: live });
-      });
-      off = off.filter(function (x) { return now - x.last < 86400000; });
-      on.sort(function (a, b) { return a.name.localeCompare(b.name); });
-      off.sort(function (a, b) { return b.last - a.last; });
-      function fill(ul, arr) {
-        ul.innerHTML = '';
-        arr.forEach(function (x) {
-          var li = document.createElement('li'); if (x.live) li.className = 'on';
-          var d = document.createElement('i'); d.className = 'dot';
-          var w = document.createElement('div'); w.className = 'who';
-          var b = document.createElement('b'); b.textContent = x.name;
-          var sp = document.createElement('span'); sp.textContent = x.where || '';
-          w.appendChild(b); w.appendChild(sp);
-          var t = document.createElement('div'); t.className = 'ago'; t.textContent = x.live ? 'now' : ago(now - x.last);
-          li.appendChild(d); li.appendChild(w); li.appendChild(t); ul.appendChild(li);
-        });
-      }
-      fill($('listOn'), on); fill($('listOff'), off);
-      $('emptyOn').hidden = on.length > 0; $('emptyOff').hidden = off.length > 0;
-      $('nOnline').textContent = on.length; $('nSeen').textContent = on.length + off.length;
-    }
+    var app = A.initializeApp(cfg), auth = Au.getAuth(app), db = D.getDatabase(app), unsubs = [], tick = null;
+    function stop() { unsubs.forEach(function (u) { try { u(); } catch (e) {} }); unsubs = []; if (tick) { clearInterval(tick); tick = null; } }
+    function bad() { say('Could not read the data. Check that the database rules are published.', true); $('signin').hidden = false; $('board').hidden = true; stop(); }
     function show(user) {
-      if (!user || user.isAnonymous) { $('signin').hidden = false; $('board').hidden = true; $('btnOut').hidden = true; if (unsub) { unsub(); unsub = null; } return; }
-      if (!user.emailVerified || String(user.email || '').toLowerCase() !== ADMIN) {
-        say('Signed in as ' + user.email + ', which does not have access.', true);
-        Au.signOut(auth); return;
-      }
-      $('signin').hidden = true; $('board').hidden = false; $('btnOut').hidden = false;
-      if (!unsub) unsub = D.onValue(D.ref(db, 'presence'), function (snap) { data = snap.val() || {}; render(); }, function () { say('Could not read the list. Check the database rules.', true); $('signin').hidden = false; $('board').hidden = true; });
-      if (!tick) tick = setInterval(render, 15000);
+      if (!user || user.isAnonymous) { $('signin').hidden = false; $('board').hidden = true; $('btnOut').hidden = true; stop(); return; }
+      if (!user.emailVerified || String(user.email || '').toLowerCase() !== ADMIN) { say('Signed in as ' + user.email + ', which does not have access.', true); Au.signOut(auth); return; }
+      $('signin').hidden = true; $('board').hidden = false; $('board').style.display = 'flex'; $('btnOut').hidden = false; $('who').textContent = 'Signed in as ' + user.email + '. Updates live.';
+      if (unsubs.length) return;
+      unsubs.push(D.onValue(D.ref(db, 'presence'), function (s) { state.presence = s.val() || {}; render(); }, bad));
+      unsubs.push(D.onValue(D.ref(db, 'feedback'), function (s) { state.feedback = s.val() || {}; render(); }, bad));
+      tick = setInterval(render, 15000);
     }
     Au.onAuthStateChanged(auth, show);
     $('btnIn').onclick = function () { say('Opening Google sign-in…'); Au.signInWithPopup(auth, new Au.GoogleAuthProvider()).catch(function (e) { say('Sign-in failed: ' + (e && e.code || e), true); }); };
     $('btnOut').onclick = function () { Au.signOut(auth); say('Signed out.'); };
     $('btnClear').onclick = function () {
       if (!confirm('Remove everyone who is offline from the list?')) return;
-      var now = Date.now(); Object.keys(data).forEach(function (k) { var r = data[k] || {}; if (!(r.online === true && now - (r.last || 0) < 90000)) D.remove(D.ref(db, 'presence/' + k)); });
+      var now = Date.now(); Object.keys(state.presence).forEach(function (k) { var r = state.presence[k] || {}; if (!(r.online === true && now - (r.last || 0) < FRESH)) D.remove(D.ref(db, 'presence/' + k)); });
     };
+    $('listFb').addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('button'); if (!b) return;
+      var k = b.getAttribute('data-k'), act = b.getAttribute('data-act'), f = state.feedback[k] || {};
+      if (act === 'read') D.update(D.ref(db, 'feedback/' + k), { read: !f.read });
+      if (act === 'del' && confirm('Delete this feedback?')) D.remove(D.ref(db, 'feedback/' + k));
+    });
   } catch (e) { say('Could not load Firebase. Check the connection and try again.', true); }
 })();
 </script>
