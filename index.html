@@ -25,20 +25,20 @@ window.FC_FIREBASE = {
 <style>
 /* Layout idea: light study sheet with one always-dark terminal panel where commands are typed. */
 :root {
-  --bg: #f3f5f9;
-  --surface: #ffffff;
-  --ink: #16202e;
-  --muted: #5b6678;
-  --line: #d9dfe9;
+  --bg: #e5e8ee;
+  --surface: #f4f5f8;
+  --ink: #1d2531;
+  --muted: #525e70;
+  --line: #c8cfda;
   --accent: #1d4ed8;
   --accent-ink: #ffffff;
   --good: #137a3f;
-  --good-bg: #e3f4e9;
+  --good-bg: #d6e9de;
   --bad: #b42318;
-  --bad-bg: #fde8e6;
+  --bad-bg: #f1d9d6;
   --term-bg: #1e3a8a;
   --term-fg: #e0ecff;
-  --sky1: #cfe3ff; --sky2: #e6eefb; --cloud: rgba(255, 255, 255, 0.95); --orb: rgba(255, 196, 72, 0.5); --stars: 0; --trail: #f97316;
+  --sky1: #b9cbe4; --sky2: #d3dbe8; --cloud: rgba(255, 255, 255, 0.7); --orb: rgba(255, 200, 100, 0.32); --stars: 0; --trail: #f97316;
   --term-dim: #b4cbf5;
   --term-line: #3b5fc4;
   --term-prompt: #b4cbf5;
@@ -48,20 +48,20 @@ window.FC_FIREBASE = {
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0f1520; --surface: #172030; --ink: #e6ecf5; --muted: #98a5ba; --line: #2a3750;
-    --accent: #6c93ff; --accent-ink: #0b1220;
-    --good: #5fd08c; --good-bg: #12301f; --bad: #ff8a80; --bad-bg: #3a1b19;
-    --term-bg: #08142a; --term-fg: #6ee7a0; --term-dim: #8aa3c4; --term-line: #22365a; --term-prompt: rgba(110, 231, 160, 0.75);
-    --sky1: #0a1430; --sky2: #0f1a30; --cloud: rgba(140, 165, 230, 0.10); --orb: rgba(196, 214, 255, 0.2); --stars: 1; --trail: #fb923c;
+    --bg: #313338; --surface: #2b2d31; --ink: #e3e5e8; --muted: #a8acb3; --line: #43464d;
+    --accent: #8ea1ff; --accent-ink: #15161a;
+    --good: #6fd69a; --good-bg: #26382d; --bad: #ff8f86; --bad-bg: #44292a;
+    --term-bg: #1e1f22; --term-fg: #6ee7a0; --term-dim: #9aa3b0; --term-line: #3a3d44; --term-prompt: rgba(110, 231, 160, 0.75);
+    --sky1: #3a3f55; --sky2: #34373f; --cloud: rgba(200, 210, 235, 0.09); --orb: rgba(210, 220, 255, 0.14); --stars: 0.7; --trail: #fb923c;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0f1520; --surface: #172030; --ink: #e6ecf5; --muted: #98a5ba; --line: #2a3750;
-  --accent: #6c93ff; --accent-ink: #0b1220;
-  --good: #5fd08c; --good-bg: #12301f; --bad: #ff8a80; --bad-bg: #3a1b19;
-  --term-bg: #08142a; --term-fg: #6ee7a0; --term-dim: #8aa3c4; --term-line: #22365a; --term-prompt: rgba(110, 231, 160, 0.75);
-  --sky1: #0a1430; --sky2: #0f1a30; --cloud: rgba(140, 165, 230, 0.10); --orb: rgba(196, 214, 255, 0.2); --stars: 1; --trail: #fb923c;
+  --bg: #313338; --surface: #2b2d31; --ink: #e3e5e8; --muted: #a8acb3; --line: #43464d;
+  --accent: #8ea1ff; --accent-ink: #15161a;
+  --good: #6fd69a; --good-bg: #26382d; --bad: #ff8f86; --bad-bg: #44292a;
+  --term-bg: #1e1f22; --term-fg: #6ee7a0; --term-dim: #9aa3b0; --term-line: #3a3d44; --term-prompt: rgba(110, 231, 160, 0.75);
+  --sky1: #3a3f55; --sky2: #34373f; --cloud: rgba(200, 210, 235, 0.09); --orb: rgba(210, 220, 255, 0.14); --stars: 0.7; --trail: #fb923c;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -150,6 +150,20 @@ html[data-view="home"] .cloud { opacity: 1; animation-play-state: running; }
 html[data-eff="dark"] .themebtn .sun { transform: rotate(90deg) scale(0.3); opacity: 0; }
 html[data-eff="dark"] .themebtn .moon { transform: none; opacity: 1; }
 html:not(.js) #sky .stars { display: none; }
+
+.homefoot { display: flex; justify-content: center; padding-top: 4px; }
+.homefoot .btn { display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--surface) 80%, transparent); }
+.homefoot .btn svg { width: 18px; height: 18px; }
+.rate { display: flex; gap: 4px; }
+.rate .star { width: 40px; height: 40px; padding: 0; border: 0; border-radius: 10px; background: transparent; cursor: pointer; display: grid; place-items: center; color: var(--muted); transition: transform 0.15s ease, color 0.2s ease, background-color 0.2s ease; }
+.rate .star:hover { background: var(--bg); }
+.rate .star:active { transform: scale(0.88); }
+.rate .star svg { width: 26px; height: 26px; fill: none; stroke: currentColor; transition: fill 0.2s ease, stroke 0.2s ease; }
+.rate .star.on { color: #f59e0b; }
+.rate .star.on svg { fill: #f59e0b; }
+textarea.ginput { resize: vertical; min-height: 110px; line-height: 1.45; }
+.fbmeta { display: flex; justify-content: space-between; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+.gok { color: var(--good); font-size: 0.85rem; min-height: 1.1em; }
 .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 40px; }
 html:not(.js) .topbar { display: none; }
 html[data-view="home"] #btnHome { visibility: hidden; }
@@ -312,6 +326,7 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
     <p class="sub">Choose a topic to practice. Typing practice only; no live flight data.</p>
   </div>
   <div class="tgrid" id="tgrid"></div>
+  <div class="homefoot"><button class="btn" type="button" id="btnFeedback" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Send feedback</button></div>
 </section>
 <div id="app">
   <header>
@@ -404,8 +419,24 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
     <div><label for="gateName">Your name</label>
     <input class="ginput" id="gateName" type="text" maxlength="30" placeholder="e.g. Maria" autocapitalize="words" enterkeyhint="go"></div>
     <div class="gerr" id="gateErr" role="alert"></div>
-    <p>Your name is visible to the site owner while you use this page.</p>
+    <p>Your name and practice progress are visible to the site owner while you use this page.</p>
     <div class="grow"><button class="btn" type="button" id="btnGateCancel" hidden>Cancel</button><button class="btn primary" type="submit" id="btnGateGo">Continue</button></div>
+  </form>
+</div>
+<div class="gate" id="fb" role="dialog" aria-modal="true" aria-labelledby="fbTitle" hidden>
+  <form class="gcard" id="fbForm" autocomplete="off" novalidate>
+    <h1 id="fbTitle">Send feedback</h1>
+    <p>Tell the site owner what works, what is confusing, or what you would like to see.</p>
+    <div class="rate" role="group" aria-label="Rating, optional">
+      <button class="star" type="button" data-n="1" aria-label="1 star" aria-pressed="false"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+      <button class="star" type="button" data-n="2" aria-label="2 stars" aria-pressed="false"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+      <button class="star" type="button" data-n="3" aria-label="3 stars" aria-pressed="false"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+      <button class="star" type="button" data-n="4" aria-label="4 stars" aria-pressed="false"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+      <button class="star" type="button" data-n="5" aria-label="5 stars" aria-pressed="false"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button>
+    </div>
+    <textarea class="ginput" id="fbMsg" rows="5" maxlength="600" placeholder="Your feedback" aria-label="Your feedback"></textarea>
+    <div class="fbmeta"><span id="fbCount">0 / 600</span><span class="gerr" id="fbErr" role="alert"></span></div>
+    <div class="grow"><button class="btn" type="button" id="btnFbCancel">Cancel</button><button class="btn primary" type="submit" id="btnFbSend">Send</button></div>
   </form>
 </div>
 <div class="scrim" id="scrim"></div>
@@ -725,7 +756,7 @@ function renderSettings() {
     });
     h += '</div></div>';
   });
-  if (window.FC_FIREBASE) h += '<div class="setgroup"><h2>You</h2><div class="setcard"><div class="setrow"><div class="lbl">Your name<span class="desc" id="nameNow"></span></div><button class="btn" type="button" id="btnChangeName">Change</button></div></div></div>';
+  if (window.FC_FIREBASE) h += '<div class="setgroup"><h2>You</h2><div class="setcard"><div class="setrow"><div class="lbl">Your name<span class="desc" id="nameNow"></span></div><button class="btn" type="button" id="btnChangeName">Change</button></div><div class="setrow"><div class="lbl">Feedback<span class="desc">Tell the site owner what you think</span></div><button class="btn" type="button" id="btnFeedback2">Send</button></div></div></div>';
   h += '<div class="setgroup"><h2>Reset and data</h2><div class="setcard">' +
     '<div class="setrow"><div class="lbl">Reset stats<span class="desc">Clears answered, accuracy and streak</span></div><button class="btn" id="btnResetStats">Reset stats</button></div>' +
     '<div class="setrow"><div class="lbl">Clear misses list<span class="desc">Empties "Practice my misses"</span></div><button class="btn" id="btnClearMisses">Clear misses</button></div></div></div>' +
@@ -796,11 +827,12 @@ var CLICKS = {
   back: [[784, 523], 'sine', 0.11],
   win:  [[523, 659, 784, 1047], 'sine', 0.13]
 };
-var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnTheme: 'mid', btnChangeName: 'mid', btnGateCancel: 'back', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
+var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnTheme: 'mid', btnChangeName: 'mid', btnFeedback: 'mid', btnFeedback2: 'mid', btnFbCancel: 'back', btnGateCancel: 'back', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
 function clickKind(t) {
   var el = t && t.closest ? t.closest('button,input,select') : null;
   if (!el || el.disabled) return null;
-  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnCheck' || el.id === 'btnGateGo') return null;
+  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnCheck' || el.id === 'btnGateGo' || el.id === 'btnFbSend') return null;
+  if (el.classList.contains('star')) return 'tab';
   if (el.tagName === 'SELECT') return null;
   if (el.tagName === 'INPUT') {
     if (el.type === 'checkbox') return el.checked ? 'hi' : 'lo';
@@ -1259,6 +1291,61 @@ window.fcWhere = function () {
 };
 
 
+
+/* ---------- feedback ---------- */
+var fbOpen = false, fbRating = 0, fbBusy = false;
+function setRating(n) {
+  fbRating = n;
+  Array.prototype.forEach.call(document.querySelectorAll('#fb .star'), function (b) { var on = (+b.getAttribute('data-n')) <= n; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on && (+b.getAttribute('data-n')) === n ? 'true' : 'false'); });
+}
+function openFb() {
+  if (fbOpen) return; fbOpen = true;
+  $('fbMsg').value = ''; $('fbErr').textContent = ''; $('fbErr').className = 'gerr'; $('fbCount').textContent = '0 / 600'; setRating(0);
+  var g = $('fb'); g.classList.remove('out'); g.hidden = false;
+  document.body.classList.add('gateopen');
+  try { wrapEl().inert = true; } catch (e) {}
+  anim($('fbForm'), [{ opacity: 0, transform: 'translateY(14px) scale(0.98)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: EASE });
+  setTimeout(function () { try { $('fbMsg').focus(); } catch (e) {} }, 80);
+}
+function closeFb() {
+  if (!fbOpen) return; fbOpen = false;
+  var g = $('fb'); g.classList.add('out');
+  if (!gateOpen) document.body.classList.remove('gateopen');
+  try { wrapEl().inert = false; } catch (e) {}
+  setTimeout(function () { if (!fbOpen) g.hidden = true; }, motionOn() ? 260 : 0);
+}
+Array.prototype.forEach.call(document.querySelectorAll('#fb .star'), function (b) {
+  b.addEventListener('click', function () { var n = +b.getAttribute('data-n'); setRating(n === fbRating ? 0 : n); });
+});
+$('fbMsg').addEventListener('input', function () { $('fbCount').textContent = $('fbMsg').value.length + ' / 600'; $('fbErr').textContent = ''; $('fbErr').className = 'gerr'; });
+$('btnFbCancel').addEventListener('click', closeFb);
+$('btnFeedback').addEventListener('click', openFb);
+$('settingsBody').addEventListener('click', function (e) { if (e.target && e.target.id === 'btnFeedback2') { closeSettings(); openFb(); } });
+document.addEventListener('keydown', function (e) { if (fbOpen && e.key === 'Escape') closeFb(); });
+function fbError(t) { $('fbErr').className = 'gerr'; $('fbErr').textContent = t; playSound('lo'); }
+$('fbForm').addEventListener('submit', function (e) {
+  e.preventDefault(); if (fbBusy) return;
+  var m = $('fbMsg').value.trim();
+  if (!m) { fbError('Please write a message first.'); shake($('fbMsg')); return; }
+  if (Date.now() - (+store.get('fc-fb-at') || 0) < 20000) { fbError('Please wait a moment before sending another.'); return; }
+  if (!window.fcSendFeedback) { fbError('Feedback is not available right now. Try again in a moment.'); return; }
+  fbBusy = true; $('btnFbSend').disabled = true; $('btnFbSend').textContent = 'Sending...';
+  var timer = new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')); }, 8000); });
+  Promise.race([window.fcSendFeedback({ msg: m.slice(0, 600), rating: fbRating }), timer]).then(function () {
+    store.set('fc-fb-at', String(Date.now()));
+    $('fbErr').className = 'gok'; $('fbErr').textContent = 'Thank you! Your feedback was sent.'; playSound('up');
+    setTimeout(closeFb, 1400);
+  }).catch(function () { fbError('Could not send. Check your connection and try again.'); }).then(function () {
+    fbBusy = false; $('btnFbSend').disabled = false; $('btnFbSend').textContent = 'Send';
+  });
+});
+window.fcProgress = function () {
+  var o = {};
+  COURSE.forEach(function (c) { if (!c.ready) return; var g = loadProg(c.id); if (g.d) o[c.id] = { d: g.d, r: g.r, b: g.b }; });
+  return o;
+};
+try { store.set('fc-visits', String((+store.get('fc-visits') || 0) + 1)); if (!store.get('fc-first')) store.set('fc-first', String(Date.now())); } catch (e) {}
+
 /* ---------- greeting plane ---------- */
 var greeted = false, flying = false, flyRaf = 0, flyTimers = [];
 var PLANE_D = 'M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z';
@@ -1332,6 +1419,7 @@ confirmBtn('btnClearMisses', 'Clear misses', function () { S.misses = []; S.miss
 nextQ();
 startDeck();
 showName();
+$('btnFeedback').hidden = !window.FC_FIREBASE;
 if (window.FC_FIREBASE && !savedName()) openGate(false);
 renderHome();
 $('appTitle').textContent = CUR.title;
@@ -1357,20 +1445,27 @@ maybeGreet();
     function name() { try { return (localStorage.getItem('fc-name') || '').trim(); } catch (e) { return ''; } }
     function where() { try { return String(window.fcWhere ? window.fcWhere() : '').slice(0, 60); } catch (e) { return ''; } }
     function visible() { return document.visibilityState !== 'hidden'; }
+    function num(k) { try { return +localStorage.getItem(k) || 0; } catch (e) { return 0; } }
     function beat(first) {
       var n = name(); if (!n) return;
-      var data = { name: n, online: visible(), where: where(), last: D.serverTimestamp() };
+      var data = { name: n, online: true, away: !visible(), where: where(), last: D.serverTimestamp(), visits: num('fc-visits'), first: num('fc-first') || Date.now() };
+      try { var pr = window.fcProgress ? window.fcProgress() : null; if (pr && Object.keys(pr).length) data.prog = pr; } catch (e) {}
       (first ? D.set(me, data) : D.update(me, data)).catch(function () {});
     }
     function start() {
       if (started || !name()) return; started = true;
       D.onValue(D.ref(db, '.info/connected'), function (snap) {
         if (snap.val() !== true) return;
-        D.onDisconnect(me).update({ online: false, last: D.serverTimestamp() }).catch(function () {});
+        D.onDisconnect(me).update({ online: false, away: false, last: D.serverTimestamp() }).catch(function () {});
         beat(true);
       });
       timer = setInterval(function () { beat(false); }, 25000);
     }
+    window.fcSendFeedback = async function (p) {
+      var rec = { msg: String(p.msg || '').slice(0, 600), at: D.serverTimestamp(), where: where(), name: name() };
+      if (p.rating >= 1 && p.rating <= 5) rec.rating = p.rating | 0;
+      await D.push(D.ref(db, 'feedback'), rec);
+    };
     start();
     window.addEventListener('fc-name', function () { if (!started) start(); else beat(false); });
     document.addEventListener('visibilitychange', function () { beat(false); });
