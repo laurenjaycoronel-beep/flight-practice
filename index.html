@@ -63,22 +63,51 @@ h1 { font-size: 1.5rem; margin: 0; letter-spacing: -0.01em; text-wrap: balance; 
 #r-drill:checked ~ .tabs label[for="r-drill"],
 #r-cards:checked ~ .tabs label[for="r-cards"],
 #r-sheet:checked ~ .tabs label[for="r-sheet"],
-#r-settings:checked ~ .tabs label[for="r-settings"] { color: var(--ink); border-bottom-color: var(--accent); }
 .tabradio:focus-visible ~ .tabs label { outline: 0; }
 #r-drill:focus-visible ~ .tabs label[for="r-drill"],
 #r-cards:focus-visible ~ .tabs label[for="r-cards"],
 #r-sheet:focus-visible ~ .tabs label[for="r-sheet"],
-#r-settings:focus-visible ~ .tabs label[for="r-settings"] { outline: 3px solid var(--accent); outline-offset: 2px; }
 button:focus-visible, input:focus-visible, .chip:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: none; flex-direction: column; gap: 14px; }
-#r-drill:checked ~ #drill, #r-cards:checked ~ #cards, #r-sheet:checked ~ #sheet, #r-settings:checked ~ #settings { display: flex; }
+#r-drill:checked ~ #drill, #r-cards:checked ~ #cards, #r-sheet:checked ~ #sheet { display: flex; }
 html:not(.js) .stats { display: none; }
-.setgroup { display: flex; flex-direction: column; }
-.setgroup h2 { font-size: 1.05rem; margin: 8px 0 2px; }
-.setrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
-.setrow .lbl { font-weight: 500; flex: 1 1 200px; }
-.setrow .desc { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 400; }
+.setgroup { display: flex; flex-direction: column; gap: 6px; }
+.setgroup h2 { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin: 0 4px; }
+.setcard { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 14px; }
+.setrow { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.setrow:last-child { border-bottom: 0; }
+.setrow.stack { flex-direction: column; align-items: stretch; gap: 10px; }
+.setrow .lbl { font-weight: 500; flex: 1 1 auto; min-width: 0; }
+.setrow .desc { display: block; font-size: 0.8rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; border-radius: 11px; background: var(--bg); border: 1px solid var(--line); }
+.seg label { position: relative; display: block; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: block; text-align: center; padding: 7px 6px; border-radius: 8px; font-size: 0.85rem; color: var(--muted); white-space: nowrap; transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease; }
+.seg input:checked + span { background: var(--accent); color: var(--accent-ink); font-weight: 500; }
+.seg input:active + span { transform: scale(0.96); }
+.seg label:has(input:focus-visible) span { outline: 3px solid var(--accent); outline-offset: 1px; }
+.setcard .btn { flex: none; }
+.topbar { display: flex; align-items: center; justify-content: space-between; min-height: 40px; }
+html:not(.js) .topbar { display: none; }
+html[data-view="home"] #btnHome { visibility: hidden; }
+.gear { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.12s ease; }
+.gear:hover { border-color: var(--accent); }
+.gear:active { transform: scale(0.92); }
+.gear svg { width: 22px; height: 22px; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+body.setopen .gear svg { transform: rotate(90deg); }
+.scrim { position: fixed; inset: 0; background: rgba(8, 14, 26, 0.45); opacity: 0; visibility: hidden; z-index: 40; transition: opacity 0.28s ease, visibility 0s linear 0.28s; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(92vw, 400px); background: var(--bg); border-left: 1px solid var(--line); box-shadow: -12px 0 32px rgba(8, 14, 26, 0.18); z-index: 41; display: flex; flex-direction: column; transform: translateX(104%); visibility: hidden; transition: transform 0.34s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0.34s; }
+body.setopen .scrim { opacity: 1; visibility: visible; transition-delay: 0s; }
+body.setopen .drawer { transform: none; visibility: visible; transition-delay: 0s; }
+body.setopen { overflow: hidden; }
+.shead { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.shead h2 { margin: 0; font-size: 1.15rem; }
+.sclose { width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; color: var(--muted); font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, transform 0.12s ease; }
+.sclose:hover { background: var(--line); color: var(--ink); }
+.sclose:active { transform: scale(0.9); }
+.sbody { overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 18px; flex: 1; overscroll-behavior: contain; }
+html:not(.js) .scrim, html:not(.js) .drawer { display: none; }
 .switch { appearance: none; -webkit-appearance: none; width: 46px; height: 26px; border-radius: 13px; background: var(--line); position: relative; cursor: pointer; border: 0; flex: none; margin: 0; }
 .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
 .switch:checked { background: var(--accent); }
@@ -92,7 +121,7 @@ html:not(.js) .stats { display: none; }
 html.js[data-view="home"] #app { display: none; }
 html:not(.js) #home, html[data-view="topic"] #home { display: none; }
 html:not(.js) .jsonly-btn { display: none; }
-.hero { padding: 18px 0 4px; }
+.hero { padding: 6px 0 4px; }
 .hero h1 { font-size: 1.9rem; line-height: 1.15; }
 .tgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
 .tcard { font: inherit; color: var(--ink); text-align: left; display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease; }
@@ -107,8 +136,6 @@ html:not(.js) .jsonly-btn { display: none; }
 .tcard.locked { border-style: dashed; opacity: 0.6; cursor: not-allowed; }
 .tcard.locked:hover { transform: none; box-shadow: none; border-color: var(--line); }
 .tcard .lock { position: absolute; top: 14px; right: 14px; width: 18px; height: 18px; color: var(--muted); }
-.homebar { display: flex; justify-content: flex-start; }
-.appbar { display: flex; }
 .tabs { position: relative; }
 .tabind { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--accent); border-radius: 3px 3px 0 0; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); pointer-events: none; }
 .tabind.noanim { transition: none !important; }
@@ -196,16 +223,18 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 </head>
 <body>
 <div class="wrap">
+<div class="topbar">
+  <button class="btn jsonly-btn" type="button" id="btnHome">&larr; Topics</button>
+  <button class="gear jsonly-btn" type="button" id="btnGear" aria-label="Settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+</div>
 <section id="home" class="jsonly-block" aria-label="Topic selection">
   <div class="hero">
     <h1>Flight Command Practice</h1>
     <p class="sub">Choose a topic to practice. Typing practice only; no live flight data.</p>
   </div>
   <div class="tgrid" id="tgrid"></div>
-  <div class="homebar"><button class="btn" type="button" id="homeSettings">Settings</button></div>
 </section>
 <div id="app">
-  <div class="appbar"><button class="btn jsonly-btn" type="button" id="btnHome">&larr; Topics</button></div>
   <header>
     <div>
       <h1 id="appTitle">Flight Command Practice</h1>
@@ -221,12 +250,10 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
   <input class="tabradio" type="radio" name="tab" id="r-drill" checked aria-label="Command drill">
   <input class="tabradio" type="radio" name="tab" id="r-cards" aria-label="Flashcards">
   <input class="tabradio" type="radio" name="tab" id="r-sheet" aria-label="Cheat sheet">
-  <input class="tabradio" type="radio" name="tab" id="r-settings" aria-label="Settings">
   <div class="tabs">
     <label class="tab" for="r-drill">Drill</label>
     <label class="tab" for="r-cards">Flashcards</label>
     <label class="tab" for="r-sheet">Cheat sheet</label>
-    <label class="tab" for="r-settings">Settings</label>
     <i class="tabind" id="tabind" aria-hidden="true"></i>
   </div>
 
@@ -283,18 +310,18 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
     <div class="nojs"><h2 class="topichead">Topic 3: Flight Availability</h2><p class="note">Tap a card to see the answer. The shuffled flashcard mode opens when scripts can run, for example in Chrome or Safari.</p><h2>Commands</h2><details><summary>What does <code>AN</code> do?</summary><div class="ans">Availability display<div class="note">AN 15NOV FRASIN</div></div></details><details><summary>Which entry gives: <b>Availability display</b>?</summary><div class="ans"><code>AN</code><div class="note">AN 15NOV FRASIN</div></div></details><details><summary>What does <code>TN</code> do?</summary><div class="ans">Timetable display<div class="note">TN 15NOV FRASIN, add 1500 for a time</div></div></details><details><summary>Which entry gives: <b>Timetable display</b>?</summary><div class="ans"><code>TN</code><div class="note">TN 15NOV FRASIN, add 1500 for a time</div></div></details><details><summary>What does <code>DO</code> do?</summary><div class="ans">Flight information (DO CX930/26JAN/MNLHKG), or DO 3 for line 3 of an availability</div></details><details><summary>Which entry gives: <b>Flight information (DO CX930/26JAN/MNLHKG), or DO 3 for line 3 of an availability</b>?</summary><div class="ans"><code>DO</code></div></details><details><summary>What does <code>DM</code> do?</summary><div class="ans">Minimum connecting time (DM JFK, DM LON, DM 3)</div></details><details><summary>Which entry gives: <b>Minimum connecting time (DM JFK, DM LON, DM 3)</b>?</summary><div class="ans"><code>DM</code></div></details><h2>AN options</h2><details><summary>What does <code>/A</code> do?</summary><div class="ans">Operating airline<div class="note">AN 30NOV LONNYC /A BA</div></div></details><details><summary>Which entry gives: <b>Operating airline</b>?</summary><div class="ans"><code>/A</code><div class="note">AN 30NOV LONNYC /A BA</div></div></details><details><summary>What does <code>/A-</code> do?</summary><div class="ans">Exclude an airline<div class="note">AN 30NOV LONNYC /A- BA</div></div></details><details><summary>Which entry gives: <b>Exclude an airline</b>?</summary><div class="ans"><code>/A-</code><div class="note">AN 30NOV LONNYC /A- BA</div></div></details><details><summary>What does <code>/C</code> do?</summary><div class="ans">Booking class<div class="note">AN 30NOV LONNYC /C M</div></div></details><details><summary>Which entry gives: <b>Booking class</b>?</summary><div class="ans"><code>/C</code><div class="note">AN 30NOV LONNYC /C M</div></div></details><details><summary>What does <code>/X</code> do?</summary><div class="ans">Connection point<div class="note">AN 30NOV LONNYC /X LAX</div></div></details><details><summary>Which entry gives: <b>Connection point</b>?</summary><div class="ans"><code>/X</code><div class="note">AN 30NOV LONNYC /X LAX</div></div></details><details><summary>What does <code>/A*O</code> do?</summary><div class="ans">Alliance: oneworld<div class="note">S = SkyTeam, A = Star Alliance</div></div></details><details><summary>Which entry gives: <b>Alliance: oneworld</b>?</summary><div class="ans"><code>/A*O</code><div class="note">S = SkyTeam, A = Star Alliance</div></div></details><details><summary>What does <code>/A*S</code> do?</summary><div class="ans">Alliance: SkyTeam<div class="note">O = oneworld, A = Star Alliance</div></div></details><details><summary>Which entry gives: <b>Alliance: SkyTeam</b>?</summary><div class="ans"><code>/A*S</code><div class="note">O = oneworld, A = Star Alliance</div></div></details><details><summary>What does <code>/A*A</code> do?</summary><div class="ans">Alliance: Star Alliance<div class="note">O = oneworld, S = SkyTeam</div></div></details><details><summary>Which entry gives: <b>Alliance: Star Alliance</b>?</summary><div class="ans"><code>/A*A</code><div class="note">O = oneworld, S = SkyTeam</div></div></details><details><summary>What does <code>/K</code> do?</summary><div class="ans">Cabin type<div class="note">AN 30NOV LONNYC /K C</div></div></details><details><summary>Which entry gives: <b>Cabin type</b>?</summary><div class="ans"><code>/K</code><div class="note">AN 30NOV LONNYC /K C</div></div></details><details><summary>What does <code>/K F</code> do?</summary><div class="ans">First class cabin</div></details><details><summary>Which entry gives: <b>First class cabin</b>?</summary><div class="ans"><code>/K F</code></div></details><details><summary>What does <code>/K C</code> do?</summary><div class="ans">Business class cabin</div></details><details><summary>Which entry gives: <b>Business class cabin</b>?</summary><div class="ans"><code>/K C</code></div></details><details><summary>What does <code>/K Y</code> do?</summary><div class="ans">Economy including premium economy</div></details><details><summary>Which entry gives: <b>Economy including premium economy</b>?</summary><div class="ans"><code>/K Y</code></div></details><details><summary>What does <code>/K W</code> do?</summary><div class="ans">Premium economy</div></details><details><summary>Which entry gives: <b>Premium economy</b>?</summary><div class="ans"><code>/K W</code></div></details><details><summary>What does <code>/K M</code> do?</summary><div class="ans">Economy excluding premium economy</div></details><details><summary>Which entry gives: <b>Economy excluding premium economy</b>?</summary><div class="ans"><code>/K M</code></div></details><details><summary>What does <code>HHMM after the city pair</code> do?</summary><div class="ans">Specific departure time<div class="note">AN 30NOV LONNYC 1500</div></div></details><details><summary>Which entry gives: <b>Specific departure time</b>?</summary><div class="ans"><code>HHMM after the city pair</code><div class="note">AN 30NOV LONNYC 1500</div></div></details><details><summary>What does <code>/B</code> do?</summary><div class="ans">Number of seats required<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Number of seats required</b>?</summary><div class="ans"><code>/B</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/X-</code> do?</summary><div class="ans">Exclude a connection point<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Exclude a connection point</b>?</summary><div class="ans"><code>/X-</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/O</code> do?</summary><div class="ans">On-line connection (same airline)<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>On-line connection (same airline)</b>?</summary><div class="ans"><code>/O</code><div class="note">From your notes</div></div></details><h2>Reading the screen</h2><details><summary>On an availability display, what are the purple numbers on the left?</summary><div class="ans">Line numbers. Use them with DO or DM (DO 3, DM 3).<div class="note">From your notes</div></div></details><details><summary>On an availability display, what is the light blue text?</summary><div class="ans">The airline code (carrier).<div class="note">From your notes</div></div></details><details><summary>On an availability display, what is the red text?</summary><div class="ans">The flight number.<div class="note">From your notes</div></div></details><details><summary>On an availability display, what is the purple text near the right?</summary><div class="ans">The type of aircraft (equipment).<div class="note">From your notes</div></div></details><details><summary>What is the time at the far right of an availability line?</summary><div class="ans">The elapsed time (total flight journey time), for example 3:25.<div class="note">From your notes</div></div></details><details><summary>What is the third way to check availability for a flight, besides the line display?</summary><div class="ans">Hover over the flight number.<div class="note">From your notes</div></div></details><details><summary>What do DY and EFT mean?</summary><div class="ans">DY = day (of the week). EFT = elapsed flight time.<div class="note">From your notes</div></div></details><details><summary>Which time should you always read when comparing arrivals?</summary><div class="ans">The arrival time, which is local time in the arrival country.<div class="note">From your notes</div></div></details><details><summary>In a city pair like MNLHKG, which is the origin?</summary><div class="ans">MNL, the first three letters. HKG is the destination.</div></details><details><summary>How is time written in a command?</summary><div class="ans">HHMM in 24 hours, so 3:00 PM is 1500.<div class="note">HH = hour, MM = minute</div></div></details><details><summary>What is the difference between AN and TN?</summary><div class="ans">AN shows availability (seats open to sell). TN shows the timetable (schedule only).</div></details><details><summary>What does the 3-letter connection pair KUL-KUL stand for?</summary><div class="ans">A connection at the same airport (arrive and depart KUL).<div class="note">Your notes were hard to read here, so check against the handout</div></div></details><h2>Codes</h2><details><summary>What does <code>D/D</code> do?</summary><div class="ans">Domestic to Domestic</div></details><details><summary>Which entry gives: <b>Domestic to Domestic</b>?</summary><div class="ans"><code>D/D</code></div></details><details><summary>What does <code>D/I</code> do?</summary><div class="ans">Domestic to International</div></details><details><summary>Which entry gives: <b>Domestic to International</b>?</summary><div class="ans"><code>D/I</code></div></details><details><summary>What does <code>I/D</code> do?</summary><div class="ans">International to Domestic</div></details><details><summary>Which entry gives: <b>International to Domestic</b>?</summary><div class="ans"><code>I/D</code></div></details><details><summary>What does <code>I/I</code> do?</summary><div class="ans">International to International</div></details><details><summary>Which entry gives: <b>International to International</b>?</summary><div class="ans"><code>I/I</code></div></details><details><summary>What does <code>/M</code> do?</summary><div class="ans">Meal (general)<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Meal (general)</b>?</summary><div class="ans"><code>/M</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/B</code> do?</summary><div class="ans">Breakfast<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Breakfast</b>?</summary><div class="ans"><code>/B</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/L</code> do?</summary><div class="ans">Lunch<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Lunch</b>?</summary><div class="ans"><code>/L</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/S</code> do?</summary><div class="ans">Snacks<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Snacks</b>?</summary><div class="ans"><code>/S</code><div class="note">From your notes</div></div></details><details><summary>What does <code>/D</code> do?</summary><div class="ans">Dinner<div class="note">From your notes</div></div></details><details><summary>Which entry gives: <b>Dinner</b>?</summary><div class="ans"><code>/D</code><div class="note">From your notes</div></div></details><details><summary>What does <code>DM JFK</code> do?</summary><div class="ans">MCT for one airport</div></details><details><summary>Which entry gives: <b>MCT for one airport</b>?</summary><div class="ans"><code>DM JFK</code></div></details><details><summary>What does <code>DM LON</code> do?</summary><div class="ans">MCT table for a multi-airport city</div></details><details><summary>Which entry gives: <b>MCT table for a multi-airport city</b>?</summary><div class="ans"><code>DM LON</code></div></details><details><summary>What does <code>DM LGW-LHR</code> do?</summary><div class="ans">MCT between two specific airports</div></details><details><summary>Which entry gives: <b>MCT between two specific airports</b>?</summary><div class="ans"><code>DM LGW-LHR</code></div></details><details><summary>What does <code>DM SIN 1</code> do?</summary><div class="ans">MCT for a specific terminal</div></details><details><summary>Which entry gives: <b>MCT for a specific terminal</b>?</summary><div class="ans"><code>DM SIN 1</code></div></details><details><summary>What does <code>DM 3</code> do?</summary><div class="ans">MCT for line 3 of an availability</div></details><details><summary>Which entry gives: <b>MCT for line 3 of an availability</b>?</summary><div class="ans"><code>DM 3</code></div></details><details><summary>What does <code>DM QF/HKG/CX</code> do?</summary><div class="ans">MCT from one airline to another via a transit point</div></details><details><summary>Which entry gives: <b>MCT from one airline to another via a transit point</b>?</summary><div class="ans"><code>DM QF/HKG/CX</code></div></details><details><summary>What does <code>DM ORYW-CDG2B</code> do?</summary><div class="ans">MCT between specific terminals at different airports</div></details><details><summary>Which entry gives: <b>MCT between specific terminals at different airports</b>?</summary><div class="ans"><code>DM ORYW-CDG2B</code></div></details></div>
   </section>
 
-  <!-- SETTINGS -->
-  <section class="panel" id="settings">
-    <div class="jsonly"><div id="settingsBody"></div></div>
-    <div class="nojs"><p class="note">Settings need scripts, so they are not available in this viewer. The page follows the phone's light or dark setting automatically.</p></div>
-  </section>
-
   <!-- CHEAT SHEET -->
   <section class="panel sheet" id="sheet">
 <div class="sheetblock" data-topic="t3"><h2 class="topichead">Topic 3: Flight Availability</h2><h2>Core entries</h2><div class="tablewrap"><table><thead><tr><th>Entry</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td>AN</td><td>Availability</td><td>AN 15NOV FRASIN</td></tr><tr><td>TN</td><td>Timetable</td><td>TN 15NOV FRASIN 1500</td></tr><tr><td>DO</td><td>Flight information</td><td>DO CX930/26JAN/MNLHKG  or  DO 3</td></tr><tr><td>DM</td><td>Minimum connecting time</td><td>DM JFK  /  DM LON  /  DM 3</td></tr></tbody></table></div><h2>AN options</h2><div class="tablewrap"><table><thead><tr><th>Option</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td>/A</td><td>Operating airline</td><td>AN 30NOV LONNYC /A BA</td></tr><tr><td>/A-</td><td>Exclude airline</td><td>AN 30NOV LONNYC /A- BA</td></tr><tr><td>/C</td><td>Booking class</td><td>AN 30NOV LONNYC /C M</td></tr><tr><td>/X</td><td>Connection point</td><td>AN 30NOV LONNYC /X LAX</td></tr><tr><td>/A*O  /A*S  /A*A</td><td>Alliance: oneworld, SkyTeam, Star Alliance</td><td>AN 30NOV LONNYC /A*O</td></tr><tr><td>/K</td><td>Cabin: F first, C business, Y economy (incl. premium), W premium economy, M economy (excl. premium)</td><td>AN 30NOV LONNYC /K C</td></tr><tr><td>+ HHMM</td><td>Specific departure time</td><td>AN 30NOV LONNYC 1500</td></tr><tr><td>/B  /X-  /O</td><td>Seats required, exclude connection point, on-line connection (from your notes)</td><td></td></tr></tbody></table></div><h2>Cabin types (/K)</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Cabin</th><th>Example</th></tr></thead><tbody><tr><td>F</td><td>First class</td><td>AN 30NOV LONNYC /K F</td></tr><tr><td>C</td><td>Business class</td><td>AN 30NOV LONNYC /K C</td></tr><tr><td>Y</td><td>Economy, including premium economy</td><td>AN 30NOV LONNYC /K Y</td></tr><tr><td>W</td><td>Premium economy only</td><td>AN 30NOV LONNYC /K W</td></tr><tr><td>M</td><td>Economy, excluding premium economy</td><td>AN 30NOV LONNYC /K M</td></tr></tbody></table></div><h2>Cabin (/K) vs booking class (/C)</h2><div class="tablewrap"><table><thead><tr><th>Question says</th><th>Type</th><th>Example</th></tr></thead><tbody><tr><td>First, Business, Economy, Premium Economy</td><td>/K + cabin letter</td><td>AN 30NOV LONNYC /K C</td></tr><tr><td>Booking class + a letter</td><td>/C + class letter</td><td>AN 30NOV LONNYC /C M</td></tr></tbody></table></div><p class="note">The letters can look the same (Y, C, F, W, M), so the option in front decides: /K C is the business cabin, /C C is booking class C.</p><h2>DM variations</h2><div class="tablewrap"><table><thead><tr><th>Entry</th><th>Shows</th></tr></thead><tbody><tr><td>DM JFK</td><td>MCT for a specific airport</td></tr><tr><td>DM LON</td><td>MCT table for a multi-airport city</td></tr><tr><td>DM LGW-LHR</td><td>MCT between two specific airports</td></tr><tr><td>DM SIN 1</td><td>MCT for a specific terminal</td></tr><tr><td>DM 3</td><td>MCT from line 3 of an availability</td></tr><tr><td>DM QF/HKG/CX</td><td>MCT from one airline to another via a transit point</td></tr><tr><td>DM ORYW-CDG2B</td><td>MCT for specific terminals at different airports</td></tr></tbody></table></div><h2>Connection codes</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td>D/D</td><td>Domestic to Domestic</td></tr><tr><td>D/I</td><td>Domestic to International</td></tr><tr><td>I/D</td><td>International to Domestic</td></tr><tr><td>I/I</td><td>International to International</td></tr></tbody></table></div><h2>Meal codes (from your notes)</h2><div class="tablewrap"><table><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody><tr><td>/M</td><td>Meal</td></tr><tr><td>/B</td><td>Breakfast</td></tr><tr><td>/L</td><td>Lunch</td></tr><tr><td>/S</td><td>Snacks</td></tr><tr><td>/D</td><td>Dinner</td></tr></tbody></table></div><h2>Reading an availability display (from your notes)</h2><div class="tablewrap"><table><thead><tr><th>Where</th><th>What it is</th></tr></thead><tbody><tr><td>Purple numbers, far left</td><td>Line numbers</td></tr><tr><td>Light blue</td><td>Airline code (carrier)</td></tr><tr><td>Red</td><td>Flight number</td></tr><tr><td>Purple, near the right</td><td>Aircraft type (equipment)</td></tr><tr><td>Far right time</td><td>Elapsed flight time</td></tr><tr><td>Hover over the flight number</td><td>Third way to check availability</td></tr><tr><td>Arrival time</td><td>Local time in the arrival country</td></tr></tbody></table></div></div>
   </section>
 </div>
 </div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="settings" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true">
+  <div class="shead"><h2>Settings</h2><button class="sclose" type="button" id="btnCloseSet" aria-label="Close settings">&times;</button></div>
+  <div class="sbody" id="settingsBody"></div>
+</aside>
 
 <script>
 /* ===== LOGIC (no DOM) ===== */
@@ -562,42 +589,42 @@ function applyAppearance() {
 }
 var SET_UI = [
   { title: 'Appearance', rows: [
-    { key: 'theme', label: 'Theme', desc: 'Auto follows the phone setting', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
+    { key: 'theme', label: 'Theme', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
     { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] },
     { key: 'motion', label: 'Smooth animations', desc: 'Turn off if the page feels slow', sw: true } ] },
   { title: 'Sound', rows: [
-    { key: 'sound', label: 'Sound effects', desc: 'A chime for correct, a low tone for wrong, and a soft tone on every tap (high for on or up, low for off or down)', sw: true } ] },
+    { key: 'sound', label: 'Sound effects', desc: 'Chimes for answers and soft tones on taps', sw: true } ] },
   { title: 'Drill', rows: [
-    { key: 'autoNext', label: 'Auto-next after a correct answer', desc: 'Moves on after a moment so the explanation is still readable', sw: true },
-    { key: 'len', label: 'Session length', desc: 'A summary shows when the session ends', opts: [[10, '10'], [20, '20'], [0, 'Endless']] },
+    { key: 'autoNext', label: 'Auto-next after a correct answer', desc: 'Moves on after a moment', sw: true },
+    { key: 'len', label: 'Session length', opts: [[10, '10'], [20, '20'], [0, 'Endless']] },
     { key: 'alwaysHint', label: 'Always show the hint', sw: true } ] },
   { title: 'Flashcards', rows: [
-    { key: 'dir', label: 'Direction', opts: [['both', 'Both'], ['c2m', 'Code to meaning'], ['m2c', 'Meaning to code']] },
+    { key: 'dir', label: 'Direction', opts: [['both', 'Both'], ['c2m', 'Code → meaning'], ['m2c', 'Meaning → code']] },
     { key: 'shuffle', label: 'Shuffle cards', sw: true },
-    { key: 'notes', label: 'Show the "From your notes" labels', sw: true } ] }
+    { key: 'notes', label: '"From your notes" labels', sw: true } ] }
 ];
 function renderSettings() {
   var h = '';
   SET_UI.forEach(function (g) {
-    h += '<div class="setgroup"><h2>' + g.title + '</h2>';
+    h += '<div class="setgroup"><h2>' + g.title + '</h2><div class="setcard">';
     g.rows.forEach(function (r) {
-      h += '<div class="setrow"><div class="lbl">' + r.label + (r.desc ? '<span class="desc">' + r.desc + '</span>' : '') + '</div>';
+      h += '<div class="setrow' + (r.sw ? '' : ' stack') + '"><div class="lbl">' + r.label + (r.desc ? '<span class="desc">' + r.desc + '</span>' : '') + '</div>';
       if (r.sw) {
         h += '<input class="switch" type="checkbox" role="switch" data-key="' + r.key + '" aria-label="' + r.label.replace(/"/g, '&quot;') + '"' + (CFG[r.key] ? ' checked' : '') + '>';
       } else {
-        h += '<div class="chips">';
+        h += '<div class="seg" role="radiogroup" aria-label="' + r.label.replace(/"/g, '&quot;') + '">';
         r.opts.forEach(function (o) {
-          h += '<label class="chip"><input type="radio" name="set-' + r.key + '" data-key="' + r.key + '" value="' + o[0] + '"' + (String(CFG[r.key]) === String(o[0]) ? ' checked' : '') + '><span>' + o[1] + '</span></label>';
+          h += '<label><input type="radio" name="set-' + r.key + '" data-key="' + r.key + '" value="' + o[0] + '"' + (String(CFG[r.key]) === String(o[0]) ? ' checked' : '') + '><span>' + o[1] + '</span></label>';
         });
         h += '</div>';
       }
       h += '</div>';
     });
-    h += '</div>';
+    h += '</div></div>';
   });
-  h += '<div class="setgroup"><h2>Reset and data</h2>' +
+  h += '<div class="setgroup"><h2>Reset and data</h2><div class="setcard">' +
     '<div class="setrow"><div class="lbl">Reset stats<span class="desc">Clears answered, accuracy and streak</span></div><button class="btn" id="btnResetStats">Reset stats</button></div>' +
-    '<div class="setrow"><div class="lbl">Clear misses list<span class="desc">Empties "Practice my misses"</span></div><button class="btn" id="btnClearMisses">Clear misses</button></div></div>' +
+    '<div class="setrow"><div class="lbl">Clear misses list<span class="desc">Empties "Practice my misses"</span></div><button class="btn" id="btnClearMisses">Clear misses</button></div></div></div>' +
     '<p class="note" id="setMsg" aria-live="polite">Settings are saved in this browser.</p>';
   $('settingsBody').innerHTML = h;
 }
@@ -664,7 +691,7 @@ var CLICKS = {
   open: [[523, 784, 1047], 'sine', 0.11],
   back: [[784, 523], 'sine', 0.11]
 };
-var BTN_SOUND = { btnHome: 'back', homeSettings: 'mid', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
+var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
 function clickKind(t) {
   var el = t && t.closest ? t.closest('button,input,select') : null;
   if (!el || el.disabled) return null;
@@ -921,7 +948,7 @@ document.addEventListener('keydown', function (e) {
 });
 
 /* ---------- home / views / tabs ---------- */
-var TABIDS = ['r-drill', 'r-cards', 'r-sheet', 'r-settings'], TABPANELS = ['drill', 'cards', 'sheet', 'settings'], TABNAMES = ['drill', 'cards', 'sheet', 'settings'];
+var TABIDS = ['r-drill', 'r-cards', 'r-sheet'], TABPANELS = ['drill', 'cards', 'sheet'], TABNAMES = ['drill', 'cards', 'sheet'];
 var curTab = 0, busy = false;
 function tabIndex() { for (var i = 0; i < TABIDS.length; i++) if ($(TABIDS[i]).checked) return i; return 0; }
 function placeInd(instant) {
@@ -1010,6 +1037,7 @@ function goHome(fromHash) {
   if (!fromHash) pushHash('topics');
 }
 function routeFromHash() {
+  closeSettings();
   var m = (location.hash || '').match(/^#topic-(\w+)$/);
   if (m && COURSE.filter(function (x) { return x.id === m[1] && x.ready; })[0]) openTopic(m[1], null, true); else goHome(true);
 }
@@ -1020,7 +1048,41 @@ $('tgrid').addEventListener('click', function (e) {
   openTopic(b.getAttribute('data-id'));
 });
 $('btnHome').addEventListener('click', function () { goHome(); });
-$('homeSettings').addEventListener('click', function () { openTopic(CUR.id, 'settings'); });
+
+/* ---------- settings drawer ---------- */
+var setOpen = false, setReturn = null;
+function wrapEl() { return document.querySelector('.wrap'); }
+function openSettings() {
+  if (setOpen) return;
+  setOpen = true; setReturn = document.activeElement;
+  document.body.classList.add('setopen');
+  $('settings').setAttribute('aria-hidden', 'false');
+  try { wrapEl().inert = true; } catch (e) {}
+  setTimeout(function () { try { $('btnCloseSet').focus(); } catch (e) {} }, 60);
+}
+function closeSettings(snd) {
+  if (!setOpen) return;
+  setOpen = false;
+  document.body.classList.remove('setopen');
+  $('settings').setAttribute('aria-hidden', 'true');
+  try { wrapEl().inert = false; } catch (e) {}
+  try { (setReturn && setReturn.focus ? setReturn : $('btnGear')).focus(); } catch (e) {}
+  if (snd) playSound('back');
+}
+$('btnGear').addEventListener('click', function () { if (setOpen) closeSettings(); else openSettings(); });
+$('btnCloseSet').addEventListener('click', function () { closeSettings(); });
+$('scrim').addEventListener('click', function () { closeSettings(true); });
+document.addEventListener('keydown', function (e) {
+  if (!setOpen) return;
+  if (e.key === 'Escape') { closeSettings(); return; }
+  if (e.key === 'Tab') {
+    var f = Array.prototype.slice.call($('settings').querySelectorAll('button,input,select')).filter(function (x) { return !x.disabled && x.offsetParent !== null; });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
 
 /* ---------- topics ---------- */
 function applySheetTopic() {
