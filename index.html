@@ -157,7 +157,18 @@ html:not(.js) .jsonly-btn { display: none; }
 .tcard { font: inherit; color: var(--ink); text-align: left; display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease; }
 .tcard:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 8px 22px rgba(15, 30, 60, 0.12); }
 .tcard:active { transform: scale(0.98); }
-.tcard .ttag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); font-weight: 600; }
+.tcard .ttag { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tc, var(--accent)); font-weight: 600; }
+.ticon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: var(--tc, var(--accent)); background: color-mix(in srgb, var(--tc, var(--accent)) 14%, transparent); margin-bottom: 4px; transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ticon svg { width: 22px; height: 22px; }
+.tcard:hover .ticon { transform: rotate(-8deg) scale(1.06); }
+.tc-violet { --tc: #8b5cf6; } .tc-teal { --tc: #0d9488; } .tc-amber { --tc: #d97706; }
+.tcard .tprog { font-size: 0.82rem; color: var(--ink); font-weight: 500; }
+.gcard .ticon { width: 48px; height: 48px; border-radius: 14px; margin-bottom: 0; }
+.gcard .ticon svg { width: 26px; height: 26px; }
+#summary .big { position: relative; display: inline-block; }
+.conf { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; z-index: 5; }
+.conf i { position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; }
+#summary .qtag.win { color: var(--good); }
 .tcard .tname { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; }
 .tcard .tblurb { color: var(--muted); font-size: 0.9rem; }
 .tcard .tpills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
@@ -349,8 +360,9 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" hidden>
   <form class="gcard" id="gateForm" autocomplete="off" novalidate>
-    <h1 id="gateTitle">Welcome</h1>
-    <p>Type your name to start practicing. No account or password needed.</p>
+    <span class="ticon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></span>
+    <h1 id="gateTitle">Ready to practice?</h1>
+    <p>Type your name to get started. No account or password needed.</p>
     <div><label for="gateName">Your name</label>
     <input class="ginput" id="gateName" type="text" maxlength="30" placeholder="e.g. Maria" autocapitalize="words" enterkeyhint="go"></div>
     <div class="gerr" id="gateErr" role="alert"></div>
@@ -600,8 +612,8 @@ function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').
 /* Each topic is one entry here. To add Topic 4: build its question generators, decks and cards,
    add a block with data-topic="t4" to the cheat sheet, then set ready: true. */
 var COURSE = [
-  { id: 't3', tag: 'Topic 3', name: 'Flight Availability', blurb: 'AN, TN, DO and DM commands: typing drills, flashcards and a cheat sheet.', title: 'Topic 3: Flight Availability', ready: true, topics: TOPICS, labels: TOPIC_LABEL, decks: DECKS, cards: buildCards },
-  { id: 't4', tag: 'Topic 4', name: 'Coming soon', blurb: 'Not available yet. Check back later.', title: 'Topic 4: coming soon', ready: false }
+  { id: 't3', icon: 'plane', hue: '', tag: 'Topic 3', name: 'Flight Availability', blurb: 'AN, TN, DO and DM commands: typing drills, flashcards and a cheat sheet.', title: 'Topic 3: Flight Availability', ready: true, topics: TOPICS, labels: TOPIC_LABEL, decks: DECKS, cards: buildCards },
+  { id: 't4', icon: 'stack', hue: 'tc-violet', tag: 'Topic 4', name: 'Coming soon', blurb: 'Not available yet. Check back later.', title: 'Topic 4: coming soon', ready: false }
 ];
 </script>
 
@@ -731,7 +743,8 @@ var CLICKS = {
   up:   [[784, 1175], 'sine', 0.12],
   down: [[330, 247], 'triangle', 0.16],
   open: [[523, 784, 1047], 'sine', 0.11],
-  back: [[784, 523], 'sine', 0.11]
+  back: [[784, 523], 'sine', 0.11],
+  win:  [[523, 659, 784, 1047], 'sine', 0.13]
 };
 var BTN_SOUND = { btnHome: 'back', btnGear: 'open', btnChangeName: 'mid', btnGateCancel: 'back', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
 function clickKind(t) {
@@ -837,15 +850,32 @@ function nextQ() {
 function showSummary() {
   clearTimeout(S.autoTimer);
   var d = S.sessionDone, r = S.sessionRight, pct = d ? Math.round(100 * r / d) : 0, m = S.misses.length;
-  $('summary').innerHTML = '<div class="qtag">SESSION COMPLETE</div><div class="big">' + r + ' / ' + d + '</div>' +
+  var win = d >= 5 && pct >= 80, tag = pct === 100 && win ? 'PERFECT SCORE' : (win ? 'GREAT JOB' : 'SESSION COMPLETE');
+  $('summary').innerHTML = '<div class="qtag' + (win ? ' win' : '') + '">' + tag + '</div><div class="big">' + r + ' / ' + d + '</div>' +
     '<p class="qtext">' + pct + '% correct. ' + (m ? m + ' question' + (m === 1 ? '' : 's') + ' saved in the misses list.' : 'No misses to review.') + '</p>' +
     '<div class="actions"><button class="btn primary" id="btnNewSession">Start a new session</button>' + (m ? '<button class="btn" id="btnReviewMisses">Review my misses</button>' : '') + '</div>';
   setEnded(true); fadeIn($('summary'), 12);
+  if (win) { playSound('win'); celebrate(document.querySelector('#summary .big')); }
   $('btnNewSession').addEventListener('click', function () { resetSession(); S.missMode = false; nextQ(); });
   var rm = $('btnReviewMisses');
   if (rm) rm.addEventListener('click', function () { resetSession(); S.missMode = true; nextQ(); });
 }
+function celebrate(host) {
+  if (!host || !motionOn() || !host.animate) return;
+  anim(host, [{ transform: 'scale(0.7)' }, { transform: 'scale(1.18)' }, { transform: 'scale(1)' }], { duration: 520, easing: EASE });
+  var box = document.createElement('span'); box.className = 'conf'; box.setAttribute('aria-hidden', 'true');
+  var cols = ['#f59e0b', '#22c55e', '#3b82f6', '#ec4899', '#a855f7'];
+  for (var i = 0; i < 16; i++) {
+    var d = document.createElement('i'), a = (Math.PI * 2 * i) / 16 + Math.random() * 0.4, r = 55 + Math.random() * 55;
+    d.style.background = cols[i % cols.length]; box.appendChild(d);
+    try { d.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: 'translate(' + Math.round(Math.cos(a) * r) + 'px,' + Math.round(Math.sin(a) * r) + 'px) scale(0.4)', opacity: 0 }], { duration: 750 + Math.random() * 250, easing: 'cubic-bezier(0.1, 0.7, 0.3, 1)', fill: 'forwards' }); } catch (e) {}
+  }
+  host.appendChild(box); setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 1200);
+}
 function advance() { if (S.sessionEnd) showSummary(); else nextQ(); }
+function progKey(id) { return 'fc-prog-' + id; }
+function loadProg(id) { var o = { d: 0, r: 0, b: 0 }; try { var v = JSON.parse(store.get(progKey(id)) || '{}'); if (v && typeof v === 'object') { o.d = v.d | 0; o.r = v.r | 0; o.b = v.b | 0; } } catch (e) {} return o; }
+function bumpProg(ok) { var g = loadProg(CUR.id); g.d++; if (ok) g.r++; if (S.streak > g.b) g.b = S.streak; store.set(progKey(CUR.id), JSON.stringify(g)); }
 function saveMisses() { store.set(missKey(), JSON.stringify(S.misses.slice(0, 40))); }
 function sameQ(a, b) { return a.text === b.text && a.answers[0] === b.answers[0]; }
 function breakdown(q) {
@@ -859,6 +889,7 @@ function finish(ok, gaveUp) {
   if (!gaveUp) {
     S.done++;
     if (ok) { S.right++; S.streak++; } else S.streak = 0;
+    bumpProg(ok);
   }
   S.sessionDone++; if (ok) S.sessionRight++;
   if (!gaveUp) playSound(ok ? 'ok' : 'no');
@@ -1015,22 +1046,25 @@ TABIDS.forEach(function (id) { $(id).addEventListener('change', onTab); });
 window.addEventListener('resize', function () { placeInd(true); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { placeInd(true); });
 
+var ICONS = { plane: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>', stack: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>' };
 function missCount(id) { try { var a = JSON.parse(store.get('fc-misses-' + id) || '[]'); return a && a.length ? a.length : 0; } catch (e) { return 0; } }
 function renderHome() {
   var box = $('tgrid'), last = store.get('fc-topic'); box.innerHTML = '';
   COURSE.forEach(function (c) {
     var b = document.createElement('button'); b.type = 'button';
     b.className = 'tcard' + (c.ready ? '' : ' locked'); b.setAttribute('data-id', c.id);
-    var pills = '', extra = '';
+    var pills = '', extra = '', prog = '';
+    if (c.hue) b.className += ' ' + c.hue;
     if (c.ready) {
-      var n = missCount(c.id);
-      pills = '<span class="tpill">' + c.topics.length + ' drill types</span><span class="tpill">' + c.cards().length + ' flashcards</span>' + (n ? '<span class="tpill">' + n + ' to review</span>' : '');
+      var n = missCount(c.id), g = loadProg(c.id);
+      pills = '<span class="tpill">' + c.cards().length + ' flashcards</span>' + (n ? '<span class="tpill">' + n + ' to review</span>' : '');
+      if (g.d) prog = '<span class="tprog">Best streak ' + g.b + ' &middot; ' + Math.round(100 * g.r / g.d) + '% accuracy</span>';
       if (c.id === last) extra = '<span class="tgo">Continue</span>';
     } else {
       b.setAttribute('aria-disabled', 'true');
       extra = '<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     }
-    b.innerHTML = extra + '<span class="ttag">' + esc(c.tag) + '</span><span class="tname">' + esc(c.name) + '</span><span class="tblurb">' + esc(c.blurb) + '</span>' + (pills ? '<span class="tpills">' + pills + '</span>' : '');
+    b.innerHTML = extra + '<span class="ticon" aria-hidden="true">' + (ICONS[c.icon] || '') + '</span><span class="ttag">' + esc(c.tag) + '</span><span class="tname">' + esc(c.name) + '</span><span class="tblurb">' + esc(c.blurb) + '</span>' + prog + (pills ? '<span class="tpills">' + pills + '</span>' : '');
     box.appendChild(b);
   });
 }
@@ -1136,7 +1170,7 @@ function openGate(changing) {
   gateOpen = true;
   $('gateName').value = changing ? savedName() : ''; $('gateErr').textContent = '';
   $('btnGateCancel').hidden = !changing;
-  $('gateTitle').textContent = changing ? 'Change your name' : 'Welcome';
+  $('gateTitle').textContent = changing ? 'Change your name' : 'Ready to practice?';
   var g = $('gate'); g.classList.remove('out'); g.hidden = false;
   document.body.classList.add('gateopen');
   try { wrapEl().inert = true; } catch (e) {}
@@ -1185,7 +1219,7 @@ buildDeckChips();
 applySheetTopic();
 applyAppearance();
 renderSettings();
-confirmBtn('btnResetStats', 'Reset stats', function () { S.done = 0; S.right = 0; S.streak = 0; resetSession(); updateStats(); flash('Stats reset.'); });
+confirmBtn('btnResetStats', 'Reset stats', function () { S.done = 0; S.right = 0; S.streak = 0; store.set(progKey(CUR.id), '{}'); resetSession(); updateStats(); flash('Stats reset.'); });
 confirmBtn('btnClearMisses', 'Clear misses', function () { S.misses = []; S.missMode = false; saveMisses(); updateStats(); flash('Misses list cleared.'); });
 nextQ();
 startDeck();
