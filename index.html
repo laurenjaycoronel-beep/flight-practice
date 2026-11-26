@@ -317,22 +317,22 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 .mfly.on { display: block; }
 .mbird { position: absolute; inset: 0; padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; border-radius: 50%; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .mbird:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.mflip { position: absolute; inset: 0; transform-origin: 50% 50%; }
-.mbird svg { width: 100%; height: 100%; display: block; overflow: visible; filter: drop-shadow(0 5px 6px rgba(10, 20, 40, 0.3)); }
+.mflip { position: absolute; inset: 0; transform-origin: 50% 50%; will-change: transform; }
+.mbird svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .mbird svg * { transform-box: fill-box; }
 .mbub { position: absolute; left: 0; bottom: calc(100% - 4px); width: max-content; max-width: min(250px, 70vw); padding: 9px 13px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 15px; font-size: 0.86rem; line-height: 1.35; box-shadow: 0 8px 22px rgba(8, 14, 26, 0.22); opacity: 0; transform: translateY(6px) scale(0.95); transition: opacity 0.2s ease, transform 0.26s cubic-bezier(0.2, 0.8, 0.3, 1.25); pointer-events: none; }
 .mbub.show { opacity: 1; transform: none; }
 .mbub.d { bottom: auto; top: calc(100% - 2px); }
-.mpg { animation: mbob 0.5s ease-in-out infinite alternate; }
-.mwN { transform-origin: 100% 92%; animation: mflap 0.34s ease-in-out infinite alternate; }
-.mwF { transform-origin: 100% 92%; animation: mflap 0.34s ease-in-out infinite alternate-reverse; animation-delay: -0.06s; }
+.mpg { animation: mbob 0.36s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.mwN { transform-origin: 100% 92%; animation: mflap 0.36s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.mwF { transform-origin: 100% 92%; animation: mflap 0.36s cubic-bezier(.45,0,.55,1) infinite alternate; animation-delay: -0.02s; }
 .mlid { transform-origin: 50% 0; transform: scaleY(0); animation: mblink 4.2s infinite; }
 .msc { transform-origin: 100% 40%; animation: mscarf 0.3s ease-in-out infinite alternate; }
 .mtail { transform-origin: 90% 50%; animation: mtail 0.5s ease-in-out infinite alternate; }
 .mhap, .mbrow, .mspark, .msweat { opacity: 0; }
 .mspark { fill: #fbbf24; }
-@keyframes mbob { from { transform: translateY(-2px); } to { transform: translateY(3px); } }
-@keyframes mflap { from { transform: rotate(14deg); } to { transform: rotate(-78deg); } }
+@keyframes mbob { from { transform: translateY(2px); } to { transform: translateY(-3px); } }
+@keyframes mflap { from { transform: rotate(14deg) scale(1, 1); } to { transform: rotate(-30deg) scale(0.95, 0.9); } }
 @keyframes mblink { 0%, 92%, 100% { transform: scaleY(0); } 95% { transform: scaleY(1); } }
 @keyframes mscarf { from { transform: rotate(-7deg) scaleX(1); } to { transform: rotate(8deg) scaleX(0.93); } }
 @keyframes mtail { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
@@ -340,12 +340,29 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 #mascot.m-cheer .meye { opacity: 0; }
 #mascot.m-cheer .mhap { opacity: 1; }
 #mascot.m-cheer .mspark { animation: mspark 0.4s ease-in-out infinite alternate; }
-#mascot.m-cheer .mwN, #mascot.m-cheer .mwF { animation-duration: 0.2s; }
+#mascot.m-cheer .mwN, #mascot.m-cheer .mwF { animation-duration: 0.28s; }
+#mascot.m-cheer .mpg { animation-duration: 0.28s; }
 #mascot.m-sad .mbrow { opacity: 1; }
 #mascot.m-sad .msweat { opacity: 1; }
 #mascot.m-sad .mpup { transform: translateY(2px); }
-#mascot.m-sad .mwN, #mascot.m-sad .mwF { animation-duration: 0.7s; }
-#mascot.m-sad .mpg { animation-duration: 1s; }
+.mpup { transition: transform 0.3s ease; }
+.meye { transition: opacity 0.2s ease; } .mhap, .mbrow, .msweat { transition: opacity 0.25s ease; }
+#mascot.m-sad .mwN, #mascot.m-sad .mwF { animation-duration: 0.6s; }
+#mascot.m-sad .mpg { animation-duration: 0.6s; }
+/* Pip's wings act like arms while he hovers: wave, cheer, droop */
+.mfly.arms .mpg { animation: mbob 0.9s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.mfly.arms .mwN { transform-origin: 100% 90%; animation: marmwave 0.55s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.mfly.arms .mwF { transform-origin: 100% 90%; animation: none; transform: rotate(12deg); }
+.mfly.arms .mtail { animation-duration: 1.2s; }
+@keyframes marmwave { from { transform: rotate(132deg); } to { transform: rotate(168deg); } }
+@keyframes marmcheer { from { transform: rotate(8deg) scale(1.04); } to { transform: rotate(44deg) scale(1.04); } }
+@keyframes marmcheerB { from { transform: rotate(-6deg); } to { transform: rotate(30deg); } }
+#mascot.m-cheer .mfly.arms .mwN { animation: marmcheer 0.3s cubic-bezier(.45,0,.55,1) infinite alternate; }
+#mascot.m-cheer .mfly.arms .mwF { animation: marmcheerB 0.3s cubic-bezier(.45,0,.55,1) infinite alternate; animation-delay: -0.15s; }
+#mascot.m-cheer .mfly.arms .mpg { animation: mbob 0.3s cubic-bezier(.45,0,.55,1) infinite alternate; }
+#mascot.m-sad .mfly.arms .mwN { animation: none; transform: rotate(-32deg); }
+#mascot.m-sad .mfly.arms .mwF { transform: rotate(-24deg); }
+#mascot.m-sad .mfly.arms .mpg { animation-duration: 1.6s; }
 @media (max-width: 520px) { .mfly { width: 86px; height: 72px; } .mbub { font-size: 0.82rem; } }
 @media print { #mascot { display: none !important; } }
 
@@ -1728,7 +1745,7 @@ function setTopic(id) {
 /* ---------- Pip, the flying pilot bird ---------- */
 var Mascot = (function () {
   var root, fly, btn, bub, flip, ready = false, raf = 0, st = null, pending = null, hideT = 0, tipN = -1, lastEnd = 0, lastLife = Date.now(), nextAmb = 0, hintedQ = null, lastMsg = {}, tickT = 0;
-  var SVG = '<svg viewBox="0 0 120 100" aria-hidden="true" focusable="false"><g class="mpg"><path class="mwF" d="M58 52C48 22 30 12 16 18C28 28 40 44 58 58Z" fill="#dd9a14"/><path class="mtail" d="M32 56L5 44L10 56L3 66L30 66Z" fill="#f4b223"/><path d="M54 80l-7 11M65 81l-5 11" stroke="#f97316" stroke-width="3.4" stroke-linecap="round" fill="none"/><ellipse cx="58" cy="58" rx="33" ry="25" fill="#ffc93c"/><ellipse cx="63" cy="68" rx="22" ry="13" fill="#fff3c4"/><path class="msc" d="M70 66C58 62 44 72 24 64L30 77C46 80 58 76 72 73Z" fill="#dc2626"/><circle cx="84" cy="44" r="22" fill="#ffc93c"/><path d="M65 62q10 9 23 3l-1 9q-14 6-24-4z" fill="#ef4444"/><circle cx="87" cy="54" r="4.6" fill="#fb7185" opacity=".45"/><path d="M101 41Q119 43 117 49Q114 55 101 54Z" fill="#f97316"/><path d="M102 47.5Q112 47 116 49" stroke="#c2410c" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M60 46C57 12 108 8 107 41Q96 33 84 34Q70 34 60 46Z" fill="#8a5a3c"/><path d="M61 47Q84 29 107 42" stroke="#6f452b" stroke-width="5" stroke-linecap="round" fill="none"/><ellipse cx="66" cy="52" rx="6" ry="10" fill="#8a5a3c"/><circle cx="88" cy="25" r="9.5" fill="#cfe8ff" stroke="#5b6b8a" stroke-width="3.6"/><path d="M82 23q2-4 7-4" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/><g class="meye"><circle cx="90" cy="43" r="8" fill="#fff"/><circle class="mpup" cx="92.5" cy="44" r="4.3" fill="#1f2937"/><circle cx="94" cy="42.4" r="1.5" fill="#fff"/><ellipse class="mlid" cx="90" cy="43" rx="8.6" ry="8.6" fill="#ffc93c"/></g><path class="mhap" d="M83 45q7-10 14 0" stroke="#1f2937" stroke-width="3.4" stroke-linecap="round" fill="none"/><path class="mbrow" d="M82 34l16 5" stroke="#6f452b" stroke-width="3.2" stroke-linecap="round" fill="none"/><path class="msweat" d="M100 30q4 6 0 9q-4-3 0-9z" fill="#7dd3fc"/><path class="mspark" d="M14 22l2.4 6.2L22.6 30.6l-6.2 2.4L14 39.2l-2.4-6.2L5.4 30.6l6.2-2.4z"/><path class="mspark" d="M108 8l1.8 4.6L114.4 14.4l-4.6 1.8L108 20.8l-1.8-4.6L101.6 14.4l4.6-1.8z" style="animation-delay:.15s"/><g class="mwN"><path d="M60 54C50 22 32 10 14 16C28 28 42 46 60 60Z" fill="#f4b223" stroke="#e08f0d" stroke-width="1.6" stroke-linejoin="round"/><path d="M52 44Q40 28 26 22M56 50Q42 38 30 32" stroke="#e08f0d" stroke-width="1.6" stroke-linecap="round" fill="none"/></g></g></svg>';
+  var SVG = '<svg viewBox="0 0 120 100" aria-hidden="true" focusable="false"><g class="mpg"><path class="mwF" d="M60 60C54 42 42 36 28 40C30 48 36 54 42 56C44 62 52 66 60 66Z" fill="#256fc0"/><path class="mtail" d="M32 64L6 56L12 66L4 76L32 74Z" fill="#2f86e0"/><path d="M52 84l-3 9M64 85l-2 8" stroke="#ff8a1f" stroke-width="4" stroke-linecap="round" fill="none"/><ellipse cx="56" cy="64" rx="31" ry="25" fill="#4aa8ff"/><ellipse cx="63" cy="72" rx="19" ry="14" fill="#fff6dc"/><path class="msc" d="M66 68C56 64 44 74 26 68L31 80C46 82 58 78 70 75Z" fill="#e11d48"/><circle cx="80" cy="44" r="27" fill="#4aa8ff"/><ellipse cx="74" cy="22" rx="3" ry="6" transform="rotate(-20 74 22)" fill="#4aa8ff"/><circle cx="92" cy="56" r="5" fill="#ff8fa3" opacity=".5"/><path d="M103 45Q119 46 117 51Q114 57 103 55Z" fill="#ff9a2e"/><path d="M104 50.5Q112 50 116 51" stroke="#c2570c" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M54 44C50 10 106 8 106 38Q94 30 80 31Q64 31 54 44Z" fill="#8a5a3c"/><path d="M55 45Q80 27 106 39" stroke="#6f452b" stroke-width="5" stroke-linecap="round" fill="none"/><ellipse cx="62" cy="52" rx="6" ry="10" fill="#8a5a3c"/><circle cx="82" cy="22" r="9" fill="#cfe8ff" stroke="#5b6b8a" stroke-width="3.4"/><path d="M76 20q2-4 7-4" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/><g class="meye"><circle cx="89" cy="46" r="11" fill="#fff"/><circle class="mpup" cx="92" cy="47" r="6.6" fill="#1b2433"/><circle cx="94.4" cy="44.4" r="2.4" fill="#fff"/><circle cx="90" cy="50" r="1.1" fill="#fff"/><ellipse class="mlid" cx="89" cy="46" rx="11.6" ry="11.6" fill="#4aa8ff"/></g><path class="mhap" d="M81 49q8-13 16 0" stroke="#1b2433" stroke-width="3.6" stroke-linecap="round" fill="none"/><path class="mbrow" d="M80 37l19-7" stroke="#6f452b" stroke-width="3.4" stroke-linecap="round" fill="none"/><path class="msweat" d="M102 30q4 6 0 9q-4-3 0-9z" fill="#7dd3fc"/><path class="mspark" d="M14 22l2.4 6.2L22.6 30.6l-6.2 2.4L14 39.2l-2.4-6.2L5.4 30.6l6.2-2.4z"/><path class="mspark" d="M108 6l1.8 4.6L114.4 12.4l-4.6 1.8L108 18.8l-1.8-4.6L101.6 12.4l4.6-1.8z" style="animation-delay:.15s"/><g class="mwN"><path d="M60 62C54 44 42 38 28 42C30 50 36 56 42 58C44 64 52 68 60 68Z" fill="#2f86e0" stroke="#1f64b0" stroke-width="2" stroke-linejoin="round"/><path d="M50 56Q42 48 34 46" stroke="#1f64b0" stroke-width="1.6" stroke-linecap="round" fill="none"/></g></g></svg>';
   var TIPS = [
     'Spaces and capitals do not matter when you type a command.',
     'For AN, the order of the options does not matter.',
@@ -1779,18 +1796,20 @@ var Mascot = (function () {
   function sync() { document.documentElement.setAttribute('data-mascot', on() ? 'on' : 'off'); if (root) { root.hidden = !on(); if (!on()) stop(); } }
   function setMood(m, ms) { if (!root) return; root.className = m ? 'm-' + m : ''; clearTimeout(setMood.t); if (m && ms) setMood.t = setTimeout(function () { if (root) root.className = ''; }, ms); }
   function showText(t, ms) { if (!bub || !t) return; bub.textContent = t; bub.classList.add('show'); clearTimeout(hideT); hideT = setTimeout(function () { bub.classList.remove('show'); }, ms || 4200); }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } st = null; if (fly) { fly.classList.remove('on'); fly.style.transform = ''; } if (bub) bub.classList.remove('show'); setMood(null); }
+  function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } st = null; if (fly) { fly.classList.remove('on'); fly.classList.remove('arms'); fly.style.transform = ''; } if (bub) bub.classList.remove('show'); setMood(null); }
   function ease(k) { return k < 0 ? 0 : k > 1 ? 1 : k; }
   function outC(k) { k = ease(k); return 1 - Math.pow(1 - k, 3); }
   function inC(k) { k = ease(k); return k * k * k; }
   function place(x, y, rot, dir, now) {
-    var w = fly.offsetWidth || 116, h = fly.offsetHeight || 97, W = window.innerWidth, spin = 0;
-    if (st && st.spin) { var k = (now - st.spin) / 800; if (k >= 1) st.spin = 0; else spin = -360 * outC(k); }
-    fly.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
-    flip.style.transform = 'scaleX(' + dir + ') rotate(' + (rot + spin).toFixed(1) + 'deg)';
-    if (bub.classList.contains('show')) {
-      var bw = bub.offsetWidth, left = x + w / 2 - bw / 2; left = Math.max(8, Math.min(W - bw - 8, left));
-      bub.style.left = (left - x).toFixed(1) + 'px'; bub.classList.toggle('d', y < (bub.offsetHeight + 12));
+    var showB = bub.classList.contains('show'), w = fly.offsetWidth || 116, W = window.innerWidth, spin = 0, bw = 0, bh = 0;
+    if (showB) { bw = bub.offsetWidth; bh = bub.offsetHeight; }
+    if (st && st.spin) { var k = (now - st.spin) / 900; if (k >= 1) st.spin = 0; else spin = -360 * (k * k * (3 - 2 * k)); }
+    fly.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0)';
+    flip.style.transform = 'scaleX(' + dir + ') rotate(' + (rot + spin).toFixed(2) + 'deg)';
+    if (showB) {
+      var left = x + w / 2 - bw / 2; left = Math.max(8, Math.min(W - bw - 8, left));
+      bub.style.left = (left - x).toFixed(1) + 'px';
+      var d = y < (bh + 12); if (d !== st.bd) { st.bd = d; bub.classList.toggle('d', d); }
     }
   }
   /* o: { text, mood, hover (ms; 0 = just fly past), ms (bubble time) } */
@@ -1837,18 +1856,20 @@ var Mascot = (function () {
       } else if (ph === 'in') {
         var k2 = (now - st.t0) / st.dur, e = outC(k2);
         x = st.sx + (st.hx - st.sx) * e; y = st.sy + (st.hy - st.sy) * e + Math.sin(k2 * Math.PI * 3) * 14 * (1 - e);
-        if (k2 >= 1) { st.phase = 'hover'; st.t1 = now; st.hoverEnd = now + st.hov; if (st.spin === now0 + 900 || st.spin) {} }
+        if (k2 >= 1) { fly.classList.add('arms'); st.phase = 'hover'; st.t1 = now; st.hoverEnd = now + st.hov; if (st.spin === now0 + 900 || st.spin) {} }
       } else if (ph === 'hover') {
-        var tt = now - st.t1; x = st.hx + Math.sin(tt / 420) * 7; y = st.hy + Math.sin(tt / 290) * 6;
-        if (now >= st.hoverEnd) { st.phase = 'out'; st.t2 = now; if (bub) bub.classList.remove('show'); }
+        var tt = now - st.t1, ra = Math.min(1, tt / 600); ra = ra * ra * (3 - 2 * ra); st.ox = Math.sin(tt / 520) * 7 * ra; st.oy = Math.sin(tt / 380) * 6 * ra; x = st.hx + st.ox; y = st.hy + st.oy;
+        if (now >= st.hoverEnd) { fly.classList.remove('arms'); st.phase = 'out'; st.t2 = now; if (bub) bub.classList.remove('show'); }
       } else {
         var k3 = (now - st.t2) / 1700, e3 = inC(k3);
-        x = st.hx + (st.ex - st.hx) * e3; y = st.hy + (st.ey - st.hy) * e3 + Math.sin(k3 * Math.PI * 2) * 10;
+        var dec = 1 - Math.min(1, k3 * 4); x = st.hx + (st.ox || 0) * dec + (st.ex - st.hx) * e3; y = st.hy + (st.oy || 0) * dec + (st.ey - st.hy) * e3 + Math.sin(k3 * Math.PI * 2) * 10 * Math.min(1, k3 * 3);
         if (k3 >= 1) { finish(); return; }
       }
+      var dtm = Math.min(50, Math.max(8, now - (st.pn || now - 16))); st.pn = now;
       var dx = x - st.px, dy = y - st.py; st.px = x; st.py = y;
-      var sp = Math.abs(dx) > 0.2 ? Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI * 0.5 : 0;
-      rot = Math.max(-18, Math.min(18, sp));
+      var sp = Math.abs(dx) > 0.15 ? Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI * 0.5 : 0;
+      var tgt = Math.max(-16, Math.min(16, sp));
+      st.rs = (st.rs || 0) + (tgt - (st.rs || 0)) * (1 - Math.exp(-dtm / 140)); rot = st.rs;
       place(x, y, rot, st.dir, now);
       raf = requestAnimationFrame(loop);
     };
@@ -2004,7 +2025,8 @@ if (CFG.mascot !== false) { Mascot.build(); if (!(window.FC_FIREBASE && !savedNa
     var V = '10.14.1', B = 'https://www.gstatic.com/firebasejs/' + V + '/';
     var A = await import(B + 'firebase-app.js'), Au = await import(B + 'firebase-auth.js'), D = await import(B + 'firebase-database.js');
     var app = A.initializeApp(cfg), auth = Au.getAuth(app), db = D.getDatabase(app);
-    var cred = await Au.signInAnonymously(auth), me = D.ref(db, 'presence/' + cred.user.uid);
+    try { if (auth.authStateReady) await auth.authStateReady(); } catch (e) {}
+    var cu = auth.currentUser || (await Au.signInAnonymously(auth)).user, me = D.ref(db, 'presence/' + cu.uid);
     var started = false, timer = null;
     function name() { try { return (localStorage.getItem('fc-name') || '').trim(); } catch (e) { return ''; } }
     function where() { try { return String(window.fcWhere ? window.fcWhere() : '').slice(0, 60); } catch (e) { return ''; } }
