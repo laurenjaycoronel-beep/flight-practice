@@ -316,6 +316,18 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 @media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
 
 
+
+.why h4 { margin: 0 0 4px; font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--bad); }
+.why ul { margin: 0; padding-left: 1.1rem; font-size: 0.92rem; }
+.why li { margin: 3px 0; }
+td.pstat { text-align: center; font-weight: 700; white-space: nowrap; }
+td.pstat.ok { color: var(--good); }
+td.pstat.no { color: var(--bad); }
+.musicbtn { color: var(--muted); }
+.musicbtn svg { width: 20px; height: 20px; display: block; margin: auto; }
+.musicbtn[data-on="1"] { color: var(--accent); border-color: var(--accent); }
+.musicbtn[data-on="1"] svg { animation: mbeat 1.6s ease-in-out infinite; }
+@keyframes mbeat { 0%, 100% { transform: translateY(0) rotate(0deg); } 25% { transform: translateY(-2px) rotate(-6deg); } 75% { transform: translateY(1px) rotate(5deg); } }
 /* ---------- season scenes ---------- */
 html[data-scene="spring"][data-eff="light"] { --sky1: #f1c4d8; --sky2: #e2dbee; --cloud: rgba(255, 255, 255, 0.78); --orb: rgba(255, 214, 160, 0.38); }
 html[data-scene="spring"][data-eff="dark"] { --sky1: #4b3a53; --sky2: #383640; --cloud: rgba(240, 200, 225, 0.1); --orb: rgba(255, 175, 210, 0.16); --stars: 0.35; }
@@ -410,6 +422,7 @@ html[data-eff="light"][data-scene="winter"] #scene .p-snow { background: #fff; b
 <div class="topbar">
   <button class="btn jsonly-btn" type="button" id="btnHome">&larr; Topics</button>
   <div class="tools jsonly-btn">
+  <button class="langbtn musicbtn" type="button" id="btnMusic" aria-label="Lofi music: off" aria-pressed="false" data-on="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></button>
   <button class="langbtn" type="button" id="btnLang" aria-label="Language: English. Tap to switch to Tagalog.">EN</button>
   <button class="themebtn" type="button" id="btnTheme" aria-label="Switch to dark mode"><svg class="sun" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path fill="none" d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg><svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg></button>
   <button class="gear" type="button" id="btnGear" aria-label="Settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
@@ -816,6 +829,15 @@ var store = { get: function (k) { try { return localStorage.getItem(k); } catch 
 
 /* ---------- language: English / Tagalog ---------- */
 var TLD = {
+'What went wrong': 'Ano ang mali',
+'Your answer': 'Sagot mo',
+'Found in your answer': 'Nasa sagot mo',
+'Missing or different': 'Kulang o iba',
+'Lofi music': 'Lofi na music',
+'Chill background beats, made right in the page': 'Chill na background beats, ginawa mismo sa page',
+'Music volume': 'Lakas ng music',
+'Low': 'Mahina',
+'High': 'Malakas',
 'Season scene': 'Eksena ng panahon',
 'Changes the sky and the drifting details': 'Binabago ang langit at ang mga lumilipad na detalye',
 'Clear': 'Malinaw',
@@ -1044,7 +1066,7 @@ function qPart(q, i) { var p = q.parts[i]; return (CFG.lang === 'tl' && p[2]) ? 
 
 
 /* ---------- settings ---------- */
-var DEFAULTS = { lang: 'en', theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true, mascot: true, scene: 'auto', pack: 'cabin' };
+var DEFAULTS = { lang: 'en', theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true, mascot: true, scene: 'auto', pack: 'cabin', music: false, musicVol: 2 };
 var CFG = {};
 (function () {
   var saved = {}, k;
@@ -1109,6 +1131,8 @@ var SET_UI = [
     { key: 'mascot', label: 'Pip the flying bird', desc: 'A little bird that flies by and cheers you on', sw: true } ] },
   { title: 'Sound', rows: [
     { key: 'sound', label: 'Sound effects', desc: 'Chimes for answers and soft tones on taps', sw: true },
+    { key: 'music', label: 'Lofi music', desc: 'Chill background beats, made right in the page', sw: true },
+    { key: 'musicVol', label: 'Music volume', opts: [[1, 'Low'], [2, 'Medium'], [3, 'High']] },
     { key: 'pack', label: 'Sound pack', desc: 'Pick how taps and answers sound. Tap one to hear it', wrap: true, opts: [['cabin', 'Cabin'], ['wood', 'Wood'], ['glass', 'Glass'], ['keys', 'Keys'], ['classic', 'Classic']] } ] },
   { title: 'Offline and app', custom: function () {
     return '<div class="setrow"><div class="lbl">' + TR('Works without internet') + '<span class="desc" id="offStat">&nbsp;</span></div></div>' +
@@ -1299,11 +1323,11 @@ var CLICKS = {
   back: [[784, 523], 'sine', 0.11],
   win:  [[523, 659, 784, 1047], 'sine', 0.13]
 };
-var BTN_SOUND = { btnLang: 'mid', btnHome: 'back', btnGear: 'open', btnTheme: 'mid', btnChangeName: 'mid', btnFeedback: 'mid', btnFeedback2: 'mid', btnFbCancel: 'back', btnGateCancel: 'back', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
+var BTN_SOUND = { btnLang: 'mid', btnMusic: null, btnHome: 'back', btnGear: 'open', btnTheme: 'mid', btnChangeName: 'mid', btnFeedback: 'mid', btnFeedback2: 'mid', btnFbCancel: 'back', btnGateCancel: 'back', btnCloseSet: 'back', btnHint: 'hi', btnSkip: 'lo', btnNext: 'mid', btnReveal: 'flip', btnGot: 'up', btnMissed: 'down', btnMisses: 'mid', btnNewSession: 'up', btnResetStats: 'lo', btnClearMisses: 'lo' };
 function clickKind(t) {
   var el = t && t.closest ? t.closest('button,input,select') : null;
   if (!el || el.disabled) return null;
-  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnMascot' || el.id === 'btnCheck' || el.id === 'btnGateGo' || el.id === 'btnFbSend') return null;
+  if (el.getAttribute('data-key') === 'sound' || el.id === 'btnMascot' || el.id === 'btnMusic' || el.id === 'btnCheck' || el.id === 'btnGateGo' || el.id === 'btnFbSend') return null;
   if (el.classList.contains('star')) return 'tab';
   if (el.tagName === 'SELECT') return null;
   if (el.tagName === 'INPUT') {
@@ -1327,6 +1351,8 @@ $('settingsBody').addEventListener('change', function (e) {
   if (key === 'lang') applyLang();
   if (key === 'sound' && CFG.sound) playSound('ok');
   if (key === 'pack') playSound('ok');
+  if (key === 'music') musicSync();
+  if (key === 'musicVol') musicVolume();
   if (key === 'scene') applyScene();
   if (key === 'mascot') { Mascot.sync(); if (CFG.mascot) { Mascot.build(); Mascot.say(L('Hi! I am Pip. Let\'s fly!', 'Hi! Ako si Pip. Lipad na tayo!'), 'wave', { force: true, ms: 3600 }); } }
   if (key === 'alwaysHint' && S.q && !S.answered) { if (CFG.alwaysHint) { $('hintBox').textContent = qHint(S.q); $('hintBox').hidden = false; } else $('hintBox').hidden = true; }
@@ -1443,19 +1469,99 @@ function loadProg(id) { var o = { d: 0, r: 0, b: 0 }; try { var v = JSON.parse(s
 function bumpProg(ok) { var g = loadProg(CUR.id); g.d++; if (ok) g.r++; if (S.streak > g.b) g.b = S.streak; store.set(progKey(CUR.id), JSON.stringify(g)); }
 function saveMisses() { store.set(missKey(), JSON.stringify(S.misses.slice(0, 40))); }
 function sameQ(a, b) { return a.text === b.text && a.answers[0] === b.answers[0]; }
-function breakdown(q) {
-  var rows = q.parts.map(function (p, i) { return '<tr><td>' + esc(p[0]) + '</td><td>' + esc(qPart(q, i)) + '</td></tr>'; }).join('');
-  return '<div class="tablewrap"><table><thead><tr><th>' + TR('Part') + '</th><th>' + TR('Meaning') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+function breakdown(q, st) {
+  var rows = q.parts.map(function (p, i) {
+    var c = st ? (st[i] ? '<td class="pstat ok" title="' + TR('Found in your answer') + '">&#10003;</td>' : '<td class="pstat no" title="' + TR('Missing or different') + '">&#10007;</td>') : '';
+    return '<tr><td>' + esc(p[0]) + '</td><td>' + esc(qPart(q, i)) + '</td>' + c + '</tr>';
+  }).join('');
+  return '<div class="tablewrap"><table><thead><tr><th>' + TR('Part') + '</th><th>' + TR('Meaning') + '</th>' + (st ? '<th>' + TR('Your answer') + '</th>' : '') + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
 }
+/* explain my mistake: compare what was typed with each part of the answer */
+var CMD_NAME = { AN: ['Availability', 'Availability'], TN: ['Timetable', 'Timetable'], DO: ['Display flight information', 'Impormasyon ng flight'], DM: ['Minimum connecting time', 'Minimum connecting time'] };
+var OPT_NAME = { 'A': ['/A is for one airline', '/A ay para sa isang airline'], 'A-': ['/A- excludes an airline', 'ang /A- ay nag-e-exclude ng airline'], 'A*': ['/A* is for an alliance', 'ang /A* ay para sa alliance'], 'K': ['/K is for the cabin type', 'ang /K ay para sa cabin type'], 'C': ['/C is for the booking class', 'ang /C ay para sa booking class'], 'X': ['/X is for the connection point', 'ang /X ay para sa connection point'] };
+function parseOpts(n) {
+  return n.split('/').slice(1).map(function (g) {
+    var k = g.indexOf('A-') === 0 ? 'A-' : g.indexOf('A*') === 0 ? 'A*' : g.charAt(0);
+    var v = g.slice(k.length); return { k: k, v: v, raw: '/' + k + (v ? ' ' + v : '') };
+  });
+}
+function diagnose(user, q) {
+  var u = norm(user), e = norm(q.answers[0]), tips = [], st = [], cov = {}, MONRE = '(' + MON.join('|') + ')';
+  var isAN = q.kind === 'an';
+  q.parts.forEach(function (p, i) {
+    var c = norm(p[0]), ok;
+    if (/^\d{1,2}[A-Z]{3}$/.test(c)) ok = new RegExp('(^|[^0-9])' + c).test(u);
+    else if (i === 0) ok = u.indexOf(c) === 0;
+    else ok = u.indexOf(c) >= 0;
+    st.push(ok);
+  });
+  /* 1. the command word */
+  var ec = norm(q.parts[0][0]);
+  if (!st[0]) {
+    cov[0] = 1; var tc = u.slice(0, 2), en = CMD_NAME[ec] || ['', ''];
+    if (tc !== ec && CMD_NAME[tc]) tips.push(L('You started with ' + tc + ' (' + CMD_NAME[tc][0] + '), but this question needs ' + ec + ' (' + en[0] + ').', 'Nagsimula ka sa ' + tc + ' (' + CMD_NAME[tc][1] + '), pero ' + ec + ' (' + en[1] + ') ang kailangan ng tanong na ito.'));
+    else tips.push(L('Start with ' + ec + ' (' + en[0] + ').', 'Magsimula sa ' + ec + ' (' + en[1] + ').'));
+  }
+  /* 2. the date */
+  q.parts.forEach(function (p, i) {
+    var c = norm(p[0]); if (!/^\d{1,2}[A-Z]{3}$/.test(c) || st[i]) return;
+    cov[i] = 1; var m = u.match(new RegExp('(\\d{1,2})' + MONRE)), back = u.match(new RegExp(MONRE + '(\\d{1,2})'));
+    if (m) tips.push(L('The date should be ' + p[0] + ' (day, then 3-letter month). You typed ' + m[0] + '.', 'Dapat ' + p[0] + ' ang petsa (araw, tapos 3-letter na buwan). Ang na-type mo ay ' + m[0] + '.'));
+    else if (back || /\d\/\d/.test(user)) tips.push(L('Write the date as day + 3-letter month, like ' + p[0] + ' (not ' + (back ? back[0] : '05/01') + ').', 'Isulat ang petsa bilang araw + 3-letter na buwan, tulad ng ' + p[0] + ' (hindi ' + (back ? back[0] : '05/01') + ').'));
+    else tips.push(L('The date is missing. Write it like ' + p[0] + '.', 'Walang petsa. Isulat ito tulad ng ' + p[0] + '.'));
+  });
+  /* 3. the city pair */
+  q.parts.forEach(function (p, i) {
+    var c = norm(p[0]); if (!/^[A-Z]{6}$/.test(c) || st[i]) return;
+    cov[i] = 1; var o1 = c.slice(0, 3), d1 = c.slice(3);
+    if (/[A-Z]{3}[-\/][A-Z]{3}/.test(String(user).toUpperCase())) { tips.push(L('Write the two airport codes together with nothing between them: ' + c + '.', 'Isulat nang magkadikit ang dalawang airport code: ' + c + '.')); return; }
+    var r = u.slice(2).replace(new RegExp('\\d{1,2}' + MONRE), '');
+    if (isAN) r = r.split('/')[0];
+    if (/^[A-Z]{6}$/.test(r)) {
+      if (r === d1 + o1) tips.push(L('Origin and destination are swapped. Origin first (' + o1 + '), then destination (' + d1 + ').', 'Nagpalit ang origin at destination. Origin muna (' + o1 + '), tapos destination (' + d1 + ').'));
+      else if (r.slice(0, 3) !== o1 && r.slice(3) === d1) tips.push(L('The origin should be ' + o1 + ', not ' + r.slice(0, 3) + '.', 'Dapat ' + o1 + ' ang origin, hindi ' + r.slice(0, 3) + '.'));
+      else if (r.slice(3) !== d1 && r.slice(0, 3) === o1) tips.push(L('The destination should be ' + d1 + ', not ' + r.slice(3) + '.', 'Dapat ' + d1 + ' ang destination, hindi ' + r.slice(3) + '.'));
+      else tips.push(L('The city pair should be ' + c + ' (' + o1 + ' to ' + d1 + '). You typed ' + r + '.', 'Dapat ' + c + ' ang city pair (' + o1 + ' papuntang ' + d1 + '). Ang na-type mo ay ' + r + '.'));
+    } else if (/^[A-Z]{3}$/.test(r)) tips.push(L('Only one airport code. Origin + destination go together: ' + c + '.', 'Isang airport code lang. Magkasama ang origin + destination: ' + c + '.'));
+    else tips.push(L('The city pair is origin + destination, 6 letters: ' + c + '.', 'Ang city pair ay origin + destination, 6 na letra: ' + c + '.'));
+  });
+  /* 4. AN options (/A, /A-, /A*, /K, /C, /X) */
+  if (isAN) {
+    var eo = parseOpts(e), uo = parseOpts(u), used = {};
+    q.parts.forEach(function (p, i) {
+      var c = norm(p[0]); if (c.charAt(0) !== '/') return;
+      var want = parseOpts(c)[0], same = null, i2;
+      for (i2 = 0; i2 < uo.length; i2++) if (uo[i2].k === want.k && uo[i2].v === want.v) { same = i2; break; }
+      if (same !== null) { used[same] = 1; st[i] = true; return; }
+      st[i] = false; cov[i] = 1;
+      var kin = null; for (i2 = 0; i2 < uo.length; i2++) if (uo[i2].k === want.k && !used[i2]) { kin = i2; break; }
+      var alt = null; for (i2 = 0; i2 < uo.length; i2++) if (!used[i2] && uo[i2].k !== want.k && uo[i2].k.charAt(0) === 'A' && want.k.charAt(0) === 'A') { alt = i2; break; }
+      var nm = OPT_NAME[want.k] || ['', ''];
+      if (kin !== null) { used[kin] = 1; tips.push(L(nm[0].charAt(0).toUpperCase() + nm[0].slice(1) + ': it should be ' + p[0] + ', you typed ' + uo[kin].raw + '.', nm[1].charAt(0).toUpperCase() + nm[1].slice(1) + ': dapat ' + p[0] + ', ang na-type mo ay ' + uo[kin].raw + '.')); }
+      else if (alt !== null) { used[alt] = 1; tips.push(L('You typed ' + uo[alt].raw + ' but this needs ' + p[0] + ': ' + nm[0] + '.', 'Ang na-type mo ay ' + uo[alt].raw + ' pero ' + p[0] + ' ang kailangan: ' + nm[1] + '.')); }
+      else tips.push(L('Missing ' + p[0] + ' (' + qPartEn(q, i) + ').', 'Kulang ang ' + p[0] + ' (' + qPart(q, i) + ').'));
+    });
+    uo.forEach(function (o, j) { if (!used[j]) tips.push(L('Not needed: ' + o.raw + '. The question did not ask for it.', 'Hindi kailangan: ' + o.raw + '. Hindi ito hiningi ng tanong.')); });
+  }
+  /* 5. anything else that is missing */
+  q.parts.forEach(function (p, i) { if (!st[i] && !cov[i]) tips.push(L('Missing or different: ' + p[0] + ' (' + qPartEn(q, i) + ').', 'Kulang o iba: ' + p[0] + ' (' + qPart(q, i) + ').')); });
+  if (!tips.length) tips.push(L('All the parts are there, but the order or an extra character is off. Compare it with the answer above.', 'Nandiyan ang lahat ng bahagi, pero mali ang pagkakasunod o may sobrang character. Ikumpara sa sagot sa itaas.'));
+  var allOk = st.every(Boolean);
+  return { tips: tips.slice(0, 4), st: st, allOk: allOk };
+}
+function qPartEn(q, i) { return q.parts[i][1]; }
 function renderResult() {
   var q = S.q, r = S.res, html;
   if (!q || !r) return;
   if (r.ok) {
     html = '<div class="result ok"><h3>' + TR('Correct') + '</h3><div class="cmd">' + esc(q.answers[0]) + '</div>' + breakdown(q) + '</div>';
   } else {
+    var dg = (r.typed && !r.gaveUp) ? diagnose(r.typed, q) : null;
     html = '<div class="result no"><h3>' + TR(r.gaveUp ? 'Answer' : 'Not quite') + '</h3>' +
       (r.typed && !r.gaveUp ? '<div class="yours">' + TR('You typed: ') + esc(r.typed) + '</div>' : '') +
-      '<div class="cmd">' + esc(q.answers[0]) + '</div>' + breakdown(q) + '</div>';
+      '<div class="cmd">' + esc(q.answers[0]) + '</div>' +
+      (dg ? '<div class="why"><h4>' + TR('What went wrong') + '</h4><ul>' + dg.tips.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' : '') +
+      breakdown(q, dg ? dg.st : null) + '</div>';
   }
   $('result').innerHTML = html;
 }
@@ -2107,7 +2213,7 @@ var Mascot = (function () {
 })();
 
 /* ---------- applying the language ---------- */
-var TR_SKIP = '#mascot,.nojs,svg,#result,#summary,#qText,#qTag,#hintBox,#cardFront,#cardBack,#cardNote,#tgrid,#settingsBody,#cardProgress,#btnMisses,#btnNext';
+var TR_SKIP = '#mascot,.nojs,svg,#result,#summary,#qText,#qTag,#hintBox,#cardFront,#cardBack,#cardNote,#tgrid,#settingsBody,#cardProgress,#btnMisses,#btnNext,#btnMusic';
 function trDom(root) {
   var tl = CFG.lang === 'tl', w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, list = [];
   while ((n = w.nextNode())) list.push(n);
@@ -2124,7 +2230,7 @@ function trDom(root) {
   });
   ['placeholder', 'aria-label', 'title'].forEach(function (a) {
     Array.prototype.forEach.call(root.querySelectorAll('[' + a + ']'), function (el) {
-      if (el.closest && el.closest('#mascot,.nojs,#btnTheme,#btnLang,#settingsBody')) return;
+      if (el.closest && el.closest('#mascot,.nojs,#btnTheme,#btnLang,#btnMusic,#settingsBody')) return;
       var k = '__a_' + a;
       if (el[k] === undefined) { var v = el.getAttribute(a); if (!TLD.hasOwnProperty(v)) return; el[k] = v; }
       el.setAttribute(a, tl ? TLD[el[k]] : el[k]);
@@ -2132,6 +2238,7 @@ function trDom(root) {
   });
 }
 function syncLangBtn() {
+  if (window.musicSync) try { musicSync(); } catch (e) {}
   var b = $('btnLang'); if (!b) return;
   b.textContent = CFG.lang === 'tl' ? 'TL' : 'EN';
   b.setAttribute('aria-label', CFG.lang === 'tl' ? 'Wika: Tagalog. I-tap para lumipat sa English.' : 'Language: English. Tap to switch to Tagalog.');
@@ -2191,6 +2298,131 @@ $('appTitle').textContent = CUR.title;
 syncTheme();
 applyLang();
 maybeGreet();
+/* ---------- lofi music: generated live in the browser (no audio files) ---------- */
+var MUS = { ac: null, on: false, timer: 0, next: 0, step: 0, bar: 0, prog: null, key: 0, last: 9, v: null, bpm: 74 };
+var CHQ = { m9: [3, 7, 10, 14], M9: [4, 7, 11, 14], d9: [4, 7, 10, 14], m7: [3, 7, 10, 12] };
+var PROGS = [
+  [[2, 'm9'], [7, 'd9'], [0, 'M9'], [9, 'm9']], [[0, 'M9'], [9, 'm9'], [2, 'm9'], [7, 'd9']],
+  [[5, 'M9'], [4, 'm7'], [2, 'm9'], [7, 'd9']], [[9, 'm9'], [2, 'm9'], [7, 'd9'], [0, 'M9']],
+  [[0, 'm9'], [5, 'm9'], [10, 'd9'], [3, 'M9']]
+];
+function musicGraph(ac) {
+  if (MUS.v && MUS.v.ac === ac) return MUS.v;
+  var v = { ac: ac }, lp = ac.createBiquadFilter(), hp = ac.createBiquadFilter(), out = ac.createGain(), mix = ac.createGain(), dl = ac.createDelay(1), fb = ac.createGain(), dlp = ac.createBiquadFilter(), wet = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain(), trem = ac.createGain(), tl = ac.createOscillator(), tg = ac.createGain();
+  lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 0.4; hp.type = 'highpass'; hp.frequency.value = 40;
+  dl.delayTime.value = 60 / MUS.bpm * 0.75; fb.gain.value = 0.34; dlp.type = 'lowpass'; dlp.frequency.value = 1700; wet.gain.value = 0.2;
+  mix.connect(hp); hp.connect(lp); lp.connect(out); lp.connect(dl); dl.connect(dlp); dlp.connect(fb); fb.connect(dl); dlp.connect(wet); wet.connect(out);
+  out.gain.value = 0.0001; out.connect(ac.destination);
+  lfo.frequency.value = 0.35; lg.gain.value = 7; lfo.connect(lg); lfo.start();
+  trem.gain.value = 0.92; tl.frequency.value = 4.2; tg.gain.value = 0.07; tl.connect(tg); tg.connect(trem.gain); tl.start(); trem.connect(mix);
+  v.mix = mix; v.out = out; v.wob = lg; v.trem = trem; v.lp = lp;
+  /* vinyl crackle: a looping buffer of tiny pops over a quiet hiss */
+  var n = Math.floor(ac.sampleRate * 3), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+  for (var i = 0; i < n; i++) { d[i] = (Math.random() * 2 - 1) * 0.012; if (Math.random() < 0.00035) { var a = 0.15 + Math.random() * 0.5; d[i] += a; if (i + 1 < n) d[i + 1] -= a * 0.6; } }
+  var vs = ac.createBufferSource(), vf = ac.createBiquadFilter(), vg = ac.createGain();
+  vs.buffer = b; vs.loop = true; vf.type = 'bandpass'; vf.frequency.value = 3200; vf.Q.value = 0.5; vg.gain.value = 0.5; vs.connect(vf); vf.connect(vg); vg.connect(out); vs.start();
+  MUS.v = v; return v;
+}
+function mRhodes(v, f, t, dur, vel) {
+  var ac = v.ac, g = ac.createGain(), det = (Math.random() - 0.5) * 8;
+  var c = ac.createOscillator(), m = ac.createOscillator(), mg = ac.createGain();
+  c.frequency.setValueAtTime(f, t); m.frequency.setValueAtTime(f, t); c.detune.value = det; v.wob.connect(c.detune);
+  mg.gain.setValueAtTime(f * 1.5 * vel + f * 0.3, t); mg.gain.exponentialRampToValueAtTime(f * 0.05, t + 0.7);
+  m.connect(mg); mg.connect(c.frequency);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.11 * vel, t + 0.006); g.gain.exponentialRampToValueAtTime(0.045 * vel, t + 0.35); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  c.connect(g); g.connect(v.trem);
+  var tn = ac.createOscillator(), tg = ac.createGain(); tn.frequency.setValueAtTime(f * 7, t); tg.gain.setValueAtTime(0.0001, t); tg.gain.exponentialRampToValueAtTime(0.02 * vel, t + 0.003); tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.12); tn.connect(tg); tg.connect(v.trem);
+  c.start(t); m.start(t); tn.start(t); c.stop(t + dur + 0.05); m.stop(t + dur + 0.05); tn.stop(t + 0.2);
+  setTimeout(function () { try { v.wob.disconnect(c.detune); } catch (e) {} }, (dur + 0.3 + Math.max(0, t - ac.currentTime)) * 1000);
+}
+function mBass(v, f, t, dur, vel) {
+  var ac = v.ac, o = ac.createOscillator(), o2 = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter();
+  o.type = 'sine'; o2.type = 'triangle'; o.frequency.setValueAtTime(f, t); o2.frequency.setValueAtTime(f, t); lp.type = 'lowpass'; lp.frequency.value = 380;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2 * vel, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(v.mix); o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+}
+function mNoise(v, t, hz, type, q, vol, dec) {
+  var ac = v.ac, s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+  s.buffer = noiseBuf(ac); f.type = type; f.frequency.value = hz; f.Q.value = q;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, t + dec);
+  s.connect(f); f.connect(g); g.connect(v.mix); s.start(t, Math.random() * 0.15); s.stop(t + dec + 0.03);
+}
+function mKick(v, t, vel) {
+  var ac = v.ac, o = ac.createOscillator(), g = ac.createGain();
+  o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(46, t + 0.11);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.34 * vel, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.32);
+  o.connect(g); g.connect(v.mix); o.start(t); o.stop(t + 0.36);
+}
+function mSnare(v, t, vel) {
+  var ac = v.ac, o = ac.createOscillator(), g = ac.createGain();
+  mNoise(v, t, 1700, 'bandpass', 0.7, 0.2 * vel, 0.17);
+  o.frequency.setValueAtTime(210, t); o.frequency.exponentialRampToValueAtTime(150, t + 0.08);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.1 * vel, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+  o.connect(g); g.connect(v.mix); o.start(t); o.stop(t + 0.16);
+}
+function mFold(n) { while (n < 54) n += 12; while (n > 74) n -= 12; return n; }
+function musicStep(v, t0, step) {
+  var spb = 60 / MUS.bpm, sd = spb / 4, st = step % 16, sw = (st % 4 === 2) ? sd * 0.55 : (st % 2 === 1 ? sd * 0.18 : 0);
+  var t = t0 + sw + (Math.random() - 0.5) * 0.01, R = Math.random;
+  if (st === 0) {
+    if (step % 64 === 0 || !MUS.prog) { MUS.prog = PROGS[Math.floor(R() * PROGS.length)]; MUS.key = [0, 2, 5, 7, 9][Math.floor(R() * 5)]; }
+    MUS.bar = Math.floor(step / 16) % 4;
+  }
+  var ch = MUS.prog[MUS.bar], root = 48 + MUS.key + ch[0], notes = CHQ[ch[1]].map(function (iv) { return mFold(root + iv); });
+  if (st === 0) {
+    notes.forEach(function (n, i) { mRhodes(v, mf(n), t + i * 0.014, spb * 3.6, 0.8 + R() * 0.15); });
+    mBass(v, mf(root - 12), t, spb * 1.1, 1);
+  }
+  if ((st === 6 || st === 10) && R() < 0.45) notes.slice(1).forEach(function (n, i) { mRhodes(v, mf(n), t + i * 0.012, spb * 0.9, 0.45 + R() * 0.15); });
+  if (st === 8 && R() < 0.55) mBass(v, mf(root - 5), t, spb * 0.6, 0.7);
+  if (st === 14 && R() < 0.3) mBass(v, mf(root - 12 + 7), t, spb * 0.4, 0.55);
+  if (st === 0 || (st === 10 && R() < 0.6) || (st === 3 && R() < 0.2)) mKick(v, t, st === 0 ? 1 : 0.75);
+  if (st === 4 || st === 12) mSnare(v, t + 0.012, 0.8 + R() * 0.2);
+  if (st % 2 === 0 && R() > 0.13) mNoise(v, t, 7500, 'highpass', 0.7, (st % 4 === 0 ? 0.07 : 0.045) * (0.7 + R() * 0.5), st === 14 && R() < 0.35 ? 0.16 : 0.045);
+  if ([2, 6, 9, 11, 14].indexOf(st) >= 0 && R() < 0.3) {
+    var minor = MUS.prog === PROGS[4], sc = minor ? [0, 3, 5, 7, 10] : [0, 2, 4, 7, 9], idx = Math.max(0, Math.min(9, MUS.last + Math.floor(R() * 5) - 2));
+    MUS.last = idx; var oct = idx >= 5 ? 12 : 0, nn = 72 + MUS.key + sc[idx % 5] + oct - 12;
+    mRhodes(v, mf(nn), t, spb * 1.6, 0.5);
+  }
+}
+function musicTick() {
+  var ac = MUS.ac; if (!ac || !MUS.on) return;
+  var sd = 60 / MUS.bpm / 4;
+  while (MUS.next < ac.currentTime + 0.4) { musicStep(MUS.v, MUS.next, MUS.step); MUS.next += sd; MUS.step++; }
+}
+function musicLevel() { return [0, 0.5, 0.85, 1.3][CFG.musicVol] || 0.85; }
+function musicVolume() { if (MUS.v && MUS.on) MUS.v.out.gain.setTargetAtTime(musicLevel(), MUS.ac.currentTime, 0.15); }
+function musicStart() {
+  if (MUS.on) return; var ac = audioCtx(); if (!ac) return;
+  MUS.ac = ac; var v = musicGraph(ac); MUS.on = true; MUS.step = 0; MUS.prog = null; MUS.next = ac.currentTime + 0.15;
+  v.out.gain.cancelScheduledValues(ac.currentTime); v.out.gain.setValueAtTime(Math.max(v.out.gain.value, 0.0001), ac.currentTime); v.out.gain.setTargetAtTime(musicLevel(), ac.currentTime, 0.7);
+  clearInterval(MUS.timer); MUS.timer = setInterval(musicTick, 80); musicTick();
+}
+function musicStop() {
+  if (!MUS.on) return; MUS.on = false; clearInterval(MUS.timer);
+  try { MUS.v.out.gain.cancelScheduledValues(MUS.ac.currentTime); MUS.v.out.gain.setTargetAtTime(0.0001, MUS.ac.currentTime, 0.25); } catch (e) {}
+}
+var musicWait = false;
+function musicSync() {
+  var b = $('btnMusic'); if (b) { b.setAttribute('data-on', CFG.music ? '1' : '0'); b.setAttribute('aria-pressed', CFG.music ? 'true' : 'false'); b.setAttribute('aria-label', L('Lofi music: ' + (CFG.music ? 'on' : 'off'), 'Lofi music: ' + (CFG.music ? 'bukas' : 'sarado'))); b.setAttribute('title', b.getAttribute('aria-label')); }
+  var sw = document.querySelector('#settingsBody [data-key="music"]'); if (sw) sw.checked = !!CFG.music;
+  if (!CFG.music) { musicStop(); return; }
+  if (document.hidden) return;
+  if (MUS.ac && MUS.ac.state === 'running') { musicStart(); return; }
+  /* browsers only allow sound after a tap or key press */
+  if (!musicWait) {
+    musicWait = true;
+    var go = function () { document.removeEventListener('pointerdown', go, true); document.removeEventListener('keydown', go, true); document.removeEventListener('touchstart', go, true); musicWait = false; if (CFG.music && !document.hidden) musicStart(); };
+    document.addEventListener('pointerdown', go, true); document.addEventListener('keydown', go, true); document.addEventListener('touchstart', go, true);
+  }
+}
+$('btnMusic').addEventListener('click', function () {
+  CFG.music = !CFG.music; saveCfg(); playSound(CFG.music ? 'hi' : 'lo');
+  if (CFG.music) { musicWait = false; musicStart(); } else musicStop();
+  musicSync();
+});
+document.addEventListener('visibilitychange', function () { if (document.hidden) musicStop(); else if (CFG.music) musicSync(); });
+
 /* ---------- offline mode ---------- */
 var deferredInstall = null;
 function offState(cb) {
@@ -2231,6 +2463,7 @@ if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').then(function () { if (window.refreshOffline) setTimeout(refreshOffline, 1500); }, function () {}); });
 }
 
+musicSync();
 Mascot.sync();
 if (CFG.mascot !== false) { Mascot.build(); if (!(window.FC_FIREBASE && !savedName())) setTimeout(Mascot.hello, 3600); }
 </script>
