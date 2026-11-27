@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#3a4f7a">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Flight Command Practice</title>
 <script>(function(){var d=document.documentElement;d.classList.add("js");d.setAttribute("data-view",/^#topic-\w+$/.test(location.hash||"")?"topic":"home");try{window.__origTheme=d.getAttribute("data-theme");var c=JSON.parse(localStorage.getItem("fc-settings")||"{}")||{};if(c.theme==="light"||c.theme==="dark")d.setAttribute("data-theme",c.theme);var z={s:"88%",m:"100%",l:"116%"}[c.size];if(z)d.style.fontSize=z;}catch(e){}})();</script>
 <script>
@@ -310,6 +315,36 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 [hidden] { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
 
+
+/* ---------- season scenes ---------- */
+html[data-scene="spring"][data-eff="light"] { --sky1: #f1c4d8; --sky2: #e2dbee; --cloud: rgba(255, 255, 255, 0.78); --orb: rgba(255, 214, 160, 0.38); }
+html[data-scene="spring"][data-eff="dark"] { --sky1: #4b3a53; --sky2: #383640; --cloud: rgba(240, 200, 225, 0.1); --orb: rgba(255, 175, 210, 0.16); --stars: 0.35; }
+html[data-scene="summer"][data-eff="light"] { --sky1: #8dcdf0; --sky2: #cbe7f3; --cloud: rgba(255, 255, 255, 0.82); --orb: rgba(255, 196, 60, 0.6); }
+html[data-scene="summer"][data-eff="dark"] { --sky1: #2f4a64; --sky2: #333b46; --cloud: rgba(200, 220, 245, 0.1); --orb: rgba(255, 190, 90, 0.22); --stars: 0.5; }
+html[data-scene="autumn"][data-eff="light"] { --sky1: #efbf97; --sky2: #e8d6c6; --cloud: rgba(255, 240, 225, 0.65); --orb: rgba(255, 150, 60, 0.42); }
+html[data-scene="autumn"][data-eff="dark"] { --sky1: #5b4130; --sky2: #3d3733; --cloud: rgba(230, 205, 185, 0.09); --orb: rgba(255, 160, 80, 0.17); --stars: 0.4; }
+html[data-scene="winter"][data-eff="light"] { --sky1: #c3d7ee; --sky2: #e0e8f2; --cloud: rgba(255, 255, 255, 0.85); --orb: rgba(225, 238, 255, 0.55); }
+html[data-scene="winter"][data-eff="dark"] { --sky1: #2f3f59; --sky2: #343a45; --cloud: rgba(205, 220, 245, 0.1); --orb: rgba(190, 215, 255, 0.17); --stars: 0.85; }
+html[data-scene="rain"][data-eff="light"] { --sky1: #97a7bc; --sky2: #c2cad6; --cloud: rgba(110, 125, 148, 0.5); --orb: rgba(255, 255, 255, 0.12); }
+html[data-scene="rain"][data-eff="dark"] { --sky1: #2b313c; --sky2: #30343b; --cloud: rgba(150, 165, 190, 0.15); --orb: rgba(180, 195, 220, 0.06); --stars: 0; }
+#scene { position: absolute; inset: 0; overflow: hidden; transition: opacity 0.5s ease; }
+html:not([data-view="home"]) #scene { opacity: 0.55; }
+html[data-motion="off"] #scene { display: none; }
+#scene i { position: absolute; top: 0; left: var(--x); width: var(--s); height: var(--s); opacity: 0; will-change: transform, opacity; animation: pfall var(--d) linear var(--dl) infinite; }
+#scene .p-petal { background: linear-gradient(135deg, #ffd3e2, #f59bbb); border-radius: 80% 0 80% 0; height: calc(var(--s) * 0.7); }
+#scene .p-leaf { background: var(--c); border-radius: 0 100% 0 100%; height: calc(var(--s) * 0.8); }
+#scene .p-snow { background: #fff; border-radius: 50%; box-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
+#scene .p-rain { width: 1.6px; height: var(--s); background: linear-gradient(to bottom, rgba(200, 215, 240, 0), rgba(200, 220, 245, 0.8)); rotate: 10deg; animation-name: prain; }
+#scene .p-mote { background: radial-gradient(circle, #fff4c2, rgba(255, 220, 120, 0)); border-radius: 50%; animation-name: prise; }
+html[data-eff="light"][data-scene="rain"] #scene .p-rain { background: linear-gradient(to bottom, rgba(90, 110, 140, 0), rgba(80, 100, 135, 0.6)); }
+html[data-eff="light"][data-scene="winter"] #scene .p-snow { background: #fff; box-shadow: 0 0 4px rgba(120, 150, 190, 0.7); }
+@keyframes pfall { 0% { opacity: 0; transform: translate3d(0, -8vh, 0) rotate(0deg); } 8% { opacity: var(--o, 0.85); } 50% { transform: translate3d(calc(var(--dx, 40px) * -0.4), 50vh, 0) rotate(calc(var(--r, 360deg) * 0.5)); } 92% { opacity: var(--o, 0.85); } 100% { opacity: 0; transform: translate3d(var(--dx, 40px), 108vh, 0) rotate(var(--r, 360deg)); } }
+@keyframes prain { 0% { opacity: 0; transform: translate3d(0, -10vh, 0); } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { opacity: 0; transform: translate3d(-40px, 108vh, 0); } }
+@keyframes prise { 0% { opacity: 0; transform: translate3d(0, 105vh, 0) scale(0.6); } 20% { opacity: 0.9; } 80% { opacity: 0.7; } 100% { opacity: 0; transform: translate3d(var(--dx, 30px), 30vh, 0) scale(1.1); } }
+.seg.wrap { width: 100%; grid-auto-flow: row; grid-template-columns: repeat(3, 1fr); }
+.offpill { position: fixed; left: 50%; bottom: 14px; transform: translate(-50%, 16px); max-width: min(92vw, 440px); padding: 8px 14px; border-radius: 999px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); box-shadow: 0 8px 22px rgba(8, 14, 26, 0.2); font-size: 0.82rem; line-height: 1.3; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; z-index: 45; }
+.offpill.on { opacity: 1; transform: translate(-50%, 0); }
+@media print { #scene, .offpill { display: none !important; } }
 /* ---------- Pip, the flying pilot bird ---------- */
 #mascot { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 30; pointer-events: none; }
 #mascot[hidden] { display: none; }
@@ -369,7 +404,7 @@ td:first-child { font-family: var(--font-mono); font-weight: 500; white-space: n
 </style>
 </head>
 <body>
-<div id="sky" aria-hidden="true"><div class="orb"></div><div class="stars"></div><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i></div>
+<div id="sky" aria-hidden="true"><div class="orb"></div><div class="stars"></div><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i><div id="scene"></div></div>
 <svg id="fly" aria-hidden="true" focusable="false"></svg>
 <div class="wrap">
 <div class="topbar">
@@ -781,6 +816,30 @@ var store = { get: function (k) { try { return localStorage.getItem(k); } catch 
 
 /* ---------- language: English / Tagalog ---------- */
 var TLD = {
+'Season scene': 'Eksena ng panahon',
+'Changes the sky and the drifting details': 'Binabago ang langit at ang mga lumilipad na detalye',
+'Clear': 'Malinaw',
+'Spring': 'Tagsibol',
+'Summer': 'Tag-init',
+'Autumn': 'Taglagas',
+'Winter': 'Taglamig',
+'Rainy': 'Maulan',
+'Sound pack': 'Pack ng tunog',
+'Pick how taps and answers sound. Tap one to hear it': 'Piliin kung paano tumunog ang taps at mga sagot. Pindutin para marinig',
+'Cabin': 'Cabin',
+'Wood': 'Kahoy',
+'Glass': 'Salamin',
+'Keys': 'Keys',
+'Classic': 'Klasiko',
+'Offline and app': 'Offline at app',
+'Works without internet': 'Gumagana kahit walang internet',
+'Ready. Practice works even with no signal.': 'Handa na. Gumagana ang practice kahit walang signal.',
+'Getting ready. Keep this page open a moment while it saves.': 'Inihahanda pa. Iwanang bukas ang page sandali habang nase-save.',
+'Not available in this browser or when opened as a file.': 'Hindi available sa browser na ito o kapag binuksan bilang file.',
+'Install app': 'I-install ang app',
+'Add it to your home screen': 'Idagdag sa home screen',
+'Install': 'I-install',
+'On iPhone: tap Share, then Add to Home Screen': 'Sa iPhone: pindutin ang Share, tapos Add to Home Screen',
 /* page + topic cards */
 '← Topics': '← Mga Topic',
 'Choose a topic to practice. Typing practice only; no live flight data.': 'Pumili ng topic na pag-aaralan. Pagta-type lang ito para sa practice; walang totoong flight data.',
@@ -985,7 +1044,7 @@ function qPart(q, i) { var p = q.parts[i]; return (CFG.lang === 'tl' && p[2]) ? 
 
 
 /* ---------- settings ---------- */
-var DEFAULTS = { lang: 'en', theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true, mascot: true };
+var DEFAULTS = { lang: 'en', theme: 'auto', size: 'm', motion: true, sound: true, autoNext: false, len: 0, alwaysHint: false, dir: 'both', shuffle: true, notes: true, mascot: true, scene: 'auto', pack: 'cabin' };
 var CFG = {};
 (function () {
   var saved = {}, k;
@@ -1002,6 +1061,31 @@ function applyAppearance() {
   ROOT.style.fontSize = { s: '88%', m: '100%', l: '116%' }[CFG.size] || '100%';
   ROOT.setAttribute('data-motion', CFG.motion ? 'on' : 'off');
   syncTheme();
+  applyScene();
+}
+/* season scenes: month decides when set to Auto */
+function sceneNow() {
+  var sc = CFG.scene || 'auto';
+  if (sc !== 'auto') return sc;
+  var m = new Date().getMonth();
+  return (m >= 2 && m <= 4) ? 'spring' : (m >= 5 && m <= 7) ? 'summer' : (m >= 8 && m <= 10) ? 'autumn' : 'winter';
+}
+function applyScene() {
+  var sc = sceneNow(); ROOT.setAttribute('data-scene', sc);
+  var box = document.getElementById('scene'); if (!box) return;
+  var key = sc + (motionOn() ? '1' : '0'); if (box.getAttribute('data-k') === key) return;
+  box.setAttribute('data-k', key); box.innerHTML = '';
+  if (!motionOn() || sc === 'clear') return;
+  var spec = { spring: ['petal', 20, 9, 16, 10, 18], summer: ['mote', 16, 5, 13, 10, 22], autumn: ['leaf', 18, 9, 17, 11, 20], winter: ['snow', 38, 3, 7, 9, 18], rain: ['rain', 46, 16, 34, 0.9, 1.7] }[sc];
+  if (!spec) return;
+  var leaf = ['#d9822b', '#c2461f', '#e0a526', '#a8431c', '#b8862b'], f = document.createDocumentFragment();
+  for (var i = 0; i < spec[1]; i++) {
+    var e = document.createElement('i'), sz = spec[2] + Math.random() * (spec[3] - spec[2]), du = spec[4] + Math.random() * (spec[5] - spec[4]);
+    e.className = 'p-' + spec[0];
+    e.style.cssText = '--x:' + (Math.random() * 100).toFixed(1) + '%;--s:' + sz.toFixed(1) + 'px;--d:' + du.toFixed(1) + 's;--dl:-' + (Math.random() * du).toFixed(1) + 's;--dx:' + (Math.random() * 120 - 30).toFixed(0) + 'px;--r:' + (Math.random() * 540 - 180).toFixed(0) + 'deg;--o:' + (0.55 + Math.random() * 0.4).toFixed(2) + ';--c:' + leaf[i % leaf.length];
+    f.appendChild(e);
+  }
+  box.appendChild(f);
 }
 function effDark() {
   if (CFG.theme === 'dark') return true;
@@ -1019,11 +1103,17 @@ var SET_UI = [
     { key: 'lang', label: 'Language', desc: 'Explanations and the whole page', opts: [['en', 'English'], ['tl', 'Tagalog']] } ] },
   { title: 'Appearance', rows: [
     { key: 'theme', label: 'Theme', opts: [['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']] },
+    { key: 'scene', label: 'Season scene', desc: 'Changes the sky and the drifting details', wrap: true, opts: [['auto', 'Auto'], ['clear', 'Clear'], ['spring', 'Spring'], ['summer', 'Summer'], ['autumn', 'Autumn'], ['winter', 'Winter'], ['rain', 'Rainy']] },
     { key: 'size', label: 'Text size', opts: [['s', 'Small'], ['m', 'Medium'], ['l', 'Large']] },
     { key: 'motion', label: 'Smooth animations', desc: 'Turn off if the page feels slow', sw: true },
     { key: 'mascot', label: 'Pip the flying bird', desc: 'A little bird that flies by and cheers you on', sw: true } ] },
   { title: 'Sound', rows: [
-    { key: 'sound', label: 'Sound effects', desc: 'Chimes for answers and soft tones on taps', sw: true } ] },
+    { key: 'sound', label: 'Sound effects', desc: 'Chimes for answers and soft tones on taps', sw: true },
+    { key: 'pack', label: 'Sound pack', desc: 'Pick how taps and answers sound. Tap one to hear it', wrap: true, opts: [['cabin', 'Cabin'], ['wood', 'Wood'], ['glass', 'Glass'], ['keys', 'Keys'], ['classic', 'Classic']] } ] },
+  { title: 'Offline and app', custom: function () {
+    return '<div class="setrow"><div class="lbl">' + TR('Works without internet') + '<span class="desc" id="offStat">&nbsp;</span></div></div>' +
+      '<div class="setrow" id="instRow" hidden><div class="lbl">' + TR('Install app') + '<span class="desc" id="instHint">' + TR('Add it to your home screen') + '</span></div><button class="btn" type="button" id="btnInstall" hidden>' + TR('Install') + '</button></div>';
+  } },
   { title: 'Drill', rows: [
     { key: 'autoNext', label: 'Auto-next after a correct answer', desc: 'Moves on after a moment', sw: true },
     { key: 'len', label: 'Session length', opts: [[10, '10'], [20, '20'], [0, 'Endless']] },
@@ -1036,13 +1126,14 @@ var SET_UI = [
 function renderSettings() {
   var h = '';
   SET_UI.forEach(function (g) {
+    if (g.custom) { h += '<div class="setgroup"><h2>' + TR(g.title) + '</h2><div class="setcard">' + g.custom() + '</div></div>'; return; }
     h += '<div class="setgroup"><h2>' + TR(g.title) + '</h2><div class="setcard">';
     g.rows.forEach(function (r) {
       h += '<div class="setrow' + (r.sw ? '' : ' stack') + '"><div class="lbl">' + TR(r.label) + (r.desc ? '<span class="desc">' + TR(r.desc) + '</span>' : '') + '</div>';
       if (r.sw) {
         h += '<input class="switch" type="checkbox" role="switch" data-key="' + r.key + '" aria-label="' + TR(r.label).replace(/"/g, '&quot;') + '"' + (CFG[r.key] ? ' checked' : '') + '>';
       } else {
-        h += '<div class="seg" role="radiogroup" aria-label="' + TR(r.label).replace(/"/g, '&quot;') + '">';
+        h += '<div class="seg' + (r.wrap ? ' wrap' : '') + '" role="radiogroup" aria-label="' + TR(r.label).replace(/"/g, '&quot;') + '">';
         r.opts.forEach(function (o) {
           h += '<label><input type="radio" name="set-' + r.key + '" data-key="' + r.key + '" value="' + o[0] + '"' + (String(CFG[r.key]) === String(o[0]) ? ' checked' : '') + '><span>' + TR(o[1]) + '</span></label>';
         });
@@ -1058,6 +1149,7 @@ function renderSettings() {
     '<div class="setrow"><div class="lbl">' + TR('Clear misses list') + '<span class="desc">' + TR('Empties "Practice my misses"') + '</span></div><button class="btn" id="btnClearMisses">' + TR('Clear misses') + '</button></div></div></div>' +
     '<p class="note" id="setMsg" aria-live="polite">' + TR('Settings are saved in this browser.') + '</p>';
   $('settingsBody').innerHTML = h;
+  if (window.refreshOffline) refreshOffline();
 }
 function flash(msg) { $('setMsg').textContent = msg; }
 function confirmBtn(id, label, action) {
@@ -1098,17 +1190,101 @@ function tone(ac, freq, start, dur, type, vol) {
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   o.connect(g); g.connect(ac.destination); o.start(t0); o.stop(t0 + dur + 0.05);
 }
+/* sound packs: small synth voices (bell, wood, glass, pluck, tick) with a soft room echo */
+var BUS = null, NB = null;
+function bus(ac) {
+  if (BUS && BUS.ac === ac) return BUS.out;
+  var m = ac.createGain(), c = ac.createDynamicsCompressor(), d = ac.createDelay(0.5), fb = ac.createGain(), lp = ac.createBiquadFilter(), wet = ac.createGain();
+  m.gain.value = 0.9; c.threshold.value = -16; c.ratio.value = 4; c.attack.value = 0.004; c.release.value = 0.2;
+  d.delayTime.value = 0.11; fb.gain.value = 0.26; lp.type = 'lowpass'; lp.frequency.value = 2400; wet.gain.value = 0.2;
+  m.connect(c); c.connect(ac.destination); m.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(wet); wet.connect(c);
+  BUS = { ac: ac, out: m }; return m;
+}
+function mf(n) { return 440 * Math.pow(2, (n - 69) / 12); }
+function env(g, t0, a, pk, dec) { g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(Math.max(pk, 0.0002), t0 + a); g.gain.exponentialRampToValueAtTime(0.0001, t0 + a + dec); }
+function oscN(ac, type, f, t0, dur) { var o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, t0); o.start(t0); o.stop(t0 + dur + 0.05); return o; }
+function noiseBuf(ac) {
+  if (NB && NB.sampleRate === ac.sampleRate) return NB;
+  var n = Math.floor(ac.sampleRate * 0.25), b = ac.createBuffer(1, n, ac.sampleRate), d = b.getChannelData(0);
+  for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  NB = b; return b;
+}
+var VOICE = {
+  tick: function (ac, out, hz, t0, v, dur) {
+    var src = ac.createBufferSource(), bp = ac.createBiquadFilter(), g = ac.createGain(); dur = dur || 0.03;
+    src.buffer = noiseBuf(ac); bp.type = 'bandpass'; bp.frequency.value = hz; bp.Q.value = 1.3;
+    env(g, t0, 0.001, v * 2, dur); src.connect(bp); bp.connect(g); g.connect(out); src.start(t0, Math.random() * 0.15); src.stop(t0 + dur + 0.03);
+    if (hz < 2500) { var o = oscN(ac, 'sine', 150, t0, 0.08), og = ac.createGain(); o.frequency.exponentialRampToValueAtTime(70, t0 + 0.06); env(og, t0, 0.002, v * 0.9, 0.06); o.connect(og); og.connect(out); }
+  },
+  bell: function (ac, out, f, t0, v, s) {
+    var dur = 1.3, c = oscN(ac, 'sine', f, t0, dur), m = oscN(ac, 'sine', f * 3.5, t0, dur), mg = ac.createGain(), g = ac.createGain(), idx = f * (s ? 0.45 : 1.3);
+    mg.gain.setValueAtTime(idx, t0); mg.gain.exponentialRampToValueAtTime(Math.max(idx * 0.02, 0.01), t0 + 0.45); m.connect(mg); mg.connect(c.frequency);
+    env(g, t0, 0.004, v, dur - 0.12); c.connect(g); g.connect(out);
+    var h = oscN(ac, 'sine', f * 2, t0, 0.6), hg = ac.createGain(); env(hg, t0, 0.004, v * 0.22, 0.4); h.connect(hg); hg.connect(out);
+  },
+  wood: function (ac, out, f, t0, v, s) {
+    var o = oscN(ac, 'sine', f, t0, 0.5), g = ac.createGain();
+    o.frequency.setValueAtTime(f * 1.014, t0); o.frequency.exponentialRampToValueAtTime(f, t0 + 0.03); env(g, t0, 0.002, v, s ? 0.22 : 0.3); o.connect(g); g.connect(out);
+    var o2 = oscN(ac, 'sine', f * 4, t0, 0.2), g2 = ac.createGain(); env(g2, t0, 0.001, v * 0.3, 0.06); o2.connect(g2); g2.connect(out);
+    VOICE.tick(ac, out, 1800, t0, v * 0.22, 0.012);
+  },
+  glass: function (ac, out, f, t0, v, s) {
+    [[1, 1, 0.9], [2.76, 0.3, 0.45], [5.4, 0.11, 0.22]].forEach(function (p) {
+      var o = oscN(ac, 'sine', f * p[0], t0, 1.2), g = ac.createGain();
+      env(g, t0, 0.002, v * p[1] * (s && p[0] > 2 ? 0.3 : 1), p[2] * (s ? 0.7 : 1) + 0.05); o.connect(g); g.connect(out);
+    });
+  },
+  pluck: function (ac, out, f, t0, v) {
+    var o = oscN(ac, 'sawtooth', f, t0, 0.4), o2 = oscN(ac, 'square', f * 1.005, t0, 0.4), lp = ac.createBiquadFilter(), g = ac.createGain();
+    lp.type = 'lowpass'; lp.Q.value = 2.5; lp.frequency.setValueAtTime(Math.min(f * 9, 6000), t0); lp.frequency.exponentialRampToValueAtTime(Math.max(f * 1.2, 200), t0 + 0.16);
+    env(g, t0, 0.003, v * 0.5, 0.22); o.connect(lp); o2.connect(lp); lp.connect(g); g.connect(out);
+  }
+};
+/* events: [midi note (or tick pitch in Hz when above 200), delay seconds, volume, soft flag] */
+var PACKS = {
+  cabin: { voice: 'bell', vol: 0.2, K: {
+    ok: [[79, 0], [86, 0.13, 0.9]], no: [[62, 0, 1, 1], [57, 0.15, 0.9, 1]],
+    hi: [[91, 0, 0.5]], mid: [[84, 0, 0.45]], lo: [[62, 0, 0.7, 1]], tab: [[88, 0, 0.4]], flip: [[84, 0, 0.4], [91, 0.06, 0.4]],
+    up: [[79, 0, 0.5], [86, 0.07, 0.5]], down: [[72, 0, 0.55, 1], [65, 0.07, 0.55, 1]],
+    open: [[72, 0, 0.45], [79, 0.06, 0.45], [84, 0.12, 0.45]], back: [[84, 0, 0.4], [77, 0.06, 0.4]],
+    win: [[76, 0], [80, 0.1], [83, 0.2], [88, 0.3, 1.1]] } },
+  wood: { voice: 'wood', vol: 0.3, K: {
+    ok: [[72, 0], [79, 0.1]], no: [[55, 0, 1, 1], [50, 0.12, 1, 1]],
+    hi: [[84, 0, 0.6]], mid: [[76, 0, 0.55]], lo: [[55, 0, 0.8, 1]], tab: [[79, 0, 0.5]], flip: [[76, 0, 0.5], [84, 0.05, 0.5]],
+    up: [[72, 0, 0.6], [79, 0.06, 0.6]], down: [[60, 0, 0.7, 1], [53, 0.06, 0.7, 1]],
+    open: [[67, 0, 0.55], [72, 0.05, 0.55], [79, 0.1, 0.55]], back: [[79, 0, 0.5], [72, 0.05, 0.5]],
+    win: [[67, 0], [72, 0.08], [76, 0.16], [79, 0.24], [84, 0.32]] } },
+  glass: { voice: 'glass', vol: 0.13, K: {
+    ok: [[84, 0], [91, 0.12]], no: [[67, 0, 1, 1], [62, 0.14, 1, 1]],
+    hi: [[91, 0, 0.5]], mid: [[84, 0, 0.5]], lo: [[60, 0, 0.8, 1]], tab: [[88, 0, 0.45]], flip: [[84, 0, 0.45], [91, 0.05, 0.45]],
+    up: [[79, 0, 0.55], [86, 0.07, 0.55]], down: [[72, 0, 0.6, 1], [67, 0.07, 0.6, 1]],
+    open: [[72, 0, 0.5], [79, 0.06, 0.5], [84, 0.12, 0.5]], back: [[84, 0, 0.45], [77, 0.06, 0.45]],
+    win: [[79, 0], [83, 0.09], [86, 0.18], [91, 0.27, 1.1]] } },
+  keys: { voice: 'pluck', vol: 0.25, K: {
+    ok: [[69, 0], [76, 0.09]], no: [[48, 0, 1, 1], [43, 0.12, 1, 1]],
+    hi: [[4300, 0, 0.8]], mid: [[3300, 0, 0.7]], lo: [[1700, 0, 0.9]], tab: [[3700, 0, 0.7]], flip: [[3200, 0, 0.7], [4200, 0.05, 0.7]],
+    up: [[3000, 0, 0.7], [4400, 0.06, 0.7]], down: [[3600, 0, 0.7], [1900, 0.06, 0.8]],
+    open: [[2800, 0, 0.7], [3600, 0.05, 0.7], [4600, 0.1, 0.7]], back: [[4400, 0, 0.7], [3000, 0.05, 0.7]],
+    win: [[64, 0], [69, 0.07], [72, 0.14], [76, 0.21]] } }
+};
 function playSound(kind) {
   if (!CFG.sound) return;
   var ac = audioCtx(); if (!ac) return;
   try {
-    if (kind === 'ok') { tone(ac, 659.25, 0, 0.16, 'sine', 0.2); tone(ac, 880, 0.12, 0.3, 'sine', 0.2); }
-    else if (kind === 'no') { tone(ac, 196, 0, 0.2, 'triangle', 0.25); tone(ac, 146.83, 0.17, 0.32, 'triangle', 0.25); }
-    else {
-      var P = CLICKS[kind]; if (!P) return;
-      for (var i = 0; i < P[0].length; i++) tone(ac, P[0][i], i * 0.055, 0.09, P[1], P[2]);
+    var P = PACKS[CFG.pack];
+    if (!P) {
+      if (kind === 'ok') { tone(ac, 659.25, 0, 0.16, 'sine', 0.2); tone(ac, 880, 0.12, 0.3, 'sine', 0.2); }
+      else if (kind === 'no') { tone(ac, 196, 0, 0.2, 'triangle', 0.25); tone(ac, 146.83, 0.17, 0.32, 'triangle', 0.25); }
+      else { var C = CLICKS[kind]; if (!C) return; for (var i = 0; i < C[0].length; i++) tone(ac, C[0][i], i * 0.055, 0.09, C[1], C[2]); }
+      return;
     }
-  } catch (e) {}
+    var E = P.K[kind]; if (!E) return;
+    var out = bus(ac), t0 = ac.currentTime + 0.005, tapGain = (kind === 'ok' || kind === 'no' || kind === 'win') ? 1 : 1.6;
+    for (var j = 0; j < E.length; j++) {
+      var e = E[j], v = (e[2] || 1) * P.vol * tapGain, t = t0 + (e[1] || 0);
+      if (e[0] > 200) VOICE.tick(ac, out, e[0], t, v); else VOICE[P.voice](ac, out, mf(e[0]), t, v, e[3] || 0);
+    }
+  } catch (err) {}
 }
 /* tap sounds: [notes, wave, volume]. High = on / up / go, low = off / down / stop. */
 var CLICKS = {
@@ -1150,6 +1326,8 @@ $('settingsBody').addEventListener('change', function (e) {
   if (key === 'theme' || key === 'size' || key === 'motion') applyAppearance();
   if (key === 'lang') applyLang();
   if (key === 'sound' && CFG.sound) playSound('ok');
+  if (key === 'pack') playSound('ok');
+  if (key === 'scene') applyScene();
   if (key === 'mascot') { Mascot.sync(); if (CFG.mascot) { Mascot.build(); Mascot.say(L('Hi! I am Pip. Let\'s fly!', 'Hi! Ako si Pip. Lipad na tayo!'), 'wave', { force: true, ms: 3600 }); } }
   if (key === 'alwaysHint' && S.q && !S.answered) { if (CFG.alwaysHint) { $('hintBox').textContent = qHint(S.q); $('hintBox').hidden = false; } else $('hintBox').hidden = true; }
   if (key === 'len') { resetSession(); nextQ(); }
@@ -2013,6 +2191,46 @@ $('appTitle').textContent = CUR.title;
 syncTheme();
 applyLang();
 maybeGreet();
+/* ---------- offline mode ---------- */
+var deferredInstall = null;
+function offState(cb) {
+  if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return cb('na');
+  navigator.serviceWorker.getRegistration().then(function (r) { cb(r && (r.active || navigator.serviceWorker.controller) ? 'ready' : 'none'); }, function () { cb('na'); });
+}
+window.refreshOffline = function () {
+  var st = document.getElementById('offStat'); if (!st) return;
+  offState(function (x) {
+    st = document.getElementById('offStat'); if (!st) return;
+    st.textContent = x === 'ready' ? TR('Ready. Practice works even with no signal.') : x === 'none' ? TR('Getting ready. Keep this page open a moment while it saves.') : TR('Not available in this browser or when opened as a file.');
+    var row = document.getElementById('instRow'), btn = document.getElementById('btnInstall'), hint = document.getElementById('instHint');
+    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.navigator.standalone, standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone;
+    if (!row || standalone) return;
+    if (deferredInstall) { row.hidden = false; btn.hidden = false; }
+    else if (ios) { row.hidden = false; btn.hidden = true; hint.textContent = TR('On iPhone: tap Share, then Add to Home Screen'); }
+  });
+};
+window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredInstall = e; if (window.refreshOffline) refreshOffline(); });
+window.addEventListener('appinstalled', function () { deferredInstall = null; var r = document.getElementById('instRow'); if (r) r.hidden = true; });
+document.addEventListener('click', function (e) {
+  var b = e.target && e.target.closest ? e.target.closest('#btnInstall') : null;
+  if (!b || !deferredInstall) return;
+  var d = deferredInstall; deferredInstall = null; b.hidden = true;
+  try { d.prompt(); } catch (er) {}
+});
+var offPill = document.createElement('div'); offPill.className = 'offpill'; offPill.setAttribute('role', 'status'); offPill.setAttribute('aria-live', 'polite'); document.body.appendChild(offPill);
+var offT = 0;
+function syncNet(initial) {
+  var off = navigator.onLine === false; clearTimeout(offT);
+  if (off) { offPill.textContent = L('You are offline. Practice still works and your progress saves on this device.', 'Offline ka. Gumagana pa rin ang practice at nase-save ang progress sa device na ito.'); offPill.classList.add('on'); offT = setTimeout(function () { offPill.classList.remove('on'); }, 6000); }
+  else if (!initial) { offPill.textContent = L('Back online.', 'Online ka na ulit.'); offPill.classList.add('on'); offT = setTimeout(function () { offPill.classList.remove('on'); }, 2200); }
+}
+window.addEventListener('offline', function () { syncNet(false); });
+window.addEventListener('online', function () { syncNet(false); });
+syncNet(true);
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').then(function () { if (window.refreshOffline) setTimeout(refreshOffline, 1500); }, function () {}); });
+}
+
 Mascot.sync();
 if (CFG.mascot !== false) { Mascot.build(); if (!(window.FC_FIREBASE && !savedName())) setTimeout(Mascot.hello, 3600); }
 </script>
