@@ -112,9 +112,33 @@ html:not(.js) .stats { display: none; }
 .seg label:has(input:focus-visible) span { outline: 3px solid var(--accent); outline-offset: 1px; }
 .setcard .btn { flex: none; }
 
-.gate { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); transition: opacity 0.25s ease; }
+.gate { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: opacity 0.5s ease; }
+body.gatefirst .gate { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.gatefirst .wrap { visibility: hidden; }
 .gate[hidden] { display: none; }
 .gate.out { opacity: 0; }
+.gate .gcard { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.45s ease; }
+.gate.out .gcard { transform: translateY(-30px) scale(0.96); opacity: 0; }
+.gcard { border-radius: 20px; box-shadow: 0 18px 50px rgba(15, 30, 60, 0.18); }
+.gtop { display: flex; align-items: center; gap: 12px; margin: -6px 0 -2px; }
+.gpip { position: relative; flex: none; width: 104px; height: 87px; }
+.gpip .mfly { position: relative; left: auto; top: auto; width: 100%; height: 100%; display: block; will-change: auto; animation: gpipin 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.3) both; }
+.gpip .mbird { position: absolute; inset: 0; pointer-events: none; display: block; }
+.gsay { position: relative; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 9px 13px; font-size: 0.9rem; line-height: 1.3; color: var(--ink); animation: gsayin 0.5s ease 0.35s both; }
+.gsay::before { content: ""; position: absolute; left: -6px; top: 50%; width: 10px; height: 10px; background: var(--bg); border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); transform: translateY(-50%) rotate(45deg); }
+.gnote { font-size: 0.82rem !important; }
+.gpip.cheer .mfly.arms .mwN { animation: marmcheer 0.3s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.gpip.cheer .mfly.arms .mwF { animation: marmcheerB 0.3s cubic-bezier(.45,0,.55,1) infinite alternate; animation-delay: -0.15s; }
+.gpip.cheer .mfly.arms .mpg { animation: mbob 0.3s cubic-bezier(.45,0,.55,1) infinite alternate; }
+.gpip.cheer .meye { opacity: 0; } .gpip.cheer .mhap { opacity: 1; } .gpip.cheer .mspark { animation: mspark 0.4s ease-in-out infinite alternate; }
+@keyframes gpipin { from { opacity: 0; transform: translateY(24px) scale(0.7) rotate(-8deg); } to { opacity: 1; transform: none; } }
+@keyframes gsayin { from { opacity: 0; transform: translateX(-8px) scale(0.95); } to { opacity: 1; transform: none; } }
+.gcard.going .gerr { visibility: hidden; }
+body.revealing .wrap { animation: wrapin 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+body.revealing .tcard { animation: cardin 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 110ms + 180ms); }
+@keyframes wrapin { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes cardin { from { opacity: 0; transform: translateY(26px) scale(0.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { body.revealing .wrap, body.revealing .tcard, .gpip .mfly, .gsay { animation: none !important; } }
 .gcard { width: min(100%, 420px); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 26px 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 14px 40px rgba(15, 30, 60, 0.12); }
 .gcard h1 { font-size: 1.5rem; line-height: 1.15; }
 .gcard p { margin: 0; color: var(--muted); font-size: 0.9rem; }
@@ -522,14 +546,14 @@ html[data-eff="light"][data-scene="winter"] #scene .p-snow { background: #fff; b
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" hidden>
   <form class="gcard" id="gateForm" autocomplete="off" novalidate>
-    <span class="ticon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></span>
-    <h1 id="gateTitle">Ready to practice?</h1>
-    <p>Type your name to get started. No account or password needed.</p>
+    <div class="gtop"><div class="gpip" id="gpip" aria-hidden="true"></div><div class="gsay" id="gsay">Hi! I'm Pip. What's your name?</div></div>
+    <h1 id="gateTitle">Ready for takeoff?</h1>
+    <p>Type your name to hop on board. No account or password needed.</p>
     <div><label for="gateName">Your name</label>
     <input class="ginput" id="gateName" type="text" maxlength="30" placeholder="e.g. Maria" autocapitalize="words" enterkeyhint="go"></div>
     <div class="gerr" id="gateErr" role="alert"></div>
-    <p>Your name and practice progress are visible to the site owner while you use this page.</p>
-    <div class="grow"><button class="btn" type="button" id="btnGateCancel" hidden>Cancel</button><button class="btn primary" type="submit" id="btnGateGo">Continue</button></div>
+    <p class="gnote">Your name and progress are visible to the site owner while you practice.</p>
+    <div class="grow"><button class="btn" type="button" id="btnGateCancel" hidden>Cancel</button><button class="btn primary" type="submit" id="btnGateGo">Let's fly</button></div>
   </form>
 </div>
 <div class="gate" id="fb" role="dialog" aria-modal="true" aria-labelledby="fbTitle" hidden>
@@ -829,6 +853,12 @@ var store = { get: function (k) { try { return localStorage.getItem(k); } catch 
 
 /* ---------- language: English / Tagalog ---------- */
 var TLD = {
+'Ready for takeoff?': 'Handa ka na bang lumipad?',
+'Type your name to hop on board. No account or password needed.': 'I-type ang pangalan mo para sumakay. Walang account o password.',
+'Let\'s fly': 'Lipad na!',
+'Your name and progress are visible to the site owner while you practice.': 'Makikita ng may-ari ng site ang pangalan at progress mo habang nagpa-practice ka.',
+'Hi! I\'m Pip. What\'s your name?': 'Hi! Ako si Pip. Ano ang pangalan mo?',
+'Welcome aboard!': 'Welcome aboard!',
 'Music style': 'Estilo ng music',
 'Mix changes the mood every few minutes': 'Nagpapalit ng mood ang Mix kada ilang minuto',
 'Mix': 'Halo-halo',
@@ -1880,7 +1910,7 @@ document.addEventListener('keydown', function (e) {
 
 
 /* ---------- name prompt (only when the online list is switched on) ---------- */
-var gateOpen = false;
+var gateOpen = false, gateFirst = false, gateGoing = false;
 function savedName() { return (store.get('fc-name') || '').trim(); }
 function cleanName(v) { return String(v || '').replace(/[\u0000-\u001f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, 30); }
 function showName() { var el = $('nameNow'); if (el) el.textContent = savedName() || '–'; }
@@ -1888,9 +1918,15 @@ function openGate(changing) {
   gateOpen = true;
   $('gateName').value = changing ? savedName() : ''; $('gateErr').textContent = '';
   $('btnGateCancel').hidden = !changing;
-  $('gateTitle').textContent = TR(changing ? 'Change your name' : 'Ready to practice?');
+  gateFirst = !changing; gateGoing = false;
+  $('gateTitle').textContent = TR(changing ? 'Change your name' : 'Ready for takeoff?');
+  $('btnGateGo').textContent = TR(changing ? 'Continue' : "Let's fly"); $('btnGateGo').disabled = false;
+  $('gsay').textContent = changing ? L('Changing your name? No problem!', 'Magpapalit ng pangalan? Walang problema!') : L("Hi! I'm Pip. What's your name?", 'Hi! Ako si Pip. Ano ang pangalan mo?');
+  var gp = $('gpip'); gp.classList.remove('cheer');
+  try { gp.innerHTML = '<div class="mfly arms on"><span class="mbird"><span class="mflip">' + Mascot.svg() + '</span></span></div>'; } catch (e0) {}
+  $('gateForm').classList.remove('going');
   var g = $('gate'); g.classList.remove('out'); g.hidden = false;
-  document.body.classList.add('gateopen');
+  document.body.classList.add('gateopen'); document.body.classList.toggle('gatefirst', !changing);
   try { wrapEl().inert = true; } catch (e) {}
   anim($('gateForm'), [{ opacity: 0, transform: 'translateY(14px) scale(0.98)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: EASE });
   setTimeout(function () { try { $('gateName').focus(); } catch (e) {} }, 80);
@@ -1900,14 +1936,29 @@ function closeGate() {
   var g = $('gate'); g.classList.add('out');
   document.body.classList.remove('gateopen');
   try { wrapEl().inert = false; } catch (e) {}
-  setTimeout(function () { if (!gateOpen) g.hidden = true; }, motionOn() ? 260 : 0);
+  setTimeout(function () { if (!gateOpen) g.hidden = true; }, motionOn() ? 520 : 0);
 }
 $('gateForm').addEventListener('submit', function (e) {
   e.preventDefault();
   var n = cleanName($('gateName').value);
   if (!n) { $('gateErr').textContent = TR('Please type a name to continue.'); shake($('gateName')); playSound('lo'); return; }
-  store.set('fc-name', n); showName(); greetText(); closeGate(); playSound('up'); setTimeout(maybeGreet, 380); setTimeout(Mascot.hello, 3800);
+  if (gateGoing) return;
+  store.set('fc-name', n); showName(); greetText(); playSound('up');
   try { window.dispatchEvent(new CustomEvent('fc-name', { detail: n })); } catch (e2) {}
+  if (!(gateFirst && motionOn())) {
+    closeGate(); document.body.classList.remove('gatefirst'); setTimeout(maybeGreet, 380); setTimeout(Mascot.hello, 3800); return;
+  }
+  /* smooth entrance: Pip cheers, the card lifts away, the page rises in, then the plane flies */
+  gateGoing = true; $('btnGateGo').disabled = true; $('gateForm').classList.add('going');
+  $('btnGateGo').textContent = L('Welcome aboard!', 'Welcome aboard!');
+  $('gsay').textContent = L('Nice to meet you, ' + n + '!', 'Kinagagalak kitang makilala, ' + n + '!');
+  $('gpip').classList.add('cheer');
+  var cards = document.querySelectorAll('.tcard'); for (var ci = 0; ci < cards.length; ci++) cards[ci].style.setProperty('--i', ci);
+  setTimeout(function () {
+    document.body.classList.remove('gatefirst'); document.body.classList.add('revealing'); closeGate();
+    setTimeout(maybeGreet, 900); setTimeout(Mascot.hello, 4600);
+    setTimeout(function () { document.body.classList.remove('revealing'); }, 2000);
+  }, 750);
 });
 $('btnGateCancel').addEventListener('click', closeGate);
 $('settingsBody').addEventListener('click', function (e) { if (e.target && e.target.id === 'btnChangeName') { closeSettings(); openGate(true); } });
@@ -2218,7 +2269,7 @@ var Mascot = (function () {
     else if (win) appear({ text: L('Great flight' + (n ? ', ' + n : '') + '!', 'Magandang flight' + (n ? ', ' + n : '') + '!'), mood: 'cheer', hover: 3600, force: true, spin: true });
     else appear({ text: L('Good session! Review your misses and try again.', 'Magandang session! I-review ang mga mali mo at subukan ulit.'), mood: 'wave', hover: 3600, force: true });
   }
-  return { sync: sync, say: say, hello: hello, answered: answered, summary: summary, build: build, go: go, stop: stop, state: function () { return st; } };
+  return { svg: function () { return SVG; }, sync: sync, say: say, hello: hello, answered: answered, summary: summary, build: build, go: go, stop: stop, state: function () { return st; } };
 })();
 
 /* ---------- applying the language ---------- */
