@@ -161,7 +161,31 @@ function people() {
     Object.keys(prog).forEach(function (t) { var g = prog[t] || {}; tot.d += g.d | 0; tot.r += g.r | 0; if ((g.b | 0) > tot.b) tot.b = g.b | 0; });
     out.push({ k: k, name: r.name, where: r.where || '', last: last, first: r.first || 0, visits: r.visits | 0, prog: prog, tot: tot, acc: tot.d ? tot.r / tot.d : -1, status: live ? (r.away === true ? 'away' : 'on') : 'off' });
   });
-  return out;
+  return mergeByName(out);
+}
+
+/* The same person can show up more than once (browser tab + installed app, cleared data, a second phone).
+   Each device has its own sign-in, so devices are merged here by name (not case sensitive). */
+function mergeByName(rows) {
+  var map = {}, order = [], rank = { on: 3, away: 2, off: 1 };
+  rows.forEach(function (p) {
+    var key = p.name.trim().toLowerCase(), m = map[key];
+    if (!m) { map[key] = m = { k: p.k, name: p.name.trim(), where: '', last: 0, first: 0, visits: 0, prog: {}, tot: { d: 0, r: 0, b: 0 }, acc: -1, status: 'off', devices: 0 }; order.push(key); }
+    m.devices++;
+    if (p.last >= m.last) { m.last = p.last; if (rank[p.status] >= rank[m.status] || !m.where) m.where = p.where; }
+    if (rank[p.status] > rank[m.status]) { m.status = p.status; m.where = p.where; }
+    if (p.first && (!m.first || p.first < m.first)) m.first = p.first;
+    m.visits += p.visits;
+    Object.keys(p.prog).forEach(function (t) {
+      var g = p.prog[t] || {}, c = m.prog[t] || (m.prog[t] = { d: 0, r: 0, b: 0 });
+      c.d += g.d | 0; c.r += g.r | 0; if ((g.b | 0) > c.b) c.b = g.b | 0;
+    });
+  });
+  return order.map(function (key) {
+    var m = map[key], tot = { d: 0, r: 0, b: 0 };
+    Object.keys(m.prog).forEach(function (t) { var g = m.prog[t]; tot.d += g.d; tot.r += g.r; if (g.b > tot.b) tot.b = g.b; });
+    m.tot = tot; m.acc = tot.d ? tot.r / tot.d : -1; return m;
+  });
 }
 function progBlock(p) {
   var keys = Object.keys(p.prog); if (!keys.length) return null;
@@ -181,6 +205,7 @@ function personRow(p, now, showAgo) {
   var meta = el('div', 'meta');
   if (p.where && p.status !== 'off') meta.appendChild(el('span', '', p.where));
   if (p.status === 'off' && p.last) meta.appendChild(el('span', '', 'Last seen ' + dt(p.last)));
+  if (p.devices > 1) meta.appendChild(el('span', '', p.devices + ' devices'));
   if (p.visits) meta.appendChild(el('span', '', p.visits + (p.visits === 1 ? ' visit' : ' visits')));
   if (p.first) meta.appendChild(el('span', '', 'First seen ' + dt(p.first)));
   li.appendChild(meta);
